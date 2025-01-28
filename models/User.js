@@ -6,9 +6,9 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
   },
   vanity: {
-    display_photo: { type: String, required: true },
+    display_photo: { type: String, required: false },
     cover_photo: { type: String, required: false },
-    badges: [mongoose.Schema.Type.ObjectId]
+    badges: [mongoose.Schema.Types.ObjectId]
   },
   info: {
     name: {
@@ -29,8 +29,8 @@ const userSchema = new mongoose.Schema({
     }
   },
   meta: {
-    created_at: { type: Date, required: true },
-    updated_at: { type: Date, required: true }
+    created_at: { type: Date, required: true, default: Date.now },
+    updated_at: { type: Date, required: true, default: Date.now }
   }
 })
 

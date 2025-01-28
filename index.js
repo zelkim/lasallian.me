@@ -9,15 +9,16 @@ const cors = require('cors')
 
 const app = express()
 app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 app.use(cors())
 
 // ##############
 // ##  ROUTES  ##
 // ##############
-
+app.use('/user', require('./routes/user'))
 
 // NOTE: STARTUP
-mongoose.connect(process.env.MONGODB_URI, () => {
+mongoose.connect(process.env.MONGODB_URI).then(() => {
   console.log(`[${process.env.APP_NAME}] Database connection established.`)
 })
 
