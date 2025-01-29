@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const User = require('../models/User')
+const session = require('../services/session')
 
 const create = async (req, res) => {
   try {
@@ -36,7 +37,7 @@ const authenticate = async (req, res) => {
       return res.status(400).send({ status: 'error', msg: errors })
 
     // - Account processing handler
-    const account = await User.findOne({ "credentials.email": user.email }).exec()
+    const account = await User.findOne({ "credentials.email": user.email }).lean().exec()
 
     if (!account)
       return res.status(400).send({ status: "error", msg: "Account not found." })
@@ -47,7 +48,15 @@ const authenticate = async (req, res) => {
     // obfuscate some account details
     account.credentials.password = ""
 
-    return res.status(200).send({ status: 'ok', user: account })
+    // create user session
+    const token = await session.create(account)
+    console.log(token)
+    if (!token)
+      return res.status(400).send({ status: 'error', msg: 'Could not create session.' });
+
+
+
+    return res.status(200).send({ status: 'ok', session_token: token, user: account })
   }
   catch (err) {
     console.log(err)

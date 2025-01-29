@@ -16,6 +16,7 @@ app.use(cors())
 // ##  ROUTES  ##
 // ##############
 app.use('/user', require('./routes/user'))
+app.get('/test', require('./services/session').validate, (req, res) => res.send('works'))
 
 // NOTE: STARTUP
 mongoose.connect(process.env.MONGODB_URI).then(() => {
