@@ -53,7 +53,7 @@ const authenticate = async (req, res) => {
     const token = await session.create(account)
     console.log(token)
     if (!token)
-      return res.status(400).send({ status: 'error', msg: 'Could not create session.' });
+      return res.status(400).send({ status: 'error', msg: 'Could not create session.' })
 
 
 
