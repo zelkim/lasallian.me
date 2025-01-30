@@ -4,7 +4,7 @@ const postSchema = new Schema({
     title: { type: String, required: true },
     content: { type: Object, required: true },
     media: [{ type: String }], // URL from Object Storage
-    type: { type: String, enum: ['post', 'project', 'event'] },
+    type: { type: String, enum: ['normal', 'project', 'event'] },
     meta: {
         created_at: { type: Date, required: true, default: Date.now },
         updated_at: { type: Date, required: true, default: Date.now }
