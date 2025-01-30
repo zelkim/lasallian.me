@@ -18,7 +18,7 @@ app.use(cors())
 app.use('/user', require('./routes/user'))
 app.get('/test', require('./services/session').validate, (req, res) => res.send('works'))
 
-// NOTE: STARTUP
+// -- Startup
 mongoose.connect(process.env.MONGODB_URI).then(() => {
   console.log(`[${process.env.APP_NAME}] Database connection established.`)
 })

@@ -5,10 +5,10 @@ const session = require('../services/session')
 const create = async (req, res) => {
   try {
     // -- Direct replacement of password with hashed password.
-    req.body.user.credentials.password = bcrypt.hashSync(req.body.user.credentials.password, 12)
+    req.body.credentials.password = bcrypt.hashSync(req.body.credentials.password, 12)
 
     // -- Insertion of data
-    User.create(req.body.user)
+    User.create(req.body)
       .then((createdUser) => {
         return res.status(201).send({ status: 'ok', user: createdUser })
       })
@@ -17,13 +17,14 @@ const create = async (req, res) => {
       })
   }
   catch (err) {
+    console.log(err)
     return res.status(400).send({ status: 'error', msg: err })
   }
 }
 
 const authenticate = async (req, res) => {
   try {
-    const user = req.body.user.credentials;
+    const user = req.body.credentials;
     const errors = []
 
     // api call error handler

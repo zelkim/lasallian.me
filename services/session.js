@@ -1,8 +1,22 @@
 const jwt = require('jsonwebtoken')
 
+/*
+ * session.create()
+ * @param user - The user object you receive after a mongoose query.
+ *               Use  .lean() as JWT only  accepts plain  javascript
+ *               objects.
+ *
+ * @return     - undefined or token. This is to allow if(!token)
+ *               statements.
+ *
+*/
 const create = async (user) => {
   try {
-    const token = jwt.sign(user, process.env.JWT_SECRET_KEY);
+    const token = jwt.sign(user, process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: process.env.CONFIG_TOKEN_EXPIRY
+      }
+    );
     return !token ? undefined : token;
   }
   catch (err) {
