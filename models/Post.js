@@ -1,11 +1,14 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
-const postSchema = new mongoose.Schema({
-    title:
-        credentials: {
-    email: { type: String, required: true },
-    password: { type: String, required: true },
-},
+const postSchema = new Schema({
+    title: { type: String, required: true },
+    content: { type: Object, required: true },
+    media: [{ type: String }],
+    meta: {
+        created_at: { type: Date, required: true, default: Date.now },
+        updated_at: { type: Date, required: true, default: Date.now }
+    },
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true }
 })
 
-module.exports = mongoose.model("posts", postSchema)
+export default mongoose.model("posts", postSchema)
