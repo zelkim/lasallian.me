@@ -5,7 +5,9 @@
 import express, { urlencoded, json } from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
-import config from 'dotenv';
+import { config } from 'dotenv';
+import userRouter from './routes/user.js';
+import { validateSession } from './services/session.js';
 
 config()
 
@@ -17,8 +19,8 @@ app.use(cors())
 // ##############
 // ##  ROUTES  ##
 // ##############
-app.use('/user', require('./routes/user').default)
-app.get('/test', require('./services/session').default.validate, (req, res) => res.send('works'))
+app.use('/user', userRouter)
+app.get('/test', validateSession, (req, res) => res.send('works'))
 
 // NOTE: STARTUP
 mongoose.connect(process.env.MONGODB_URI).then(() => {

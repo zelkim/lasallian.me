@@ -1,4 +1,4 @@
-import { sign, verify } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 /*
  * session.create()
@@ -10,18 +10,18 @@ import { sign, verify } from 'jsonwebtoken';
  *               statements.
  *
 */
-const create = async (user) => {
+export const createSession = async (user) => {
     try {
-        const token = sign(user, process.env.JWT_SECRET_KEY);
+        const token = jwt.sign(user, process.env.JWT_SECRET_KEY);
         return !token ? undefined : token;
     }
     catch (err) {
-        console.log(err);
+        console.error(err);
         return undefined;
     }
 }
 
-const validate = async (req, res, next) => {
+export const validateSession = async (req, res, next) => {
     try {
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1]; // Expecting "Bearer <token>"
@@ -29,7 +29,7 @@ const validate = async (req, res, next) => {
         if (!token)
             return res.status(401).json({ status: 'error', msg: 'Token not found.' })
 
-        verify(token, process.env.JWT_SECRET_KEY, (err, user) => {
+        jwt.verify(token, process.env.JWT_SECRET_KEY, (err, user) => {
             if (err)
                 return res.status(403).json({ status: 'error', msg: 'Invalid token.' });
 
@@ -42,7 +42,3 @@ const validate = async (req, res, next) => {
     }
 }
 
-export default {
-    create,
-    validate
-}

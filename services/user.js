@@ -1,14 +1,15 @@
 import { hashSync, compareSync } from 'bcrypt'
-import User from '../models/User'
-import session from '../services/session'
+import User from '../models/User.js'
+// import { create, validate } from '../services/session.js'
+import { createSession } from '../services/session.js'
 
-const create = async (req, res) => {
+export const create = async (req, res) => {
     try {
         // -- Direct replacement of password with hashed password.
-        req.body.user.credentials.password = hashSync(req.body.user.credentials.password, 12)
+        req.body.credentials.password = hashSync(req.body.credentials.password, 12)
 
         // -- Insertion of data
-        User.create(req.body.user)
+        User.create(req.body)
             .then((createdUser) => {
                 return res.status(201).send({ status: 'ok', user: createdUser })
             })
@@ -17,11 +18,12 @@ const create = async (req, res) => {
             })
     }
     catch (err) {
+        console.error(err)
         return res.status(400).send({ status: 'error', msg: err })
     }
 }
 
-const authenticate = async (req, res) => {
+export const authenticate = async (req, res) => {
     try {
         const user = req.body.user.credentials;
         const errors = []
@@ -49,7 +51,7 @@ const authenticate = async (req, res) => {
         account.credentials.password = ""
 
         // create user session
-        const token = await session.create(account)
+        const token = await createSession(account)
         console.log(token)
         if (!token)
             return res.status(400).send({ status: 'error', msg: 'Could not create session.' });
@@ -60,9 +62,4 @@ const authenticate = async (req, res) => {
         console.log(err)
         return res.status(400).send({ status: "error", msg: err })
     }
-}
-
-export default {
-    create,
-    authenticate
 }
