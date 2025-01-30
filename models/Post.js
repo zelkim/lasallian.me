@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const postSchema = new Schema({
+const postSchema = new mongoose.Schema({
     title: { type: String, required: true },
     content: { type: Object, required: true },
     media: [{ type: String }],
