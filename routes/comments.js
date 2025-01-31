@@ -4,8 +4,8 @@ import { getCommentFromSessionUser, getCommentFromPostId, createComment } from "
 
 const router = express.Router()
 
-router.post('/create', validateSession, createComment)
-router.post('/get-by-post', validateSession, getCommentFromPostId)
-router.post('/get-by-user', validateSession, getCommentFromSessionUser)
+router.post('/', validateSession, createComment)
+router.get('/post/:postid', validateSession, getCommentFromPostId)
+router.get('/user/:userid', validateSession, getCommentFromSessionUser)
 
 export default router

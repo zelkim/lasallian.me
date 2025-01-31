@@ -20,9 +20,9 @@ export const createComment = async (req, res) => {
 
 export const getCommentFromPostId = async (req, res) => {
 
-  const data = req.body;
+  const data = req.params;
 
-  Comment.find({ post: data.post_id })
+  Comment.find({ post: data.postid })
     .then((commentsList) => {
       res.status(200).send({ status: 'ok', data: commentsList });
     })
@@ -34,7 +34,6 @@ export const getCommentFromPostId = async (req, res) => {
 
 export const getCommentFromSessionUser = async (req, res) => {
 
-  const data = req.body;
   const user = req.user;
 
   Comment.find({ author: user._id })
