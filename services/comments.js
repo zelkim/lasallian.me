@@ -1,8 +1,21 @@
 import Comment from "../models/Comment.js"
+import Post from "../models/Post.js"
 
 export const createComment = async (req, res) => {
 
-  const data = req.body;
+  const data = req.body
+
+  try {
+    const postExists = await Post.findOne({ _id: data.post_id }).exec();
+
+    if (!postExists)
+      return res.status(400).send({ status: 'error', msg: 'Invalid post' });
+
+  }
+  catch (error) {
+    console.log(error)
+    return res.status(400).send({ status: 'error', msg: 'Invalid post' });
+  }
 
   Comment.create({
     author: req.user._id,
