@@ -1,13 +1,13 @@
 import Comment from "../models/Comment.js"
 
-export const create = async (req, res) => {
+export const createComment = async (req, res) => {
 
   const data = req.body;
 
   Comment.create({
-    user: req.user._id,
+    author: req.user._id,
+    post: data.post_id,
     content: data.content,
-    post: data.post_id
   })
     .then((comment) => {
       return res.status(200).send({ status: 'ok', msg: 'Comment created.', data: comment })
@@ -18,7 +18,7 @@ export const create = async (req, res) => {
     })
 }
 
-export const getFromPostId = async (req, res) => {
+export const getCommentFromPostId = async (req, res) => {
 
   const data = req.body;
 
@@ -32,12 +32,12 @@ export const getFromPostId = async (req, res) => {
     })
 }
 
-export const getFromUser = async (req, res) => {
+export const getCommentFromSessionUser = async (req, res) => {
 
   const data = req.body;
   const user = req.user;
 
-  Comment.find({ user: user._id })
+  Comment.find({ author: user._id })
     .then((commentsList) => {
       res.status(200).send({ status: 'ok', data: commentsList });
     })
@@ -49,4 +49,4 @@ export const getFromUser = async (req, res) => {
 }
 
 // TODO: Create when orgs have been defined
-export const getFromOrg = undefined
+export const getCommentFromOrg = undefined

@@ -7,6 +7,7 @@ import mongoose from 'mongoose'
 import cors from 'cors'
 import { config } from 'dotenv';
 import userRouter from './routes/user.js';
+import commentRouter from './routes/comments.js';
 import { validateSession } from './services/session.js';
 
 config()
@@ -20,6 +21,8 @@ app.use(cors())
 // ##  ROUTES  ##
 // ##############
 app.use('/user', userRouter)
+app.use('/comment', commentRouter)
+
 app.get('/test', validateSession, (req, res) => res.send('works'))
 
 // NOTE: STARTUP

@@ -25,7 +25,7 @@ export const create = async (req, res) => {
 
 export const authenticate = async (req, res) => {
     try {
-        const user = req.body.user.credentials;
+        const user = req.body.credentials;
         const errors = []
 
         // api call error handler
