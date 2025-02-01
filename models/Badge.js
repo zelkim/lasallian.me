@@ -4,6 +4,7 @@ const badgeSchema = new mongoose.Schema({
     badge_type: {enum: ['organization', 'user']},
     badge_key: {type: String},
     main_title: {type: String},
+    main_color: {type: String},
     sub_title: {type: String},
     sub_color: {type: String},
     badge_expiry: {type: Date}
