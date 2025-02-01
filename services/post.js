@@ -9,7 +9,7 @@ export const GetNormalPostById = async (req, res) => {
 
         const normalPost = await Post.findById(postId)
             .populate('author', 'vanity info')
-        // .populate('comments');
+            .populate('comments');
 
         return res.status(200).json(normalPost);
     } catch (error) {
@@ -30,7 +30,7 @@ export const GetAllNormalPostByAuthor = async (req, res) => {
 
         const userNormalPosts = await Post.find({ author: authorId })
             .populate('author', 'vanity info')
-        // .populate('comments');
+            .populate('comments');
 
         return res.status(200).json(userNormalPosts);
     } catch (err) {

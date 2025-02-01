@@ -30,7 +30,7 @@ export const authenticate = async (req, res) => {
 
         // api call error handler
         if (!user.email)
-            errors.push("'username' field is required")
+            errors.push("'email' field is required")
 
         if (!user.password)
             errors.push("'password' field is required")
