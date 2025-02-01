@@ -10,4 +10,4 @@ const badgeSchema = new mongoose.Schema({
     badge_expiry: {type: Date}
 })
 
-export default model("badge", badgeSchema)
+export default model("badges", badgeSchema)
