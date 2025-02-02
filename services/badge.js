@@ -25,12 +25,21 @@ export const CreateBadge = async (req, res) => {
     }
 }
 
-export const GetBadge = async (req, res) => {
+export const GetBadgeById = async (req, res) => {
     try {
         const badge_id = req.params.badge_id
         const badge = await Badge.findById(badge_id)
-        return res.status(200).json(badge);
+        return res.status(200).json(badge)
+    } catch (err) {
+        console.error('Error fetching badge data:', error);
+        return res.status(500).json({ error: 'An error occurred while fetching badge data.' });
+    }
+}
 
+export const GetAllBadges = async (req, res) => {
+    try {
+        const badges = await Badge.find(badge_id)
+        return res.status(200).json(badges)
     } catch (err) {
         console.error('Error fetching badge data:', error);
         return res.status(500).json({ error: 'An error occurred while fetching badge data.' });
