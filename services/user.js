@@ -3,6 +3,48 @@ import User from '../models/User.js'
 // import { create, validate } from '../services/session.js'
 import { createSession } from '../services/session.js'
 
+export const getSessionUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(400).json({ status: 'error', error: 'User not found.' });
+        }
+
+        return res.status(200).json(user);
+    } catch (err) {
+        console.error(err)
+        return res.status(400).json({ status: 'error', error: 'could not get user' });
+    }
+}
+
+export const getUserByEmail = async (req, res) => {
+    try {
+        const user = await User.findOne({ "credentials.email": req.body.email }).exec();
+
+        if (!user)
+            return res.status(400).json({ status: 'error', error: 'could not find user' })
+
+        return res.status(200).json(user);
+    } catch (err) {
+        console.error(err)
+        return res.status(400).json({ status: 'error', error: 'could not get user' })
+    }
+}
+
+export const getUserById = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).exec();
+
+        if (!user)
+            return res.status(400).json({ status: 'error', error: 'could not find user' })
+
+        return res.status(200).json(user);
+    } catch (err) {
+        console.error(err)
+        return res.status(400).json({ status: 'error', error: 'could not get user' });
+    }
+}
+
 export const create = async (req, res) => {
     try {
         // -- Direct replacement of password with hashed password.
