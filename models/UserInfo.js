@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose'
 
 const userInfoSchema = new Schema({
+    credentials: { type: Schema.Types.ObjectId, ref: 'user_credentials' },
     vanity: {
         display_photo: { type: String, required: false },
         cover_photo: { type: String, required: false },
