@@ -1,5 +1,5 @@
 import { hashSync, compareSync } from 'bcrypt'
-import User from '../models/User.js'
+import User from '../models/UserCredentials.js'
 // import { create, validate } from '../services/session.js'
 import { createSession } from '../services/session.js'
 
@@ -45,7 +45,24 @@ export const getUserById = async (req, res) => {
     }
 }
 
-export const create = async (req, res) => {
+export const createInfo = async (req, res) => {
+    try {
+        // -- Insertion of data
+        User.create(req.body)
+            .then((createdUser) => {
+                return res.status(201).send({ status: 'ok', user: createdUser })
+            })
+            .catch((error) => {
+                return res.status(400).send({ status: 'error', msg: error })
+            })
+    }
+    catch (err) {
+        console.error(err)
+        return res.status(400).send({ status: 'error', msg: err })
+    }
+}
+
+export const createCredentials = async (req, res) => {
     try {
         // -- Direct replacement of password with hashed password.
         req.body.credentials.password = hashSync(req.body.credentials.password, 12)

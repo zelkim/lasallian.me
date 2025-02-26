@@ -1,5 +1,5 @@
 import Post from '../models/Post.js'
-import User from '../models/User.js'
+import UserInfo from '../models/UserInfo.js'
 
 // expects id as param
 export const GetNormalPostById = async (req, res) => {
@@ -22,7 +22,7 @@ export const GetAllNormalPostByAuthor = async (req, res) => {
     try {
         const authorId = req.user._id
 
-        const user = await User.findById(authorId);
+        const user = await UserInfo.findById(authorId);
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });
         }
@@ -45,7 +45,7 @@ export const CreateNormalPost = async (req, res) => {
         // get authenticated user (assume it is stored in session)
         const authorId = req.user._id
 
-        const user = await User.findById(authorId);
+        const user = await UserInfo.findById(authorId);
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });
         }
@@ -126,7 +126,7 @@ export const DeletePost = async (req, res) => {
         // get authenticated user (assume it is stored in session)
         const authorId = req.user._id
 
-        const user = await User.findById(authorId);
+        const user = await UserInfo.findById(authorId);
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });
         }

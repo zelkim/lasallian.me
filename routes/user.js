@@ -1,11 +1,12 @@
 import express from 'express'
 import { validateSession } from '../services/session.js'
-import { create, authenticate, getUserById, getSessionUser, getUserByEmail } from '../services/user.js'
+import { createInfo, createCredentials, authenticate, getUserById, getSessionUser, getUserByEmail } from '../services/user.js'
 
 const router = express.Router()
 
 // - Authentication routes
-router.post('/register', create)
+router.post('/register', createInfo)
+router.post('/setup', createCredentials)
 router.post('/login', authenticate)
 
 // - CRUD routes
