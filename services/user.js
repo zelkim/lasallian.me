@@ -5,13 +5,23 @@ import { createSession } from '../services/session.js'
 
 export const getSessionUser = async (req, res) => {
     try {
-        const credentials = await UserCredentials.findById(req.user._id).populate('info').exec();
+        const credentials = await UserCredentials.findById(req.user._id).exec();
         if (!credentials) {
             return res.status(400).json({ status: 'error', error: 'User not found.' });
         }
 
-        credentials.credentials.password = undefined;
-        return res.status(200).json(credentials);
+        const userInfo = await UserInfo.findOne({ credentials: credentials._id }).exec();
+        if (!userInfo) {
+            return res.status(400).json({ status: 'error', error: 'User info not found.' });
+        }
+
+        const user = {
+            credentials: {
+                email: credentials.credentials.email
+            },
+            ...userInfo.toObject()
+        };
+        return res.status(200).json(user);
     } catch (err) {
         console.error(err)
         return res.status(400).json({ status: 'error', error: 'could not get user' });
@@ -20,13 +30,24 @@ export const getSessionUser = async (req, res) => {
 
 export const getUserByEmail = async (req, res) => {
     try {
-        const credentials = await UserCredentials.findOne({ "credentials.email": req.body.email }).populate('info').exec();
-
+        const credentials = await UserCredentials.findOne({ "credentials.email": req.body.email }).exec();
         if (!credentials)
             return res.status(400).json({ status: 'error', error: 'could not find user' })
 
-        credentials.credentials.password = undefined;
-        return res.status(200).json(credentials);
+        const userInfo = await UserInfo.findOne({ credentials: credentials._id }).exec();
+        if (!userInfo) {
+            return res.status(400).json({ status: 'error', error: 'User info not found' });
+        }
+
+        const user = {
+            credentials: {
+                email: credentials.credentials.email
+            },
+            ...userInfo.toObject()
+        };
+
+
+        return res.status(200).json(user);
     } catch (err) {
         console.error(err)
         return res.status(400).json({ status: 'error', error: 'could not get user' })
@@ -35,68 +56,64 @@ export const getUserByEmail = async (req, res) => {
 
 export const getUserById = async (req, res) => {
     try {
-        const credentials = await UserCredentials.findById(req.params.id).populate('info').exec();
-
+        const credentials = await UserCredentials.findById(req.params.id).exec();
         if (!credentials)
             return res.status(400).json({ status: 'error', error: 'could not find user' })
 
-        credentials.credentials.password = undefined;
-        return res.status(200).json(credentials);
+        const userInfo = await UserInfo.findOne({ credentials: credentials._id }).exec();
+        if (!userInfo) {
+            return res.status(400).json({ status: 'error', error: 'User info not found' });
+        }
+
+        const user = {
+            credentials: {
+                email: credentials.credentials.email
+            },
+            ...userInfo.toObject()
+        };
+
+        return res.status(200).json(user);
     } catch (err) {
         console.error(err)
         return res.status(400).json({ status: 'error', error: 'could not get user' });
     }
 }
 
-export const createInfo = async (req, res) => {
-    try {
-        // -- Insertion of data
-        UserInfo.create(req.body)
-            .then((createdUser) => {
-                return res.status(201).send({ status: 'ok', user: createdUser })
-            })
-            .catch((error) => {
-                return res.status(400).send({ status: 'error', msg: error })
-            })
-    }
-    catch (err) {
-        console.error(err)
-        return res.status(400).send({ status: 'error', msg: err })
-    }
-}
-
 export const createCredentials = async (req, res) => {
     try {
-        // check if user info exists
-        const userInfo = await UserInfo.findById(req.body.info);
-        if (!userInfo) {
-            return res.status(400).json({
-                status: 'error',
-                msg: 'User info not found'
-            });
-        }
-
         const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
-        const valid = req.body.credentials.password.match(passwordRegex)
-        if (!valid) {
+        if (!req.body.credentials.password.match(passwordRegex)) {
             return res.status(400).json({
-                status: 'error',
-                msg: "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character"
+                status: "error",
+                error: "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character"
             });
         }
 
-        // -- Direct replacement of password with hashed password.
-        req.body.credentials.password = hashSync(req.body.credentials.password, 12)
+        const existingUser = await UserCredentials.findOne({ "credentials.email": req.body.credentials.email }).exec()
+        if (existingUser) {
+            return res.status(400).json({
+                status: "error",
+                error: "Email already registered"
+            })
+        }
 
-        // -- Insertion of data
-        const userCredentials = await UserCredentials.create(req.body);
+        const credentials = await UserCredentials.create({
+            credentials: {
+                email: req.body.credentials.email,
+                password: hashSync(req.body.credentials.password, 12)
+            },
+            meta: {
+                created_at: new Date(),
+                updated_at: new Date()
+            }
+        });
 
-        const populatedCredentials = await userCredentials.populate('info');
-        populatedCredentials.credentials.password = undefined;
+        const token = await createSession(credentials);
 
         return res.status(201).json({
             status: 'ok',
-            user: populatedCredentials
+            session_token: token,
+            credentials
         });
     }
     catch (err) {
@@ -105,39 +122,63 @@ export const createCredentials = async (req, res) => {
     }
 }
 
+export const createInfo = async (req, res) => {
+    try {
+        const userInfo = await UserInfo.create({
+            vanity: req.body.vanity,
+            info: req.body.info,
+            meta: {
+                created_at: new Date(),
+                updated_at: new Date()
+            },
+            credentials: req.user._id // we get this from validateSession (sets req.user that stores authenticated user's credentials._id from UserCredentials)
+        });
+
+        return res.status(201).json({ status: 'ok', user: userInfo });
+    } catch (err) {
+        console.error(err)
+        return res.status(400).json({ status: 'error', error: 'Could not create user info' });
+    }
+}
+
 export const authenticate = async (req, res) => {
     try {
-        const user = req.body.credentials;
-        if (!user.email || !user.password) {
+        const { email, password } = req.body.credentials;
+        if (!email || !password) {
             return res.status(400).json({
                 status: 'error',
-                msg: 'Email and password are required'
+                error: 'Email and password are required'
             });
         }
 
-        // - Account processing handler
-        const account = await UserCredentials.findOne({ "credentials.email": user.email }).populate('info').lean().exec();
+        const credentials = await UserCredentials.findOne({ "credentials.email": email }).exec();
+        if (!credentials) {
+            return res.status(400).json({ status: "error", error: "Account not found." });
+        }
 
-        if (!account)
-            return res.status(400).json({ status: "error", msg: "Account not found." })
+        if (!compareSync(password, credentials.credentials.password)) {
+            return res.status(400).json({ status: 'error', error: 'Invalid password.' });
+        }
 
-        if (!compareSync(user.password, account.credentials.password))
-            return res.status(400).json({ status: 'error', msg: 'Invalid password.' })
+        const userInfo = await UserInfo.findOne({ credentials: credentials._id }).exec();
+        const user = {
+            credentials: {
+                _id: credentials._id,
+                email: credentials.credentials.email
+            },
+            ...(userInfo ? userInfo.toObject() : {})
+        };
 
-        // obfuscate some account details
-        account.credentials.password = ""
-
-        // create user session
-        const token = await createSession(account)
-        console.log(token)
-        if (!token)
-            return res.status(400).json({ status: 'error', msg: 'Could not create session.' });
+        const token = await createSession(user);
+        if (!token) {
+            return res.status(400).json({ status: 'error', error: 'Could not create session.' });
+        }
 
         return res.status(200).json({
             status: 'ok',
             session_token: token,
-            user: account
-        })
+            user
+        });
     }
     catch (err) {
         console.log(err)
