@@ -1,7 +1,6 @@
 import { hashSync, compareSync } from 'bcrypt'
 import UserCredentials from '../models/UserCredentials.js'
 import UserInfo from '../models/UserInfo.js'
-// import { create, validate } from '../services/session.js'
 import { createSession } from '../services/session.js'
 
 export const getSessionUser = async (req, res) => {
@@ -76,6 +75,16 @@ export const createCredentials = async (req, res) => {
                 msg: 'User info not found'
             });
         }
+
+        const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+        const valid = req.body.credentials.password.match(passwordRegex)
+        if (!valid) {
+            return res.status(400).json({
+                status: 'error',
+                msg: "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character"
+            });
+        }
+
         // -- Direct replacement of password with hashed password.
         req.body.credentials.password = hashSync(req.body.credentials.password, 12)
 
