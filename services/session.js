@@ -12,7 +12,12 @@ import jwt from 'jsonwebtoken';
 */
 export const createSession = async (user) => {
     try {
-        const token = jwt.sign(user, process.env.JWT_SECRET_KEY);
+        const payload = {
+            _id: user._id,
+            email: user.credentials.email,
+            ...user
+        };
+        const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
         return !token ? undefined : token;
     }
     catch (err) {
@@ -33,6 +38,7 @@ export const validateSession = async (req, res, next) => {
             if (err)
                 return res.status(403).json({ status: 'error', msg: 'Invalid token.' });
 
+            console.log(user)
             req.user = user; // Save the user info for the next middleware
             next();
         });
