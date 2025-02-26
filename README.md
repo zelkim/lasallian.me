@@ -17,15 +17,17 @@ node index.js
 
 ### POST `/user/register`
 
+* Creates user credentials and links to user info.
 * Follows the `models/UserCredentials` schema.
 * sample request body:
 
 ```json
 {
-  "credentials": {
-    "email": "zel_kim@dlsu.edu.ph",
-    "password": "usapnatayoulitpls:(" 
-  }
+    "credentials": {
+        "email": "zel_kim@dlsu.edu.ph",
+        "password": "usapnatayoulitpls:(" 
+    }
+    "info": "679b08ef4c305e30723ea908"
 }
 ```
 
@@ -37,20 +39,6 @@ node index.js
         "credentials": {
             "email": "zel_kim@dlsu.edu.ph",
             "password": "..."
-        },
-        "vanity": {
-            "badges": []
-        },
-        "info": {
-            "name": {
-                "first": "Zel",
-                "last": "Kim"
-            },
-            "batchid": "123",
-            "birthdate": "2004-11-10T00:00:00.000Z",
-            "links": {
-                "other": []
-            }
         },
         "meta": {
             "created_at": "2025-01-30T05:06:55.095Z",
@@ -69,14 +57,28 @@ node index.js
 
 ```json
 {
-  "info": {
-    "name": {
-      "first": "Zel",
-      "last": "Kim"
+    "vanity": {
+        "display_photo": "photolink",
+        "cover_photo": "photolink",
+        "badges": []
     },
-    "batchid": "123",
-    "birthdate": "2004-11-10"
-  }
+    "info": {
+        "name": {
+            "first": "Zel",
+            "last": "Kim"
+        },
+        "username": "@zelkim9",
+        "batchid": "123",
+        "birthdate": "2004-11-10T00:00:00.000Z",
+        "program": "BSCS-ST",
+        "bio": "something bio",
+        "links": {
+            "linkedin": "linkany",
+            "facebook": "linkany",
+            "instagram": "linkany",
+            "other": []
+        }
+    },
 }
 ```
 
@@ -85,11 +87,9 @@ node index.js
 {
     "status": "ok",
     "user": {
-        "credentials": {
-            "email": "zel_kim@dlsu.edu.ph",
-            "password": "..."
-        },
         "vanity": {
+            "display_photo": "photolink",
+            "cover_photo": "photolink",
             "badges": []
         },
         "info": {
@@ -97,9 +97,15 @@ node index.js
                 "first": "Zel",
                 "last": "Kim"
             },
+            "username": "@zelkim9",
             "batchid": "123",
             "birthdate": "2004-11-10T00:00:00.000Z",
+            "program": "BSCS-ST",
+            "bio": "something bio",
             "links": {
+                "linkedin": "linkany",
+                "facebook": "linkany",
+                "instagram": "linkany",
                 "other": []
             }
         },
@@ -114,6 +120,8 @@ node index.js
 ```
 
 ### POST `/user/login`
+
+* Authenticates user and returns session token to be used for Authorization Header.
 
 - example request:
 ```bash
