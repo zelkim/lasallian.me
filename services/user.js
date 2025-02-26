@@ -5,19 +5,19 @@ import { createSession } from '../services/session.js'
 
 export const getSessionUser = async (req, res) => {
     try {
-        const credentials = await UserCredentials.findById(req.user._id).exec();
-        if (!credentials) {
+        const user_credentials = await UserCredentials.findById(req.user._id).exec();
+        if (!user_credentials) {
             return res.status(400).json({ status: 'error', error: 'User not found.' });
         }
 
-        const userInfo = await UserInfo.findOne({ credentials: credentials._id }).exec();
+        const userInfo = await UserInfo.findOne({ credentials: user_credentials._id }).exec();
         if (!userInfo) {
             return res.status(400).json({ status: 'error', error: 'User info not found.' });
         }
 
         const user = {
             credentials: {
-                email: credentials.credentials.email
+                email: user_credentials.credentials.email
             },
             ...userInfo.toObject()
         };
@@ -30,18 +30,18 @@ export const getSessionUser = async (req, res) => {
 
 export const getUserByEmail = async (req, res) => {
     try {
-        const credentials = await UserCredentials.findOne({ "credentials.email": req.body.email }).exec();
-        if (!credentials)
+        const user_credentials = await UserCredentials.findOne({ "credentials.email": req.body.email }).exec();
+        if (!user_credentials)
             return res.status(400).json({ status: 'error', error: 'could not find user' })
 
-        const userInfo = await UserInfo.findOne({ credentials: credentials._id }).exec();
+        const userInfo = await UserInfo.findOne({ credentials: user_credentials._id }).exec();
         if (!userInfo) {
             return res.status(400).json({ status: 'error', error: 'User info not found' });
         }
 
         const user = {
             credentials: {
-                email: credentials.credentials.email
+                email: user_credentials.credentials.email
             },
             ...userInfo.toObject()
         };
@@ -56,18 +56,18 @@ export const getUserByEmail = async (req, res) => {
 
 export const getUserById = async (req, res) => {
     try {
-        const credentials = await UserCredentials.findById(req.params.id).exec();
-        if (!credentials)
+        const user_credentials = await UserCredentials.findById(req.params.id).exec();
+        if (!user_credentials)
             return res.status(400).json({ status: 'error', error: 'could not find user' })
 
-        const userInfo = await UserInfo.findOne({ credentials: credentials._id }).exec();
+        const userInfo = await UserInfo.findOne({ credentials: user_credentials._id }).exec();
         if (!userInfo) {
             return res.status(400).json({ status: 'error', error: 'User info not found' });
         }
 
         const user = {
             credentials: {
-                email: credentials.credentials.email
+                email: user_credentials.credentials.email
             },
             ...userInfo.toObject()
         };
@@ -113,7 +113,7 @@ export const createCredentials = async (req, res) => {
         return res.status(201).json({
             status: 'ok',
             session_token: token,
-            credentials
+            user: credentials
         });
     }
     catch (err) {
@@ -151,20 +151,22 @@ export const authenticate = async (req, res) => {
             });
         }
 
-        const credentials = await UserCredentials.findOne({ "credentials.email": email }).exec();
-        if (!credentials) {
+        const user_credentials = await UserCredentials.findOne({ "credentials.email": email }).exec();
+        if (!user_credentials) {
             return res.status(400).json({ status: "error", error: "Account not found." });
         }
 
-        if (!compareSync(password, credentials.credentials.password)) {
+        if (!compareSync(password, user_credentials.credentials.password)) {
             return res.status(400).json({ status: 'error', error: 'Invalid password.' });
         }
 
-        const userInfo = await UserInfo.findOne({ credentials: credentials._id }).exec();
+        // TODO: invalidate the last session (if it exists) before creating a new one for consistency
+
+        const userInfo = await UserInfo.findOne({ credentials: user_credentials._id }).exec();
         const user = {
             credentials: {
-                _id: credentials._id,
-                email: credentials.credentials.email
+                _id: user_credentials._id,
+                email: user_credentials.credentials.email
             },
             ...(userInfo ? userInfo.toObject() : {})
         };
