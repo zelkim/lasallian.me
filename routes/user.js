@@ -5,8 +5,8 @@ import { createInfo, createCredentials, authenticate, getUserById, getSessionUse
 const router = express.Router()
 
 // - Authentication routes
-router.post('/register', createInfo)
-router.post('/setup', createCredentials)
+router.post('/register', createCredentials)
+router.post('/setup', validateSession, createInfo)
 router.post('/login', authenticate)
 
 // - CRUD routes
