@@ -1,16 +1,18 @@
 import { hashSync, compareSync } from 'bcrypt'
-import User from '../models/UserCredentials.js'
+import UserCredentials from '../models/UserCredentials.js'
+import UserInfo from '../models/UserInfo.js'
 // import { create, validate } from '../services/session.js'
 import { createSession } from '../services/session.js'
 
 export const getSessionUser = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id);
-        if (!user) {
+        const credentials = await UserCredentials.findById(req.user._id).populate('info').exec();
+        if (!credentials) {
             return res.status(400).json({ status: 'error', error: 'User not found.' });
         }
 
-        return res.status(200).json(user);
+        credentials.credentials.password = undefined;
+        return res.status(200).json(credentials);
     } catch (err) {
         console.error(err)
         return res.status(400).json({ status: 'error', error: 'could not get user' });
@@ -19,12 +21,13 @@ export const getSessionUser = async (req, res) => {
 
 export const getUserByEmail = async (req, res) => {
     try {
-        const user = await User.findOne({ "credentials.email": req.body.email }).exec();
+        const credentials = await UserCredentials.findOne({ "credentials.email": req.body.email }).populate('info').exec();
 
-        if (!user)
+        if (!credentials)
             return res.status(400).json({ status: 'error', error: 'could not find user' })
 
-        return res.status(200).json(user);
+        credentials.credentials.password = undefined;
+        return res.status(200).json(credentials);
     } catch (err) {
         console.error(err)
         return res.status(400).json({ status: 'error', error: 'could not get user' })
@@ -33,12 +36,13 @@ export const getUserByEmail = async (req, res) => {
 
 export const getUserById = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id).exec();
+        const credentials = await UserCredentials.findById(req.params.id).populate('info').exec();
 
-        if (!user)
+        if (!credentials)
             return res.status(400).json({ status: 'error', error: 'could not find user' })
 
-        return res.status(200).json(user);
+        credentials.credentials.password = undefined;
+        return res.status(200).json(credentials);
     } catch (err) {
         console.error(err)
         return res.status(400).json({ status: 'error', error: 'could not get user' });
@@ -48,7 +52,7 @@ export const getUserById = async (req, res) => {
 export const createInfo = async (req, res) => {
     try {
         // -- Insertion of data
-        User.create(req.body)
+        UserInfo.create(req.body)
             .then((createdUser) => {
                 return res.status(201).send({ status: 'ok', user: createdUser })
             })
@@ -64,47 +68,52 @@ export const createInfo = async (req, res) => {
 
 export const createCredentials = async (req, res) => {
     try {
+        // check if user info exists
+        const userInfo = await UserInfo.findById(req.body.info);
+        if (!userInfo) {
+            return res.status(400).json({
+                status: 'error',
+                msg: 'User info not found'
+            });
+        }
         // -- Direct replacement of password with hashed password.
         req.body.credentials.password = hashSync(req.body.credentials.password, 12)
 
         // -- Insertion of data
-        User.create(req.body)
-            .then((createdUser) => {
-                return res.status(201).send({ status: 'ok', user: createdUser })
-            })
-            .catch((error) => {
-                return res.status(400).send({ status: 'error', msg: error })
-            })
+        const userCredentials = await UserCredentials.create(req.body);
+
+        const populatedCredentials = await userCredentials.populate('info');
+        populatedCredentials.credentials.password = undefined;
+
+        return res.status(201).json({
+            status: 'ok',
+            user: populatedCredentials
+        });
     }
     catch (err) {
         console.error(err)
-        return res.status(400).send({ status: 'error', msg: err })
+        return res.status(400).send({ status: 'error', msg: 'Could not create user credentials' })
     }
 }
 
 export const authenticate = async (req, res) => {
     try {
         const user = req.body.credentials;
-        const errors = []
-
-        // api call error handler
-        if (!user.email)
-            errors.push("'email' field is required")
-
-        if (!user.password)
-            errors.push("'password' field is required")
-
-        if (errors.length > 0)
-            return res.status(400).send({ status: 'error', msg: errors })
+        if (!user.email || !user.password) {
+            return res.status(400).json({
+                status: 'error',
+                msg: 'Email and password are required'
+            });
+        }
 
         // - Account processing handler
-        const account = await User.findOne({ "credentials.email": user.email }).lean().exec()
+        const account = await UserCredentials.findOne({ "credentials.email": user.email }).populate('info').lean().exec();
 
         if (!account)
-            return res.status(400).send({ status: "error", msg: "Account not found." })
+            return res.status(400).json({ status: "error", msg: "Account not found." })
 
         if (!compareSync(user.password, account.credentials.password))
-            return res.status(400).send({ status: 'error', msg: 'Invalid password.' })
+            return res.status(400).json({ status: 'error', msg: 'Invalid password.' })
 
         // obfuscate some account details
         account.credentials.password = ""
@@ -113,12 +122,16 @@ export const authenticate = async (req, res) => {
         const token = await createSession(account)
         console.log(token)
         if (!token)
-            return res.status(400).send({ status: 'error', msg: 'Could not create session.' });
+            return res.status(400).json({ status: 'error', msg: 'Could not create session.' });
 
-        return res.status(200).send({ status: 'ok', session_token: token, user: account })
+        return res.status(200).json({
+            status: 'ok',
+            session_token: token,
+            user: account
+        })
     }
     catch (err) {
         console.log(err)
-        return res.status(400).send({ status: "error", msg: err })
+        return res.status(400).send({ status: "error", msg: 'Authentication failed' })
     }
 }

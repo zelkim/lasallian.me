@@ -8,6 +8,11 @@ const userCredentialsSchema = new Schema({
     meta: {
         created_at: { type: Date, required: true, default: Date.now },
         updated_at: { type: Date, required: true, default: Date.now }
+    },
+    info: { type: Schema.Types.ObjectId, ref: 'user_info' },
+    meta: {
+        created_at: { type: Date, required: true, default: Date.now },
+        updated_at: { type: Date, required: true, default: Date.now }
     }
 })
 
