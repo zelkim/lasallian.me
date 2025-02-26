@@ -160,7 +160,7 @@ export const authenticate = async (req, res) => {
             return res.status(400).json({ status: 'error', error: 'Invalid password.' });
         }
 
-        // TODO: invalidate the last session (if it exists) before creating a new one for consistency
+        // TODO: maybe invalidate the last session (if it exists) before creating a new one for consistency or just set expiry time to shorter time than 1 hour
 
         const userInfo = await UserInfo.findOne({ credentials: user_credentials._id }).exec();
         const user = {

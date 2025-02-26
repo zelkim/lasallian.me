@@ -47,4 +47,3 @@ export const validateSession = async (req, res, next) => {
         return res.status(400).send({ status: 'error', msg: err })
     }
 }
-
