@@ -8,12 +8,14 @@ node index.js
 
 ### File Structure
 
-* `index.js` - the main entrypoint of the API
-* `routes/` - all http-related things, uses services, return status codes
-* `services/` (also known as `handlers`) - all business logic, uses db operations (CRUD), map db objects to models
-* `models/` - all domain-related objects
+- `index.js` - the main entrypoint of the API
+- `routes/` - all http-related things, uses services, return status codes
+- `services/` (also known as `handlers`) - all business logic, uses db operations (CRUD), map db objects to models
+- `models/` - all domain-related objects
 
-## Endpoints
+# API Documentation
+
+## Authentication
 
 ### POST `/user/register`
 
@@ -34,6 +36,7 @@ node index.js
 ```
 
 - via `curl`:
+
 ```bash
 curl -X POST localhost:3000/user/register -H "Content-Type: application/json" -d '{"credentials": {"email": "test123@dlsu.edu.ph", "password": "Qwerty123!"}}'
 ```
@@ -122,10 +125,10 @@ curl -X POST localhost:3000/user/setup \
 }'
 ```
 
-* sample response:
+- sample response:
 
 > [!NOTE]
-> the `credentials` field here should match the credentials' `_id` returned on `/user/register` or `/user/login` 
+> the `credentials` field here should match the credentials' `_id` returned on `/user/register` or `/user/login`
 
 ```json
 {
@@ -215,6 +218,8 @@ curl -X POST localhost:3000/user/login -H "Content-Type: application/json" -d \
   }
 }
 ```
+
+# Posts
 
 ### GET /post/all
 
@@ -346,6 +351,7 @@ curl -X GET localhost:3000/post/all
 - Gets all normal posts made by the current authenticated user
 
 - example request:
+
 ```bash
 curl -X GET localhost:3000/post/normal -H "Authorization: Bearer <token>"
 ```
@@ -432,6 +438,7 @@ curl -X GET localhost:3000/post/normal -H "Authorization: Bearer <token>"
 - needs `token`
 
 - example request:
+
 ```bash
 curl -X POST localhost:3000/post/normal -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d \
 '{"title": "POST by test101", "content": "yes yes content example something"}'
@@ -461,6 +468,7 @@ curl -X POST localhost:3000/post/normal -H "Content-Type: application/json" -H "
 - gets specific post, given the post `_id`
 
 - example request:
+
 ```bash
 curl -X GET localhost:3000/post/normal/<post-id> -H "Authorization: Bearer <token>"
 
@@ -507,7 +515,6 @@ curl -X GET localhost:3000/post/normal/67c6e2814911dd82e8dabb94 -H "Authorizatio
 }
 ```
 
-
 ### PUT `/post/normal/:id`
 
 - updates a specific post.
@@ -543,6 +550,7 @@ curl -X PUT "http://localhost:3000/post/normal/<post-id>" \
 ```
 
 - response **without** the optional `media` field:
+
 ```json
 {
   "status": "success",
@@ -584,7 +592,8 @@ curl -X PUT "http://localhost:3000/post/normal/<post-id>" \
     "__v": 0
   }
 }
-
+```
+- response **with** the optional `media` field
 
 ```
 
@@ -602,9 +611,7 @@ curl -X PUT "http://localhost:3000/post/normal/<post-id>" \
     "content": {
       "text": "Updated post content"
     },
-    "media": [
-      "url string here"
-    ],
+    "media": ["url string here"],
     "author": {
       "vanity": {
         "display_photo": "photolink",
@@ -639,6 +646,7 @@ curl -X PUT "http://localhost:3000/post/normal/<post-id>" \
 - deletes a specific post, given the post `_id` path parameter
 
 - example request:
+
 ```bash
 curl -X DELETE localhost:3000/post/normal/<post-id> -H "Authorization: Bearer <token>"
 ```
@@ -648,5 +656,196 @@ curl -X DELETE localhost:3000/post/normal/<post-id> -H "Authorization: Bearer <t
 {
   "status": "success",
   "message": "Post deleted successfully."
+}
+```
+
+# Organization
+
+### Create a New Organization
+
+**Endpoint:**
+
+```
+POST /org/
+```
+
+**Description:**
+Creates a new organization.
+
+**Request Body:**
+
+```json
+{
+  "name": "string",
+  "acronym": "string",
+  "description": "string",
+  "contact": {
+    "email": "string",
+    "phone": "string"
+  },
+  "socials": {
+    "facebook": "string",
+    "twitter": "string",
+    "website": "string"
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "_id": "string",
+  "name": "string",
+  "acronym": "string",
+  "description": "string",
+  "contact": {
+    "email": "string",
+    "phone": "string"
+  },
+  "socials": {
+    "facebook": "string",
+    "twitter": "string",
+    "website": "string"
+  }
+}
+```
+
+---
+
+### Get an Organization by ID
+
+**Endpoint:**
+
+```
+GET /org/:id
+```
+
+**Description:**
+Retrieves an organization by its unique ID.
+
+**Response:**
+
+```json
+{
+  "_id": "string",
+  "name": "string",
+  "acronym": "string",
+  "description": "string",
+  "contact": {
+    "email": "string",
+    "phone": "string"
+  },
+  "socials": {
+    "facebook": "string",
+    "twitter": "string",
+    "website": "string"
+  }
+}
+```
+
+---
+
+### Get an Organization by Acronym
+
+**Endpoint:**
+
+```
+GET /org/acronym/:acronym
+```
+
+**Description:**
+Retrieves an organization by its acronym.
+
+**Response:**
+
+```json
+{
+  "_id": "string",
+  "name": "string",
+  "acronym": "string",
+  "description": "string",
+  "contact": {
+    "email": "string",
+    "phone": "string"
+  },
+  "socials": {
+    "facebook": "string",
+    "twitter": "string",
+    "website": "string"
+  }
+}
+```
+
+---
+
+### Update an Organization
+
+**Endpoint:**
+
+```
+PUT /org/:id
+```
+
+**Description:**
+Updates an existing organization.
+
+**Request Body:** _(Only include fields to update)_
+
+```json
+{
+  "name": "string",
+  "acronym": "string",
+  "description": "string",
+  "contact": {
+    "email": "string",
+    "phone": "string"
+  },
+  "socials": {
+    "facebook": "string",
+    "twitter": "string",
+    "website": "string"
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "_id": "string",
+  "name": "string",
+  "acronym": "string",
+  "description": "string",
+  "contact": {
+    "email": "string",
+    "phone": "string"
+  },
+  "socials": {
+    "facebook": "string",
+    "twitter": "string",
+    "website": "string"
+  }
+}
+```
+
+---
+
+### Delete an Organization
+
+**Endpoint:**
+
+```
+DELETE /org/:id
+```
+
+**Description:**
+Deletes an organization by its unique ID.
+
+**Response:**
+
+```json
+{
+  "message": "Organization deleted successfully"
 }
 ```
