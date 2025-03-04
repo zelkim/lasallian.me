@@ -14,6 +14,39 @@ export const GetAllPosts = async (req, res) => {
     }
 }
 
+export const GetProjectPosts = async (req, res) => {
+    try {
+        const posts = await Post.find({ type: POST_TYPES.PROJECT })
+            .populate('author', 'vanity info')
+            .populate('comments')
+
+        return res.status(200).json(posts);
+    } catch (error) {
+        console.error('Error fetching project posts:', error);
+        return res.status(500).json({ error: 'An error occurred while fetching project posts.' });
+    }
+}
+
+export const GetEventPosts = async (req, res) => {
+    try {
+        const posts = await Post.find({
+            type: POST_TYPES.EVENT,
+            $or: [
+                { visibility: 'public' },
+                { organization: req.user.organization } // Assuming user has organization field
+            ]
+        })
+            .populate('author', 'vanity info')
+            .populate('comments')
+            .populate('organization')
+
+        return res.status(200).json(posts);
+    } catch (error) {
+        console.error('Error fetching event posts:', error);
+        return res.status(500).json({ error: 'An error occurred while fetching event posts.' });
+    }
+}
+
 // expects id as param
 export const GetNormalPostById = async (req, res) => {
     try {
@@ -53,7 +86,7 @@ export const GetAllNormalPostByAuthor = async (req, res) => {
 
 
 // expects: title, content, media (optional for now)
-export const CreateNormalPost = async (req, res) => {
+export const CreatePost = async (req, res) => {
     try {
         // get authenticated user (assume it is stored in session)
         const authorId = req.user._id
@@ -64,13 +97,26 @@ export const CreateNormalPost = async (req, res) => {
         }
 
         // TODO: add req.body check for required fields
+        if (!Object.values(POST_TYPES).includes(req.body.type)) {
+            return res.status(400).json({ error: 'Invalid post type.' });
+        }
+
+        // Validate event post requirements
+        if (req.body.type === POST_TYPES.EVENT) {
+            if (!req.body.organization) {
+                return res.status(400).json({ error: 'Event posts require an organization.' });
+            }
+        }
 
         // create new post
         const post = new Post({
             title: req.body.title,
             content: req.body.content,
-            // NOTE: no media for now
+            media: req.body.media || [],
+            type: req.body.type,
+            visibility: req.body.visibility || 'public',
             author: authorId,
+            // organization: req.body.organization,
             meta: {
                 created_at: new Date,
                 updated_at: new Date
