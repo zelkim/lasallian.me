@@ -1,5 +1,12 @@
 import express from 'express'
-import { GetAllPosts, GetNormalPostById, GetAllNormalPostByAuthor, CreateNormalPost, UpdatePost, DeletePost } from '../services/post.js'
+import {
+    GetAllPosts,
+    GetNormalPostById,
+    GetAllNormalPostByAuthor,
+    CreateNormalPost,
+    UpdatePost,
+    DeletePost
+} from '../services/post.js'
 import { validateSession } from '../services/session.js'
 
 const router = express.Router()
