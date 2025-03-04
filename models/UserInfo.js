@@ -1,10 +1,7 @@
 import { Schema, model } from 'mongoose'
 
-const userSchema = new Schema({
-    credentials: {
-        email: { type: String, required: true },
-        password: { type: String, required: true },
-    },
+const userInfoSchema = new Schema({
+    credentials: { type: Schema.Types.ObjectId, ref: 'user_credentials' },
     vanity: {
         display_photo: { type: String, required: false },
         cover_photo: { type: String, required: false },
@@ -17,9 +14,10 @@ const userSchema = new Schema({
             last: { type: String, required: true },
             suffix: { type: String, required: false }
         },
+        username: { type: String, required: true },
         batchid: { type: String, required: true },
-        nickname: { type: String, required: false },
-        birthdate: { type: Date, required: true },
+        birthdate: { type: Date, required: false },
+        program: { type: String, required: true },
         bio: { type: String, required: false },
         links: {
             linkedin: { type: String, required: false },
@@ -34,4 +32,4 @@ const userSchema = new Schema({
     }
 })
 
-export default model("users", userSchema)
+export default model("user_info", userInfoSchema)

@@ -1,9 +1,17 @@
-import express from 'express';
-import { create, authenticate } from '../services/user.js';
+import express from 'express'
+import { validateSession } from '../services/session.js'
+import { createInfo, createCredentials, authenticate, getUserById, getSessionUser, getUserByEmail } from '../services/user.js'
 
-const router = express.Router();
+const router = express.Router()
 
-router.post('/register', create);
+// - Authentication routes
+router.post('/register', createCredentials)
+router.post('/setup', validateSession, createInfo)
 router.post('/login', authenticate)
+
+// - CRUD routes
+router.get('/', validateSession, getSessionUser)
+router.get('/:id', validateSession, getUserById)
+router.post('/get-by-email', validateSession, getUserByEmail)
 
 export default router
