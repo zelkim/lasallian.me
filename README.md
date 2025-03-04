@@ -215,37 +215,438 @@ curl -X POST localhost:3000/user/login -H "Content-Type: application/json" -d \
   }
 }
 ```
+
+### GET /post/all
+
+- Gets all posts
+- mainly for testing
+
+- example request:
+```bash
+curl -X GET localhost:3000/post/all
+```
+
+- response:
+
+> [!IMPORTANT]
+> The `author._id` for each post determines who owns the post
+
+```json
+[
+  {
+    "meta": {
+      "created_at": "2025-03-04T11:19:11.061Z",
+      "updated_at": "2025-03-04T11:19:11.061Z"
+    },
+    "_id": "67c6e1af4911dd82e8dabb78",
+    "title": "second post hehe",
+    "content": "hihi test content here",
+    "media": [],
+    "author": {
+      "vanity": {
+        "display_photo": "photolink",
+        "cover_photo": "photolink",
+        "badges": []
+      },
+      "info": {
+        "name": {
+          "first": "Test",
+          "last": "User"
+        },
+        "links": {
+          "linkedin": "",
+          "facebook": "",
+          "instagram": "",
+          "other": []
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
+        "bio": "Test bio"
+      },
+      "_id": "67bf5b7efd7bafc4558be3bc"
+    },
+    "__v": 0
+  },
+  {
+    "meta": {
+      "created_at": "2025-03-04T11:20:10.770Z",
+      "updated_at": "2025-03-04T11:20:10.770Z"
+    },
+    "_id": "67c6e1ea4911dd82e8dabb89",
+    "title": "ANOTHER POST by test2",
+    "content": "content example something",
+    "media": [],
+    "author": {
+      "vanity": {
+        "display_photo": "photolink",
+        "cover_photo": "photolink",
+        "badges": []
+      },
+      "info": {
+        "name": {
+          "first": "Test",
+          "last": "User"
+        },
+        "links": {
+          "linkedin": "",
+          "facebook": "",
+          "instagram": "",
+          "other": []
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
+        "bio": "Test bio"
+      },
+      "_id": "67bf5b7efd7bafc4558be3bc"
+    },
+    "__v": 0
+  },
+  {
+    "meta": {
+      "created_at": "2025-03-04T11:22:41.892Z",
+      "updated_at": "2025-03-04T11:22:41.892Z"
+    },
+    "_id": "67c6e2814911dd82e8dabb94",
+    "title": "POST by test101",
+    "content": "yes yes content example something",
+    "media": [],
+    "author": {
+      "vanity": {
+        "display_photo": "photolink",
+        "cover_photo": "photolink",
+        "badges": []
+      },
+      "info": {
+        "name": {
+          "first": "Test",
+          "last": "User"
+        },
+        "links": {
+          "linkedin": "",
+          "facebook": "",
+          "instagram": "",
+          "other": []
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
+        "bio": "Test bio"
+      },
+      "_id": "67bf5d822d93557c2e6aee28"
+    },
+    "__v": 0
+  }
+]
 ```
 
 ### GET /post/normal
+
+- Gets all normal posts made by the current authenticated user
 
 - example request:
 ```bash
 curl -X GET localhost:3000/post/normal -H "Authorization: Bearer <token>"
 ```
 
+- response:
+```json
+[
+  {
+    "meta": {
+      "created_at": "2025-03-04T11:19:11.061Z",
+      "updated_at": "2025-03-04T11:19:11.061Z"
+    },
+    "_id": "67c6e1af4911dd82e8dabb78",
+    "title": "second post hehe",
+    "content": "hihi test content here",
+    "media": [],
+    "author": {
+      "vanity": {
+        "display_photo": "photolink",
+        "cover_photo": "photolink",
+        "badges": []
+      },
+      "info": {
+        "name": {
+          "first": "Test",
+          "last": "User"
+        },
+        "links": {
+          "linkedin": "",
+          "facebook": "",
+          "instagram": "",
+          "other": []
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
+        "bio": "Test bio"
+      },
+      "_id": "67bf5b7efd7bafc4558be3bc"
+    },
+    "__v": 0
+  },
+  {
+    "meta": {
+      "created_at": "2025-03-04T11:20:10.770Z",
+      "updated_at": "2025-03-04T11:20:10.770Z"
+    },
+    "_id": "67c6e1ea4911dd82e8dabb89",
+    "title": "ANOTHER POST by test2",
+    "content": "content example something",
+    "media": [],
+    "author": {
+      "vanity": {
+        "display_photo": "photolink",
+        "cover_photo": "photolink",
+        "badges": []
+      },
+      "info": {
+        "name": {
+          "first": "Test",
+          "last": "User"
+        },
+        "links": {
+          "linkedin": "",
+          "facebook": "",
+          "instagram": "",
+          "other": []
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
+        "bio": "Test bio"
+      },
+      "_id": "67bf5b7efd7bafc4558be3bc"
+    },
+    "__v": 0
+  }
+]
+```
+
 ### POST /post/normal
+
 - creates a post with author as the authenticated user
 - needs `token`
 
 - example request:
 ```bash
 curl -X POST localhost:3000/post/normal -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d \
-'{"title": "second post hehe", "content": "hihi test content here"}'
+'{"title": "POST by test101", "content": "yes yes content example something"}'
+```
+
+- response:
+```json
+{
+  "status": "success",
+  "savedPost": {
+    "title": "POST by test101",
+    "content": "yes yes content example something",
+    "media": [],
+    "meta": {
+      "created_at": "2025-03-04T11:22:41.892Z",
+      "updated_at": "2025-03-04T11:22:41.892Z"
+    },
+    "author": "67bf5d822d93557c2e6aee28",
+    "_id": "67c6e2814911dd82e8dabb94",
+    "__v": 0
+  }
+}
 ```
 
 ### GET /post/normal/:id
-- gets specific post, given it's `id`
+
+- gets specific post, given the post `_id`
 
 - example request:
 ```bash
 curl -X GET localhost:3000/post/normal/<post-id> -H "Authorization: Bearer <token>"
+
+# example
+curl -X GET localhost:3000/post/normal/67c6e2814911dd82e8dabb94 -H "Authorization: Bearer <token>"
+```
+
+- response:
+```json
+{
+  "meta": {
+    "created_at": "2025-03-04T11:22:41.892Z",
+    "updated_at": "2025-03-04T11:22:41.892Z"
+  },
+  "_id": "67c6e2814911dd82e8dabb94",
+  "title": "POST by test101",
+  "content": "yes yes content example something",
+  "media": [],
+  "author": {
+    "vanity": {
+      "display_photo": "photolink",
+      "cover_photo": "photolink",
+      "badges": []
+    },
+    "info": {
+      "name": {
+        "first": "Test",
+        "last": "User"
+      },
+      "links": {
+        "linkedin": "",
+        "facebook": "",
+        "instagram": "",
+        "other": []
+      },
+      "username": "@testuser",
+      "batchid": "123",
+      "program": "BSCS-ST",
+      "bio": "Test bio"
+    },
+    "_id": "67bf5d822d93557c2e6aee28"
+  },
+  "__v": 0
+}
+```
+
+
+### PUT `/post/normal/:id`
+
+- updates a specific post.
+- needs `JWT token`
+
+- requires `title` (string) and `content` (Object) to be updated
+- optional: `media` (string array) field
+
+- example request:
+
+> [!NOTE]
+> `content` is of type `Object` so the structure is like this
+
+```bash
+# without media
+curl -X PUT "http://localhost:3000/post/normal/<post-id>" \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <token>" \
+-d '{
+  "title": "Updated Post Title",
+  "content": {"text": "Updated post content"}
+}'
+
+# with media
+curl -X PUT "http://localhost:3000/post/normal/<post-id>" \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <token>" \
+-d '{
+  "title": "Updated Post Title with media",
+  "content": {"text": "Updated post content with media"},
+  "media": ["url string here"]
+}'
+```
+
+- response **without** the optional `media` field:
+```json
+{
+  "status": "success",
+  "post": {
+    "meta": {
+      "created_at": "2025-03-04T11:22:41.892Z",
+      "updated_at": "2025-03-04T11:50:45.892Z"
+    },
+    "_id": "67c6e2814911dd82e8dabb94",
+    "title": "Updated Post Title",
+    "content": {
+      "text": "Updated post content"
+    },
+    "media": [],
+    "author": {
+      "vanity": {
+        "display_photo": "photolink",
+        "cover_photo": "photolink",
+        "badges": []
+      },
+      "info": {
+        "name": {
+          "first": "Test",
+          "last": "User"
+        },
+        "links": {
+          "linkedin": "",
+          "facebook": "",
+          "instagram": "",
+          "other": []
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
+        "bio": "Test bio"
+      },
+      "_id": "67bf5d822d93557c2e6aee28"
+    },
+    "__v": 0
+  }
+}
+
+
+```
+
+- response **with** the optional `media` field
+```json
+{
+  "status": "success",
+  "post": {
+    "meta": {
+      "created_at": "2025-03-04T11:22:41.892Z",
+      "updated_at": "2025-03-04T11:54:22.043Z"
+    },
+    "_id": "67c6e2814911dd82e8dabb94",
+    "title": "Updated Post Title",
+    "content": {
+      "text": "Updated post content"
+    },
+    "media": [
+      "url string here"
+    ],
+    "author": {
+      "vanity": {
+        "display_photo": "photolink",
+        "cover_photo": "photolink",
+        "badges": []
+      },
+      "info": {
+        "name": {
+          "first": "Test",
+          "last": "User"
+        },
+        "links": {
+          "linkedin": "",
+          "facebook": "",
+          "instagram": "",
+          "other": []
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
+        "bio": "Test bio"
+      },
+      "_id": "67bf5d822d93557c2e6aee28"
+    },
+    "__v": 0
+  }
+}
 ```
 
 ### DELETE /post/normal/:id
-- deletes a specific post, given it's `id`
+
+- deletes a specific post, given the post `_id` path parameter
 
 - example request:
 ```bash
 curl -X DELETE localhost:3000/post/normal/<post-id> -H "Authorization: Bearer <token>"
+```
+
+- response:
+```json
+{
+  "status": "success",
+  "message": "Post deleted successfully."
+}
 ```
