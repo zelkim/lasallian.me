@@ -8,7 +8,7 @@ const userCredentialsSchema = new Schema({
     meta: {
         created_at: { type: Date, required: true, default: Date.now },
         updated_at: { type: Date, required: true, default: Date.now }
-    }
+    },
 })
 
 export default model("user_credentials", userCredentialsSchema)

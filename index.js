@@ -1,17 +1,16 @@
 // -- lasallian.me
 // A professional social media platform created for De La Salle University's
 // student organization ecosystem.
-
-import express, { urlencoded, json } from "express";
-import mongoose from "mongoose";
-import cors from "cors";
-import { config } from "dotenv";
-import userRouter from "./routes/user.js";
-import commentRouter from "./routes/comments.js";
-import postRouter from "./routes/post.js";
+import express, { urlencoded, json } from 'express'
+import mongoose from 'mongoose'
+import cors from 'cors'
+import { config } from 'dotenv';
+import userRouter from './routes/user.js';
+import commentRouter from './routes/comments.js';
+import postRouter from './routes/post.js';
+import { validateSession } from './services/session.js';
+import badgeRouter from './routes/badge.js';
 import orgRouter from "./routes/org.js";
-import { validateSession } from "./services/session.js";
-
 config();
 
 const app = express();
@@ -22,11 +21,12 @@ app.use(cors());
 // ##############
 // ##  ROUTES  ##
 // ##############
-app.use("/user", userRouter);
-app.use("/comment", commentRouter);
-app.use("/post", postRouter);
+app.use('/user', userRouter)
+app.use('/comment', commentRouter)
+app.use('/post', postRouter)
 app.use("/org", orgRouter);
-app.get("/test", validateSession, (req, res) => res.send("works"));
+app.get('/test', validateSession, (req, res) => res.send('works'))
+app.use('/badge', badgeRouter)
 
 // NOTE: STARTUP
 mongoose.connect(process.env.MONGODB_URI).then(() => {

@@ -1,6 +1,19 @@
 import Post from '../models/Post.js'
 import UserInfo from '../models/UserInfo.js'
 
+export const GetAllPosts = async (req, res) => {
+    try {
+        const allPosts = await Post.find()
+            .populate('author', 'vanity info')
+            .populate('comments')
+
+        return res.status(200).json(allPosts);
+    } catch (err) {
+        console.error(err)
+        return res.status(404).json({ error: 'GetAllPosts error' });
+    }
+}
+
 // expects id as param
 export const GetNormalPostById = async (req, res) => {
     try {
@@ -81,6 +94,16 @@ export const UpdatePost = async (req, res) => {
         const { id } = req.params;
         const authorId = req.user._id;
 
+        const allowedUpdates = ['title', 'content', 'media'];
+        const updates = Object.keys(req.body);
+        const isValidOperation = updates.every(update => allowedUpdates.includes(update));
+        if (!isValidOperation) {
+            return res.status(400).json({
+                status: 'error',
+                msg: 'Invalid updates. Only title, content and media can be updated.'
+            });
+        }
+
         const existingPost = await Post.findById(id);
         if (!existingPost) {
             return res.status(404).json({ status: 'error', msg: 'Post not found' });
@@ -88,6 +111,14 @@ export const UpdatePost = async (req, res) => {
 
         if (!existingPost.author.equals(authorId)) {
             return res.status(403).json({ status: 'error', msg: 'Not authorized to update this post' });
+        }
+
+        // required fields should not be empty
+        if (req.body.title && req.body.title.trim() === '') {
+            return res.status(400).json({ status: 'error', msg: 'Title cannot be empty' });
+        }
+        if (req.body.content && typeof req.body.content !== 'object') {
+            return res.status(400).json({ status: 'error', msg: 'Content must be an object' });
         }
 
         const updateData = {
@@ -115,7 +146,7 @@ export const UpdatePost = async (req, res) => {
         console.error('UpdatePost Error:', err);
         res.status(400).json({
             status: 'error',
-            msg: err.message.replace('Error: ', '')
+            msg: err.message
         });
     }
 }
