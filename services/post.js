@@ -1,4 +1,4 @@
-import Post from '../models/Post.js'
+import Post, { POST_TYPES } from '../models/Post.js'
 import UserInfo from '../models/UserInfo.js'
 
 export const GetAllPosts = async (req, res) => {
@@ -6,6 +6,7 @@ export const GetAllPosts = async (req, res) => {
         const allPosts = await Post.find()
             .populate('author', 'vanity info')
             .populate('comments')
+            .populate('organization')
 
         return res.status(200).json(allPosts);
     } catch (err) {
@@ -33,7 +34,7 @@ export const GetEventPosts = async (req, res) => {
             type: POST_TYPES.EVENT,
             $or: [
                 { visibility: 'public' },
-                { organization: req.user.organization } // Assuming user has organization field
+                { organization: req.user.organization }
             ]
         })
             .populate('author', 'vanity info')
@@ -96,12 +97,11 @@ export const CreatePost = async (req, res) => {
             return res.status(404).json({ error: 'User not found.' });
         }
 
-        // TODO: add req.body check for required fields
         if (!Object.values(POST_TYPES).includes(req.body.type)) {
             return res.status(400).json({ error: 'Invalid post type.' });
         }
 
-        // Validate event post requirements
+        // for event post types
         if (req.body.type === POST_TYPES.EVENT) {
             if (!req.body.organization) {
                 return res.status(400).json({ error: 'Event posts require an organization.' });
@@ -116,7 +116,7 @@ export const CreatePost = async (req, res) => {
             type: req.body.type,
             visibility: req.body.visibility || 'public',
             author: authorId,
-            // organization: req.body.organization,
+            organization: req.body.organization,
             meta: {
                 created_at: new Date,
                 updated_at: new Date

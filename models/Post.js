@@ -27,7 +27,12 @@ const postSchema = new mongoose.Schema({
     },
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'user_info', required: true },
     comments: { type: mongoose.Schema.Types.ObjectId, ref: 'comments' },
-    // organization: { type: mongoose.Schema.Types.ObjectId, ref: 'organization', required: false }
+    organization: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'org_info', required: function () {
+            // require organization ref only if the post type is "event"
+            return this.type === POST_TYPES.EVENT;
+        }
+    }
 })
 
 export default mongoose.model("posts", postSchema)
