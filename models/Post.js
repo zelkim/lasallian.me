@@ -7,7 +7,7 @@ export const POST_TYPES = {
 }
 
 const postSchema = new mongoose.Schema({
-    title: { type: String, required: true },
+    title: { type: String, required: false },
     content: { type: Object, required: true },
     media: [{ type: String }],
     type: {

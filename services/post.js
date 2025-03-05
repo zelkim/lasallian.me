@@ -181,9 +181,6 @@ export const CreatePost = async (req, res) => {
 
         const { title, content, media, type, visibility, organization } = req.body;
 
-        if (!title || title.trim() === '') {
-            return res.status(400).json({ error: 'Title is required.' });
-        }
         if (!content || typeof content !== 'object') {
             return res.status(400).json({ error: 'Content is required and must be an object.' });
         }
@@ -290,9 +287,6 @@ export const UpdatePost = async (req, res) => {
         }
 
         // required fields should not be empty
-        if (req.body.title && req.body.title.trim() === '') {
-            return res.status(400).json({ status: 'error', msg: 'Title cannot be empty' });
-        }
         if (req.body.content && typeof req.body.content !== 'object') {
             return res.status(400).json({ status: 'error', msg: 'Content must be an object' });
         }
