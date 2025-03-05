@@ -1,10 +1,10 @@
 import express from 'express'
 import {
-    GetProjectPosts,
-    GetEventPosts,
+    GetProjectPostsByAuthor,
+    GetEventPostsByAuthor,
     GetAllPosts,
     GetNormalPostById,
-    GetAllNormalPostByAuthor,
+    GetNormalPostsByAuthor,
     CreatePost,
     UpdatePost,
     DeletePost
@@ -15,15 +15,15 @@ const router = express.Router()
 
 router.get("/all", GetAllPosts) // /post
 
+// normal posts
+router.get("/normal", validateSession, GetNormalPostsByAuthor) // gets all normal posts of authenticated user
+router.get("/normal/:id", validateSession, GetNormalPostById)
+
 // project posts (visible to recruiters)
-router.get("/project", GetProjectPosts)
+router.get("/project", validateSession, GetProjectPostsByAuthor)
 
 // event posts
-router.get("/event", GetEventPosts)
-
-// normal posts
-router.get("/normal/:id", validateSession, GetNormalPostById)
-router.get("/normal", validateSession, GetAllNormalPostByAuthor) // gets all normal posts of authenticated user
+router.get("/event", validateSession, GetEventPostsByAuthor)
 
 // Generic post creation/update/delete (handles all types)
 router.post("/", validateSession, CreatePost)

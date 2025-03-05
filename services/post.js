@@ -15,9 +15,37 @@ export const GetAllPosts = async (req, res) => {
     }
 }
 
-export const GetProjectPosts = async (req, res) => {
+// gets all normal posts of signed in user
+export const GetNormalPostsByAuthor = async (req, res) => {
     try {
-        const posts = await Post.find({ type: POST_TYPES.PROJECT })
+        const authorId = req.user._id
+
+        const user = await UserInfo.findById(authorId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        const userNormalPosts = await Post.find({ author: authorId, type: POST_TYPES.NORMAL })
+            .populate('author', 'vanity info')
+            .populate('comments')
+
+        return res.status(200).json(userNormalPosts);
+    } catch (err) {
+        console.error(err)
+        return res.status(404).json({ error: 'GetAllNormalPostByAuthor error' });
+    }
+}
+
+export const GetProjectPostsByAuthor = async (req, res) => {
+    try {
+        const authorId = req.user._id
+
+        const user = await UserInfo.findById(authorId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        const posts = await Post.find({ author: authorId, type: POST_TYPES.PROJECT })
             .populate('author', 'vanity info')
             .populate('comments')
 
@@ -28,9 +56,17 @@ export const GetProjectPosts = async (req, res) => {
     }
 }
 
-export const GetEventPosts = async (req, res) => {
+export const GetEventPostsByAuthor = async (req, res) => {
     try {
+        const authorId = req.user._id
+
+        const user = await UserInfo.findById(authorId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
         const posts = await Post.find({
+            author: authorId,
             type: POST_TYPES.EVENT,
             $or: [
                 { visibility: 'public' },
@@ -61,27 +97,6 @@ export const GetNormalPostById = async (req, res) => {
     } catch (error) {
         console.error('Error fetching normal post:', error);
         return res.status(500).json({ error: 'An error occurred while fetching normal post.' });
-    }
-}
-
-// gets all normal posts of signed in user
-export const GetAllNormalPostByAuthor = async (req, res) => {
-    try {
-        const authorId = req.user._id
-
-        const user = await UserInfo.findById(authorId);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found.' });
-        }
-
-        const userNormalPosts = await Post.find({ author: authorId })
-            .populate('author', 'vanity info')
-            .populate('comments')
-
-        return res.status(200).json(userNormalPosts);
-    } catch (err) {
-        console.error(err)
-        return res.status(404).json({ error: 'GetAllNormalPostByAuthor error' });
     }
 }
 
