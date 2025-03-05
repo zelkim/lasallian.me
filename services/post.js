@@ -1,6 +1,7 @@
 import Post, { POST_TYPES } from '../models/Post.js'
 import UserInfo from '../models/UserInfo.js'
 import Org from '../models/Org.js'
+import { getOrgMemberRole } from '../services/org.js'
 
 export const GetAllPosts = async (req, res) => {
     try {
@@ -189,32 +190,38 @@ export const CreatePost = async (req, res) => {
             return res.status(400).json({ error: 'Invalid visibility option.' });
         }
 
-        // Validate organization for event posts
-        if (type === POST_TYPES.EVENT) {
-            if (!organization) {
-                return res.status(400).json({ error: 'Event posts require an organization.' });
+        // if (type === POST_TYPES.EVENT) {
+        //     if (!organization) {
+        //         return res.status(400).json({ error: 'Event posts require an organization.' });
+        //     }
+        //
+        //     const orgExists = await Org.findById(organization);
+        //     if (!orgExists) {
+        //         return res.status(404).json({ error: 'Organization not found.' });
+        //     }
+        // }
+
+        if (organization || type === POST_TYPES.EVENT) {
+            const memberRole = await getOrgMemberRole(authorId, organization);
+
+            if (!memberRole) {
+                return res.status(403).json({
+                    error: 'You must be a member of the organization to create this post.'
+                });
             }
 
-            const orgExists = await Org.findById(organization);
-            if (!orgExists) {
-                return res.status(404).json({ error: 'Organization not found.' });
+            // for events, verify if user has appropriate position/role
+            if (type === POST_TYPES.EVENT) {
+                const allowedPositions = ['PRES', 'EVP', 'VP', 'AVP'];
+                if (!allowedPositions.includes(memberRole)) {
+                    return res.status(403).json({
+                        error: 'You do not have permission to create event posts.'
+                    });
+                }
             }
         }
 
         // create new post
-        // const post = new Post({
-        //     title,
-        //     content,
-        //     media: media || [],
-        //     type: req.body.type,
-        //     visibility: req.body.visibility || 'public',
-        //     author: authorId,
-        //     organization: req.body.organization,
-        //     meta: {
-        //         created_at: new Date,
-        //         updated_at: new Date
-        //     },
-        // })
         const post = new Post({
             title,
             content,
