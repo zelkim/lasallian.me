@@ -2,11 +2,10 @@ import { Schema, model } from 'mongoose'
 
 const userInfoSchema = new Schema({
     credentials: { type: Schema.Types.ObjectId, ref: 'user_credentials' },
-    badges: [{ type: Schema.Types.ObjectId, ref: 'badges' }],
     vanity: {
         display_photo: { type: String, required: false },
         cover_photo: { type: String, required: false },
-        badges: [Schema.Types.ObjectId]
+        badges: [{ type: Schema.Types.ObjectId, ref: 'badges' }]
     },
     info: {
         name: {
