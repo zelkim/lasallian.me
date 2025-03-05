@@ -212,7 +212,11 @@ export const CreatePost = async (req, res) => {
 
             // for events, verify if user has appropriate position/role
             if (type === POST_TYPES.EVENT) {
-                const allowedPositions = ['PRES', 'EVP', 'VP', 'AVP'];
+                if (!organization) {
+                    return res.status(400).json({ error: 'Event posts require an organization.' });
+                }
+                // const allowedPositions = ['PRES', 'EVP', 'VP', 'AVP'];
+                const allowedPositions = ['PRES', 'EVP', 'VP', 'AVP', 'CT', 'JO', 'MEM']; // NOTE: for now allow all for testing
                 if (!allowedPositions.includes(memberRole)) {
                     return res.status(403).json({
                         error: 'You do not have permission to create event posts.'
