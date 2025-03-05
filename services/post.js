@@ -329,10 +329,14 @@ export const DeletePost = async (req, res) => {
             return res.status(404).json({ error: 'User not found.' });
         }
 
-        const post = await Post.findByIdAndDelete(req.params.id);
+        const post = await Post.findById(req.params.id);
         if (!post) {
             return res.status(404).json({ error: 'Post not found.' });
         }
+        if (!post.author.equals(authorId)) {
+            return res.status(403).json({ error: 'Not authorized to delete this post.' });
+        }
+        await Post.findByIdAndDelete(req.params.id);
 
         return res.status(200).json({
             status: 'success',
