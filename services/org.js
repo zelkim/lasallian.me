@@ -85,7 +85,7 @@ export const UpdateOrgInfo = async (req, res) => {
             },
         };
 
-        const updatedOrg = await OrgInfo.findByIdAndUpdate(id, updateData, {
+        const updatedOrg = await Org.findByIdAndUpdate(id, updateData, {
             new: true,
             runValidators: true,
         });
@@ -116,7 +116,7 @@ export const UpdateOrgInfo = async (req, res) => {
  */
 export const DeleteOrgInfo = async (req, res) => {
     try {
-        const org = await OrgInfo.findByIdAndDelete(req.params.id);
+        const org = await Org.findByIdAndDelete(req.params.id);
         if (!org) {
             return res
                 .status(404)
