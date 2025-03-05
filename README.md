@@ -774,8 +774,8 @@ curl -X GET localhost:3000/post/event/67c6e2814911dd82e8dabb94 -H "Authorization
 
 - *optional fields in request body:*
     - `media` (string array)
-    - `type` (only: `normal` (default), `project`, or `event`)
-    - `visibility` (only: `public` (default), `organization`, `private`)
+    - `type` (only: `normal`, `project`, or `event`) - by default this is set to be `normal`
+    - `visibility` (only: `public`, `organization`, `private`) - by default this is set to be `public`
 
 > [!IMPORTANT]
 > This route is used to create **ALL TYPES** of post
@@ -788,32 +788,34 @@ curl -X POST localhost:3000/post/normal -H "Content-Type: application/json" -H "
 
 # with optional fields
 curl -X POST localhost:3000/post/normal -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d \
-'{"title": "POST by test101", "content": {"text": "yes yes content example something"}, "type": "normal", "visibility": "public"}'
+'{"title": "POST by test101", "content": {"text": "yes yes content example something"}, "type": "normal", "visibility": "public", "media": ["url string test2"]}'
 ```
 **Request:**
 ```json
+// with only required fields
 {
     "title": "POST by test101",
     "content": {
         "text": "yes yes content example something"
     },
-    "type": "normal"
 }
 
-    // with visibility field
+// with optional fields
 {
     "title": "POST by test101",
     "content": {
         "text": "yes yes content example something"
     },
     "type": "normal",
-    "visibility": "public"
+    "visibility": "public",
+    "media": ["url string test2"]
 }
 ```
 
 
 **Response:**
 ```json
+// with only required fields
 {
   "status": "success",
   "savedPost": {
@@ -833,6 +835,29 @@ curl -X POST localhost:3000/post/normal -H "Content-Type: application/json" -H "
     "__v": 0
   }
 }
+
+// with optional fields
+{
+  "status": "success",
+  "savedPost": {
+    "title": "test2 AGAIN new post normal required fields",
+    "content": {
+      "text": "PROJECT econtentyes yes content example something"
+    },
+    "media": [
+      "url string test2"
+    ],
+    "type": "normal",
+    "visibility": "public",
+    "meta": {
+      "created_at": "2025-03-05T08:02:54.117Z",
+      "updated_at": "2025-03-05T08:02:54.117Z"
+    },
+    "author": "67bf5b7efd7bafc4558be3bc",
+    "_id": "67c8052ed1b60e6d549582cc",
+    "__v": 0
+  }
+}
 ```
 
 ---
@@ -848,8 +873,8 @@ curl -X POST localhost:3000/post/normal -H "Content-Type: application/json" -H "
 
 - *optional fields in request body:*
     - `media` (string array)
-    - `type` (only: `normal` (default), `project`, or `event`)
-    - `visibility` (only: `public` (default), `organization`, `private`)
+    - `type` (only: `normal`, `project`, or `event`) - by default this is set to be `normal`
+    - `visibility` (only: `public`, `organization`, `private`) - by default this is set to be `public`
 
 **Request:**
 
