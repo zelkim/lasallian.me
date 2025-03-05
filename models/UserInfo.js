@@ -30,7 +30,6 @@ const userInfoSchema = new Schema({
         type: String,
         enum: ['individual', 'organization'],
         default: 'individual',
-        required: true
     },
     meta: {
         created_at: { type: Date, required: true, default: Date.now },
