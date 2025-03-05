@@ -238,3 +238,46 @@ export const getOrgMemberRole = async (userId, orgId) => {
 
     return member ? member.position : null;
 };
+
+
+/**
+ * Gets all organization IDs where the user is a member
+ * @param {string} userId - The user's ID
+ * @returns {Promise<Array<string>>} Array of organization IDs
+ */
+export const GetUserOrganizations = async (userId) => {
+    try {
+        // find all org member records for this user
+        const memberships = await OrgMember.find({ author: userId })
+            .select('org')
+            .exec();
+
+        // then get organization IDs
+        const orgIds = memberships.map(membership => membership.org);
+
+        return orgIds;
+    } catch (error) {
+        console.error('Error getting user organizations:', error);
+        return [];
+    }
+};
+
+/**
+ * Checks if a user is a member of a specific organization
+ * @param {string} userId - The user's ID
+ * @param {string} orgId - The organization's ID
+ * @returns {Promise<boolean>} True if user is a member
+ */
+export const IsUserInOrganization = async (userId, orgId) => {
+    try {
+        const membership = await OrgMember.findOne({
+            author: userId,
+            org: orgId
+        }).exec();
+
+        return !!membership;
+    } catch (error) {
+        console.error('Error checking organization membership:', error);
+        return false;
+    }
+};

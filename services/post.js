@@ -1,7 +1,7 @@
 import Post, { POST_TYPES } from '../models/Post.js'
 import UserInfo from '../models/UserInfo.js'
 import Org from '../models/Org.js'
-import { getOrgMemberRole } from '../services/org.js'
+import { getOrgMemberRole, GetUserOrganizations, IsUserInOrganization } from '../services/org.js'
 
 export const GetAllPosts = async (req, res) => {
     try {
@@ -67,12 +67,17 @@ export const GetEventPostsByAuthor = async (req, res) => {
             return res.status(404).json({ error: 'User not found.' });
         }
 
+        const userOrgs = await GetUserOrganizations(authorId)
+
         const posts = await Post.find({
             author: authorId,
             type: POST_TYPES.EVENT,
             $or: [
                 { visibility: 'public' },
-                { organization: req.user.organization }
+                {
+                    visibility: 'public',
+                    organization: { $in: userOrgs },
+                }
             ]
         })
             .populate('author', 'vanity info')
@@ -188,6 +193,14 @@ export const CreatePost = async (req, res) => {
 
         if (visibility && !['public', 'organization', 'private'].includes(visibility)) {
             return res.status(400).json({ error: 'Invalid visibility option.' });
+        }
+        if (visibility === 'organization') {
+            const isMember = await IsUserInOrganization(authorId, organization);
+            if (!isMember) {
+                return res.status(403).json({
+                    error: 'You must be a member of the organization to create organization-visible posts.'
+                });
+            }
         }
 
         // if (type === POST_TYPES.EVENT) {
