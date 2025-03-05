@@ -1,10 +1,10 @@
 import express from "express";
 import {
-  createOrg,
-  getOrgById,
-  getOrgByAcronym,
-  UpdateOrgInfo,
-  DeleteOrgInfo,
+    createOrg,
+    getOrgById,
+    getOrgByAcronym,
+    UpdateOrgInfo,
+    DeleteOrgInfo,
 } from "../services/org.js";
 
 const router = express.Router();
