@@ -835,10 +835,10 @@ curl -X GET localhost:3000/post/event/67c6e2814911dd82e8dabb94 -H "Authorization
 - needs `Authorization: Bearer token` in request headers
 
 - *required fields in request body:*
-    - `title` (string)
     - `content` (Object)
 
 - *optional fields in request body:*
+    - `title` (string)
     - `media` (string array)
     - `type` (only: `normal`, `project`, or `event`) - by default this is set to be `normal`
     - `visibility` (only: `public`, `organization`, `private`) - by default this is set to be `public`
@@ -850,17 +850,16 @@ curl -X GET localhost:3000/post/event/67c6e2814911dd82e8dabb94 -H "Authorization
 ```bash
 # all required fields
 curl -X POST localhost:3000/post -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d \
-'{"title": "POST by test101", "content": {"text": "yes yes content example something"}}'
+'{"content": {"text": "yes yes content example something"}}'
 
 # with optional fields
 curl -X POST localhost:3000/post -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d \
-'{"title": "POST by test101", "content": {"text": "yes yes content example something"}, "type": "normal", "visibility": "public", "media": ["url string test2"]}'
+'{"content": {"text": "yes yes content example something"}, "title": "POST by test101", "type": "normal", "visibility": "public", "media": ["url string test2"]}'
 ```
 **Request:**
 ```json
 // with only required fields
 {
-    "title": "POST by test101",
     "content": {
         "text": "yes yes content example something"
     },
@@ -868,10 +867,10 @@ curl -X POST localhost:3000/post -H "Content-Type: application/json" -H "Authori
 
 // with optional fields
 {
-    "title": "POST by test101",
     "content": {
         "text": "yes yes content example something"
     },
+    "title": "POST by test101",
     "type": "normal",
     "visibility": "public",
     "media": ["url string test2"]
