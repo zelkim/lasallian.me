@@ -783,11 +783,11 @@ curl -X GET localhost:3000/post/event/67c6e2814911dd82e8dabb94 -H "Authorization
 **Request (via `curl`):**
 ```bash
 # all required fields
-curl -X POST localhost:3000/post/normal -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d \
+curl -X POST localhost:3000/post -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d \
 '{"title": "POST by test101", "content": {"text": "yes yes content example something"}}'
 
 # with optional fields
-curl -X POST localhost:3000/post/normal -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d \
+curl -X POST localhost:3000/post -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d \
 '{"title": "POST by test101", "content": {"text": "yes yes content example something"}, "type": "normal", "visibility": "public", "media": ["url string test2"]}'
 ```
 **Request:**
