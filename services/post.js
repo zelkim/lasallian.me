@@ -97,31 +97,61 @@ export const CreatePost = async (req, res) => {
             return res.status(404).json({ error: 'User not found.' });
         }
 
+        const { title, content, media, type, visibility, organization } = req.body;
+
+        if (!title || title.trim() === '') {
+            return res.status(400).json({ error: 'Title is required.' });
+        }
+        if (!content || typeof content !== 'object') {
+            return res.status(400).json({ error: 'Content is required and must be an object.' });
+        }
         if (!Object.values(POST_TYPES).includes(req.body.type)) {
             return res.status(400).json({ error: 'Invalid post type.' });
         }
 
-        // for event post types
-        if (req.body.type === POST_TYPES.EVENT) {
-            if (!req.body.organization) {
+        if (visibility && !['public', 'organization', 'private'].includes(visibility)) {
+            return res.status(400).json({ error: 'Invalid visibility option.' });
+        }
+
+        // Validate organization for event posts
+        if (type === POST_TYPES.EVENT) {
+            if (!organization) {
                 return res.status(400).json({ error: 'Event posts require an organization.' });
+            }
+
+            const orgExists = await OrgInfo.findById(organization);
+            if (!orgExists) {
+                return res.status(404).json({ error: 'Organization not found.' });
             }
         }
 
         // create new post
+        // const post = new Post({
+        //     title,
+        //     content,
+        //     media: media || [],
+        //     type: req.body.type,
+        //     visibility: req.body.visibility || 'public',
+        //     author: authorId,
+        //     organization: req.body.organization,
+        //     meta: {
+        //         created_at: new Date,
+        //         updated_at: new Date
+        //     },
+        // })
         const post = new Post({
-            title: req.body.title,
-            content: req.body.content,
-            media: req.body.media || [],
-            type: req.body.type,
-            visibility: req.body.visibility || 'public',
+            title,
+            content,
+            media: Array.isArray(media) ? media : [],
+            type: type || POST_TYPES.NORMAL,
+            visibility: visibility || 'public',
             author: authorId,
-            organization: req.body.organization,
+            organization: organization,
             meta: {
-                created_at: new Date,
-                updated_at: new Date
-            },
-        })
+                created_at: new Date(),
+                updated_at: new Date()
+            }
+        });
 
         const savedPost = await post.save()
         return res.status(201).json({
@@ -140,7 +170,7 @@ export const UpdatePost = async (req, res) => {
         const { id } = req.params;
         const authorId = req.user._id;
 
-        const allowedUpdates = ['title', 'content', 'media'];
+        const allowedUpdates = ['title', 'content', 'media', 'type', 'visibility'];
         const updates = Object.keys(req.body);
         const isValidOperation = updates.every(update => allowedUpdates.includes(update));
         if (!isValidOperation) {
@@ -165,6 +195,14 @@ export const UpdatePost = async (req, res) => {
         }
         if (req.body.content && typeof req.body.content !== 'object') {
             return res.status(400).json({ status: 'error', msg: 'Content must be an object' });
+        }
+
+        if (req.body.type && !Object.values(POST_TYPES).includes(req.body.type)) {
+            return res.status(400).json({ error: 'Invalid post type.' });
+        }
+
+        if (req.body.visibility && !['public', 'organization', 'private'].includes(req.body.visibility)) {
+            return res.status(400).json({ error: 'Invalid visibility option.' });
         }
 
         const updateData = {

@@ -1,5 +1,7 @@
 import express from 'express'
 import {
+    GetProjectPosts,
+    GetEventPosts,
     GetAllPosts,
     GetNormalPostById,
     GetAllNormalPostByAuthor,
