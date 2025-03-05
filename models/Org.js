@@ -21,6 +21,7 @@ const orgInfoSchema = new Schema({
             other: [String]
         }
     },
+    members: [{ type: Schema.Types.ObjectId, ref: 'org_members' }],
     meta: {
         created_at: { type: Date, required: true, default: Date.now },
         updated_at: { type: Date, required: true, default: Date.now }

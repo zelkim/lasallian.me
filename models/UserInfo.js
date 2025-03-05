@@ -26,11 +26,6 @@ const userInfoSchema = new Schema({
             other: [String]
         }
     },
-    account_type: {
-        type: String,
-        enum: ['individual', 'organization'],
-        default: 'individual',
-    },
     meta: {
         created_at: { type: Date, required: true, default: Date.now },
         updated_at: { type: Date, required: true, default: Date.now }
