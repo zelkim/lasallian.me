@@ -1,10 +1,12 @@
 import express from 'express'
 import {
+    GetAllPosts,
+    GetNormalPostsByAuthor,
     GetProjectPostsByAuthor,
     GetEventPostsByAuthor,
-    GetAllPosts,
     GetNormalPostById,
-    GetNormalPostsByAuthor,
+    GetProjectPostById,
+    GetEventPostById,
     CreatePost,
     UpdatePost,
     DeletePost
@@ -21,9 +23,11 @@ router.get("/normal/:id", validateSession, GetNormalPostById)
 
 // project posts (visible to recruiters)
 router.get("/project", validateSession, GetProjectPostsByAuthor)
+router.get("/project/:id", validateSession, GetProjectPostById)
 
 // event posts
 router.get("/event", validateSession, GetEventPostsByAuthor)
+router.get("/event/:id", validateSession, GetEventPostById)
 
 // Generic post creation/update/delete (handles all types)
 router.post("/", validateSession, CreatePost)

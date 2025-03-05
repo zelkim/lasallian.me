@@ -84,22 +84,83 @@ export const GetEventPostsByAuthor = async (req, res) => {
     }
 }
 
-// expects id as param
+// TODO: for these services (getting post by id), can restrict to posts created by the authenticated user, just add req.user._id check
+
+// expects id as path param
 export const GetNormalPostById = async (req, res) => {
     try {
         const postId = req.params.id
 
-        const normalPost = await Post.findById(postId)
+        const post = await Post.findOne({
+            _id: postId,
+            type: POST_TYPES.NORMAL
+        })
             .populate('author', 'vanity info')
             .populate('comments')
 
-        return res.status(200).json(normalPost);
+        if (!post) {
+            return res.status(404).json({
+                error: 'Normal post not found.'
+            })
+        }
+
+        return res.status(200).json(post);
     } catch (error) {
         console.error('Error fetching normal post:', error);
         return res.status(500).json({ error: 'An error occurred while fetching normal post.' });
     }
 }
 
+// expects id as path param
+export const GetProjectPostById = async (req, res) => {
+    try {
+        const postId = req.params.id
+
+        const post = await Post.findOne({
+            _id: postId,
+            type: POST_TYPES.PROJECT
+        })
+            .populate('author', 'vanity info')
+            .populate('comments')
+
+        if (!post) {
+            return res.status(404).json({
+                error: 'Project post not found.'
+            });
+        }
+
+        return res.status(200).json(post);
+    } catch (error) {
+        console.error('Error fetching normal post:', error);
+        return res.status(500).json({ error: 'An error occurred while fetching normal post.' });
+    }
+}
+
+// expects id as path param
+export const GetEventPostById = async (req, res) => {
+    try {
+        const postId = req.params.id
+
+        const post = await Post.findOne({
+            _id: postId,
+            type: POST_TYPES.EVENT
+        })
+            .populate('author', 'vanity info')
+            .populate('comments')
+            .populate('organization');
+
+        if (!post) {
+            return res.status(404).json({
+                error: 'Event post not found.'
+            });
+        }
+
+        return res.status(200).json(post);
+    } catch (error) {
+        console.error('Error fetching normal post:', error);
+        return res.status(500).json({ error: 'An error occurred while fetching normal post.' });
+    }
+}
 
 // expects: title, content, media (optional for now)
 export const CreatePost = async (req, res) => {
@@ -120,7 +181,7 @@ export const CreatePost = async (req, res) => {
         if (!content || typeof content !== 'object') {
             return res.status(400).json({ error: 'Content is required and must be an object.' });
         }
-        if (!Object.values(POST_TYPES).includes(req.body.type)) {
+        if (type && !Object.values(POST_TYPES).includes(req.body.type)) {
             return res.status(400).json({ error: 'Invalid post type.' });
         }
 
