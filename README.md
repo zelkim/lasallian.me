@@ -17,6 +17,14 @@ node index.js
 
 ## Authentication
 
+> [!IMPORTANT]
+> FLOW goes like this:
+> `/user/register` -> need `/user/setup` -> then `/user/login` -> get valid final session_token from login route
+
+> [!NOTE]
+> 1. the `session_token` from the `/user/register` is "INCOMPLETE" and valid only for the `/user/setup` route
+> 2. use the valid, final `session_token` from the `/user/login` to access other routes
+
 ### POST `/user/register`
 
 * Creates user credentials and links to user info.
@@ -47,8 +55,8 @@ curl -X POST localhost:3000/user/register -H "Content-Type: application/json" -d
     "session_token": "token-here",
     "user": {
         "credentials": {
-            "email": "zel_kim@dlsu.edu.ph",
-            "password": "..."
+            "email": "test101@dlsu.edu.ph",
+            "password": "hashed-password"
         },
         "meta": {
             "created_at": "2025-01-30T05:06:55.095Z",
@@ -68,32 +76,90 @@ curl -X POST localhost:3000/user/register -H "Content-Type: application/json" -d
 * Follows the `models/UserInfo` schema.
 
 **Request:**
+```json
+// required fields only
+{
+    "info": {
+        "name": {
+            "first": "Test",
+            "last": "User"
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
+    }
+}
+
+// full
+{
+    "vanity": {
+        "display_photo": "photolink",
+        "cover_photo": "photolink",
+        "badges": []
+    },
+    "info": {
+        "name": {
+            "first": "Test",
+            "last": "User"
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
+        "bio": "Test bio",
+        "links": {
+            "linkedin": "",
+            "facebook": "",
+            "instagram": "",
+            "other": []
+        }
+    }
+}
+```
+
+**Request (via `curl`):**
 ```bash
+# required fields only
 curl -X POST localhost:3000/user/setup \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <JWT-from-register-or-login>" \
 -d '{
-"vanity": {
-    "display_photo": "photolink",
-    "cover_photo": "photolink",
-    "badges": []
-},
-"info": {
-    "name": {
-    "first": "Test",
-    "last": "User"
-    },
-    "username": "@testuser",
-    "batchid": "123",
-    "program": "BSCS-ST",
-    "bio": "Test bio",
-    "links": {
-    "linkedin": "",
-    "facebook": "",
-    "instagram": "",
-    "other": []
+    "info": {
+        "name": {
+            "first": "Test",
+            "last": "User"
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
     }
-}
+}'
+
+# full
+curl -X POST localhost:3000/user/setup \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <JWT-from-register-or-login>" \
+-d '{
+    "vanity": {
+        "display_photo": "photolink",
+        "cover_photo": "photolink",
+        "badges": []
+    },
+    "info": {
+        "name": {
+            "first": "Test",
+            "last": "User"
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
+        "bio": "Test bio",
+        "links": {
+            "linkedin": "",
+            "facebook": "",
+            "instagram": "",
+            "other": []
+        }
+    }
 }'
 ```
 
