@@ -60,6 +60,8 @@ curl -X POST localhost:3000/user/register -H "Content-Type: application/json" -d
 }
 ```
 
+---
+
 ### POST `/user/setup`
 
 * Requires JWT session token as `Authorization: Bearer <JWT>` header
@@ -136,6 +138,8 @@ curl -X POST localhost:3000/user/setup \
 }
 ```
 
+---
+
 ### POST `/user/login`
 
 * Authenticates user and returns session token to be used for Authorization Header.
@@ -189,6 +193,8 @@ curl -X POST localhost:3000/user/login -H "Content-Type: application/json" -d \
   }
 }
 ```
+
+---
 
 # Posts
 
@@ -292,6 +298,8 @@ curl -X GET localhost:3000/post/all
 ]
 ```
 
+---
+
 ### GET /post/normal
 
 - Gets **ALL NORMAL** posts made by the current authenticated user
@@ -377,6 +385,186 @@ curl -X GET localhost:3000/post/normal -H "Authorization: Bearer <token>"
 ]
 ```
 
+---
+
+### GET /post/project
+
+- Gets **ALL PROJECT** posts made by the current authenticated user
+- Needs `Authorization: Bearer <token>` in request headers
+- Returns array of project posts where the authenticated user is the author
+
+**Request:**
+```bash
+curl -X GET localhost:3000/post/project -H "Authorization: Bearer <token>"
+```
+
+**Response:**
+```json
+[
+  {
+    "meta": {
+      "created_at": "2025-03-04T11:19:11.061Z",
+      "updated_at": "2025-03-04T11:19:11.061Z"
+    },
+    "_id": "67c6e1af4911dd82e8dabb78",
+    "title": "Personal Portfolio Website",
+    "content": {
+      "text": "A showcase of my web development skills",
+      "technologies": ["React", "TailwindCSS"],
+      "github": "https://github.com/username/portfolio"
+    },
+    "media": ["screenshot1.jpg", "screenshot2.jpg"],
+    "type": "project",
+    "visibility": "public",
+    "author": {
+      "vanity": {
+        "display_photo": "photolink",
+        "cover_photo": "photolink",
+        "badges": []
+      },
+      "info": {
+        "name": {
+          "first": "Test",
+          "last": "User"
+        },
+        "links": {
+          "linkedin": "",
+          "facebook": "",
+          "instagram": "",
+          "other": []
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
+        "bio": "Test bio"
+      },
+      "_id": "67bf5b7efd7bafc4558be3bc"
+    },
+    "__v": 0
+  },
+  {
+    "meta": {
+      "created_at": "2025-03-04T11:20:10.770Z",
+      "updated_at": "2025-03-04T11:20:10.770Z"
+    },
+    "_id": "67c6e1ea4911dd82e8dabb89",
+    "title": "Mobile App Project",
+    "content": {
+      "text": "A cross-platform mobile application",
+      "technologies": ["React Native", "Firebase"],
+      "playstore": "https://play.google.com/store/apps/details?id=com.example"
+    },
+    "media": ["app-preview.gif"],
+    "type": "project",
+    "visibility": "public",
+    "author": {
+      "vanity": {
+        "display_photo": "photolink",
+        "cover_photo": "photolink",
+        "badges": []
+      },
+      "info": {
+        "name": {
+          "first": "Test",
+          "last": "User"
+        },
+        "links": {
+          "linkedin": "",
+          "facebook": "",
+          "instagram": "",
+          "other": []
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
+        "bio": "Test bio"
+      },
+      "_id": "67bf5b7efd7bafc4558be3bc"
+    },
+    "__v": 0
+  }
+]
+```
+
+---
+
+### GET /post/event
+
+- Gets **ALL EVENT** posts made by the current authenticated user
+- Needs `Authorization: Bearer <token>` in request headers
+- Returns array of event posts where the authenticated user is the author
+- Includes organization details for each event
+- Only returns events that are either public or belong to the user's organization
+
+**Request:**
+```bash
+curl -X GET localhost:3000/post/event -H "Authorization: Bearer <token>"
+```
+
+**Response:**
+```json
+[
+  {
+    "meta": {
+      "created_at": "2025-03-04T11:19:11.061Z",
+      "updated_at": "2025-03-04T11:19:11.061Z"
+    },
+    "_id": "67c6e1af4911dd82e8dabb78",
+    "title": "Tech Talk 2025",
+    "content": {
+      "text": "Join us for an evening of technology insights",
+      "date": "2025-04-15T18:00:00.000Z",
+      "venue": "Andrew Building Room 1880",
+      "registration_link": "https://example.com/register"
+    },
+    "media": ["event-poster.jpg"],
+    "type": "event",
+    "visibility": "public",
+    "author": {
+      "vanity": {
+        "display_photo": "photolink",
+        "cover_photo": "photolink",
+        "badges": []
+      },
+      "info": {
+        "name": {
+          "first": "Test",
+          "last": "User"
+        },
+        "links": {
+          "linkedin": "",
+          "facebook": "",
+          "instagram": "",
+          "other": []
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
+        "bio": "Test bio"
+      },
+      "_id": "67bf5b7efd7bafc4558be3bc"
+    },
+    "organization": {
+      "vanity": {
+        "display_photo": "org-logo.jpg",
+        "cover_photo": "org-banner.jpg",
+        "badges": []
+      },
+      "info": {
+        "name": "La Salle Computer Society",
+        "acronym": "LSCS",
+        "founding": "1990-01-01T00:00:00.000Z",
+        "bio": "DLSU's premier computing society"
+      },
+      "_id": "67bf5d822d93557c2e6aee30"
+    },
+    "__v": 0
+  }
+]
+```
+
+---
+
 ### GET /post/normal/:id
 
 - gets specific post, given the post `_id` as path parameter
@@ -432,13 +620,162 @@ curl -X GET localhost:3000/post/normal/67c6e2814911dd82e8dabb94 -H "Authorizatio
   }
 ```
 
+---
+
+### GET /post/project/:id
+
+- Gets a specific project post, given the post `_id` as path parameter
+- Needs `Authorization: Bearer <token>` in request headers
+- Will only return posts of type "project"
+
+**Request:**
+```bash
+curl -X GET localhost:3000/post/project/<post-id> -H "Authorization: Bearer <token>"
+
+# example request with post's _id as path parameter
+curl -X GET localhost:3000/post/project/67c6e2814911dd82e8dabb94 -H "Authorization: Bearer <token>"
+```
+
+**Response:**
+```json
+{
+    "meta": {
+      "created_at": "2025-03-05T05:53:07.925Z",
+      "updated_at": "2025-03-05T05:53:07.925Z"
+    },
+    "_id": "67c7e6c340f3e5260fc1089c",
+    "title": "My Portfolio Project",
+    "content": {
+      "text": "Project description here",
+      "technologies": ["React", "Node.js"]
+    },
+    "media": ["project-screenshot.jpg"],
+    "type": "project",
+    "visibility": "public",
+    "author": {
+      "vanity": {
+        "display_photo": "photolink",
+        "cover_photo": "photolink",
+        "badges": []
+      },
+      "info": {
+        "name": {
+          "first": "Test",
+          "last": "User"
+        },
+        "links": {
+          "linkedin": "",
+          "facebook": "",
+          "instagram": "",
+          "other": []
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
+        "bio": "Test bio"
+      },
+      "_id": "67bf5d822d93557c2e6aee28"
+    },
+    "__v": 0
+}
+```
+---
+
+### GET /post/event/:id
+
+- Gets a specific event post, given the post `_id` as path parameter
+- Needs `Authorization: Bearer <token>` in request headers
+- Will only return posts of type "event"
+- Includes organization details since events are organization-specific
+
+**Request:**
+```bash
+curl -X GET localhost:3000/post/event/<post-id> -H "Authorization: Bearer <token>"
+
+# example request with post's _id as path parameter
+curl -X GET localhost:3000/post/event/67c6e2814911dd82e8dabb94 -H "Authorization: Bearer <token>"
+```
+
+**Response:**
+```json
+{
+    "meta": {
+      "created_at": "2025-03-05T05:53:07.925Z",
+      "updated_at": "2025-03-05T05:53:07.925Z"
+    },
+    "_id": "67c7e6c340f3e5260fc1089c",
+    "title": "Annual Tech Conference",
+    "content": {
+      "text": "Join us for our annual tech conference!",
+      "date": "2025-04-01T09:00:00.000Z",
+      "location": "Henry Sy Sr. Hall"
+    },
+    "media": ["event-banner.jpg"],
+    "type": "event",
+    "visibility": "public",
+    "author": {
+      "vanity": {
+        "display_photo": "photolink",
+        "cover_photo": "photolink",
+        "badges": []
+      },
+      "info": {
+        "name": {
+          "first": "Test",
+          "last": "User"
+        },
+        "links": {
+          "linkedin": "",
+          "facebook": "",
+          "instagram": "",
+          "other": []
+        },
+        "username": "@testuser",
+        "batchid": "123",
+        "program": "BSCS-ST",
+        "bio": "Test bio"
+      },
+      "_id": "67bf5d822d93557c2e6aee28"
+    },
+    "organization": {
+      "vanity": {
+        "display_photo": "org-photo.jpg",
+        "cover_photo": "org-cover.jpg",
+        "badges": []
+      },
+      "info": {
+        "name": "La Salle Computer Society",
+        "acronym": "LSCS",
+        "founding": "1990-01-01T00:00:00.000Z",
+        "bio": "DLSU's premier computing society"
+      },
+      "_id": "67bf5d822d93557c2e6aee30"
+    },
+    "__v": 0
+}
+```
+
+## Generic Post Routes
+
+- for creating a post regardless of type: `POST /post`
+- for updating a post: `PUT /post/:id`
+- for deleting a post: `DELETE /post/:id`
+
+---
+
 ### POST /post
 
 - creates a post with author as the authenticated user
 - needs `Authorization: Bearer token` in request headers
 
-- requires 3 fields: `title` (string), `content` (object), `type` (only: `normal` (default), `project`, or `event`) in the request body
-- optional fields: `visibility` (only: `public` (default), `organization`, `private`)
+- *required fields in request body:*
+    - `title` (string)
+    - `content` (Object)
+
+- *optional fields in request body:*
+    - `media` (string array)
+    - `type` (only: `normal` (default), `project`, or `event`)
+    - `visibility` (only: `public` (default), `organization`, `private`)
 
 > [!IMPORTANT]
 > This route is used to create **ALL TYPES** of post
@@ -447,9 +784,9 @@ curl -X GET localhost:3000/post/normal/67c6e2814911dd82e8dabb94 -H "Authorizatio
 ```bash
 # all required fields
 curl -X POST localhost:3000/post/normal -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d \
-'{"title": "POST by test101", "content": {"text": "yes yes content example something"}, "type": "normal"}'
+'{"title": "POST by test101", "content": {"text": "yes yes content example something"}}'
 
-# with visibility field
+# with optional fields
 curl -X POST localhost:3000/post/normal -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d \
 '{"title": "POST by test101", "content": {"text": "yes yes content example something"}, "type": "normal", "visibility": "public"}'
 ```
@@ -498,6 +835,7 @@ curl -X POST localhost:3000/post/normal -H "Content-Type: application/json" -H "
 }
 ```
 
+---
 
 ### PUT `/post/:id`
 
@@ -637,6 +975,8 @@ curl -X PUT "http://localhost:3000/post/<post-id>" \
   }
 }
 ```
+
+---
 
 ### DELETE /post/:id
 
