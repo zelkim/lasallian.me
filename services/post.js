@@ -163,7 +163,6 @@ export const GetEventPostById = async (req, res) => {
     }
 }
 
-// expects: title, content, media (optional for now)
 export const CreatePost = async (req, res) => {
     try {
         // get authenticated user (assume it is stored in session)
