@@ -1,5 +1,6 @@
 import Post, { POST_TYPES } from '../models/Post.js'
 import UserInfo from '../models/UserInfo.js'
+import Org from '../models/Org.js'
 
 export const GetAllPosts = async (req, res) => {
     try {
@@ -195,7 +196,7 @@ export const CreatePost = async (req, res) => {
                 return res.status(400).json({ error: 'Event posts require an organization.' });
             }
 
-            const orgExists = await OrgInfo.findById(organization);
+            const orgExists = await Org.findById(organization);
             if (!orgExists) {
                 return res.status(404).json({ error: 'Organization not found.' });
             }

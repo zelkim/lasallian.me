@@ -2,6 +2,7 @@ import { Schema, model } from 'mongoose'
 
 const userInfoSchema = new Schema({
     credentials: { type: Schema.Types.ObjectId, ref: 'user_credentials' },
+    badges: [{ type: Schema.Types.ObjectId, ref: 'badges' }],
     vanity: {
         display_photo: { type: String, required: false },
         cover_photo: { type: String, required: false },
@@ -25,6 +26,12 @@ const userInfoSchema = new Schema({
             instagram: { type: String, required: false },
             other: [String]
         }
+    },
+    account_type: {
+        type: String,
+        enum: ['individual', 'organization'],
+        default: 'individual',
+        required: true
     },
     meta: {
         created_at: { type: Date, required: true, default: Date.now },
