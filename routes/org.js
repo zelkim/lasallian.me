@@ -30,6 +30,8 @@ router.get("/:id", getOrgById);
  */
 router.get("/acronym/:acronym", getOrgByAcronym);
 
+// TODO: add auth middleware below to check if current user is valid org member with permissions to update and delete the org
+
 /**
  * @route PUT /:id
  * @description Updates organization information.
