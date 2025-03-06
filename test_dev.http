@@ -1,0 +1,159 @@
+### HTTP test file (https://www.jetbrains.com/help/idea/exploring-http-syntax.html)
+#
+# NOTE: Usage (for nvim):
+# - install luarocks and lua-5.1/lua5.1/compat-lua (via package manager)
+# - install rest.nvim plugin 
+# - hover cursor on a request you want to run and :Rest run
+#
+
+### vars
+@authToken = 
+@orgId = 67c981837c12b0d3b83b702d
+### @baseUrl = http://localhost:3000
+
+### get all post
+GET http://localhost:3000/post/all
+
+### register
+POST http://localhost:3000/user/register
+Content-Type: application/json 
+
+{
+    "credentials": {
+        "email": "w2helloworld@dlsu.edu.ph",
+        "password": "12345678@Aa"
+    }
+}
+
+### setup
+POST http://localhost:3000/user/setup
+Content-Type: application/json
+Authorization: Bearer <insert-token>
+
+{
+    "info": {
+        "name": {
+            "first": "w2helloworld",
+            "last": "YES"
+        },
+        "username": "@w2helloworld",
+        "batchid": "123",
+        "program": "BSIT"
+    }
+}
+
+### login
+POST http://localhost:3000/user/login
+Content-Type: application/json
+
+{
+    "credentials": {
+        "email": "w2helloworld@dlsu.edu.ph",
+        "password": "12345678@Aa"
+    }
+}
+
+### create post
+POST http://localhost:3000/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "title": "another normal post test title",
+    "content": {
+        "text": "NORMAL econtentyes yes content example something"
+    },
+    "type": "normal",
+    "visibility": "private"
+}
+
+### fetch all normal posts of user
+GET http://localhost:3000/post/normal
+Authorization: Bearer {{authToken}}
+
+### fetch all project posts of user
+GET http://localhost:3000/post/project
+Authorization: Bearer {{authToken}}
+
+### fetch all event posts of user
+GET http://localhost:3000/post/event
+Authorization: Bearer {{authToken}}
+
+### --- Organization Routes --- ###
+
+### create organization
+POST http://localhost:3000/org
+Content-Type: application/json
+
+{
+    "info": {
+        "name": "Sample Organization",
+        "acronym": "SORG",
+        "founding": "2024-03-01",
+        "bio": "A sample organization for testing",
+        "links": {
+            "linkedin": "https://linkedin.com/sampleorg",
+            "facebook": "https://facebook.com/sampleorg",
+            "instagram": "https://instagram.com/sampleorg",
+            "other": ["https://other-link.com"]
+        }
+    },
+    "vanity": {
+        "display_photo": "https://example.com/display.jpg",
+        "cover_photo": "https://example.com/cover.jpg",
+        "badges": []
+    }
+}
+
+### Get Organization by ID
+### Usage: http://localhost:3000/org/<org-id>
+GET http://localhost:3000/org/{{orgId}}
+
+### Get Organization by Acronym
+### Usage: http://localhost:3000/org/acronym/<org-acronym>
+GET http://localhost:3000/org/acronym/SORG
+
+### Update Organization
+### Usage: http://localhost:3000/org/<org-id>
+PUT http://localhost:3000/org/{{orgId}}
+Content-Type: application/json
+
+{
+    "info": {
+        "name": "Updated Organization Name",
+        "acronym": "SORG",
+        "bio": "Updated organization description",
+        "links": {
+            "linkedin": "https://linkedin.com/updated",
+            "facebook": "https://facebook.com/updated"
+        }
+    },
+    "vanity": {
+        "display_photo": "https://example.com/new-display.jpg"
+    }
+}
+
+### Delete Organization
+### Usage: http://localhost:3000/org/<org-id>
+DELETE http://localhost:3000/org/{{orgId}}
+
+### Add Member to Organization
+### Usage: http://localhost:3000/org/<org-id>/members
+# Note: Requires authentication
+POST http://localhost:3000/org/{{orgId}}/members
+Authorization: Bearer {{authToken}}
+
+### Add Member to Organization (with optional req.body)
+# Note: Requires authentication
+POST http://localhost:3000/org/{{orgId}}/members
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "position": "MEM"
+}
+
+### Get Organization Members
+### Usage: http://localhost:3000/org/<org-id>/members
+GET http://localhost:3000/org/{{orgId}}/members
+Authorization: Bearer {{authToken}}

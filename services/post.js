@@ -1,5 +1,7 @@
 import Post, { POST_TYPES } from '../models/Post.js'
 import UserInfo from '../models/UserInfo.js'
+import Org from '../models/Org.js'
+import { getOrgMemberRole, GetUserOrganizations, IsUserInOrganization } from '../services/org.js'
 
 export const GetAllPosts = async (req, res) => {
     try {
@@ -65,12 +67,17 @@ export const GetEventPostsByAuthor = async (req, res) => {
             return res.status(404).json({ error: 'User not found.' });
         }
 
+        const userOrgs = await GetUserOrganizations(authorId)
+
         const posts = await Post.find({
             author: authorId,
             type: POST_TYPES.EVENT,
             $or: [
                 { visibility: 'public' },
-                { organization: req.user.organization }
+                {
+                    visibility: 'public',
+                    organization: { $in: userOrgs },
+                }
             ]
         })
             .populate('author', 'vanity info')
@@ -162,7 +169,6 @@ export const GetEventPostById = async (req, res) => {
     }
 }
 
-// expects: title, content, media (optional for now)
 export const CreatePost = async (req, res) => {
     try {
         // get authenticated user (assume it is stored in session)
@@ -185,33 +191,48 @@ export const CreatePost = async (req, res) => {
         if (visibility && !['public', 'organization', 'private'].includes(visibility)) {
             return res.status(400).json({ error: 'Invalid visibility option.' });
         }
+        if (visibility === 'organization') {
+            const isMember = await IsUserInOrganization(authorId, organization);
+            if (!isMember) {
+                return res.status(403).json({
+                    error: 'You must be a member of the organization to create organization-visible posts.'
+                });
+            }
+        }
 
-        // Validate organization for event posts
         if (type === POST_TYPES.EVENT) {
             if (!organization) {
                 return res.status(400).json({ error: 'Event posts require an organization.' });
             }
 
-            const orgExists = await OrgInfo.findById(organization);
+            const orgExists = await Org.findById(organization);
             if (!orgExists) {
                 return res.status(404).json({ error: 'Organization not found.' });
             }
         }
 
+        if (organization || type === POST_TYPES.EVENT) {
+            const memberRole = await getOrgMemberRole(authorId, organization);
+
+            if (!memberRole) {
+                return res.status(403).json({
+                    error: 'You must be a member of the organization to create this post.'
+                });
+            }
+
+            // for events, verify if user has appropriate position/role
+            if (type === POST_TYPES.EVENT) {
+                // const allowedPositions = ['PRES', 'EVP', 'VP', 'AVP'];
+                const allowedPositions = ['PRES', 'EVP', 'VP', 'AVP', 'CT', 'JO', 'MEM']; // NOTE: for now allow all for testing
+                if (!allowedPositions.includes(memberRole)) {
+                    return res.status(403).json({
+                        error: 'You do not have permission to create event posts.'
+                    });
+                }
+            }
+        }
+
         // create new post
-        // const post = new Post({
-        //     title,
-        //     content,
-        //     media: media || [],
-        //     type: req.body.type,
-        //     visibility: req.body.visibility || 'public',
-        //     author: authorId,
-        //     organization: req.body.organization,
-        //     meta: {
-        //         created_at: new Date,
-        //         updated_at: new Date
-        //     },
-        // })
         const post = new Post({
             title,
             content,
@@ -316,10 +337,14 @@ export const DeletePost = async (req, res) => {
             return res.status(404).json({ error: 'User not found.' });
         }
 
-        const post = await Post.findByIdAndDelete(req.params.id);
+        const post = await Post.findById(req.params.id);
         if (!post) {
             return res.status(404).json({ error: 'Post not found.' });
         }
+        if (!post.author.equals(authorId)) {
+            return res.status(403).json({ error: 'Not authorized to delete this post.' });
+        }
+        await Post.findByIdAndDelete(req.params.id);
 
         return res.status(200).json({
             status: 'success',

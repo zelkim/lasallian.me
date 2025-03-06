@@ -30,7 +30,7 @@ const postSchema = new mongoose.Schema({
     organization: {
         type: mongoose.Schema.Types.ObjectId, ref: 'org_info', required: function () {
             // require organization ref only if the post type is "event"
-            return this.type === POST_TYPES.EVENT;
+            return this.type === POST_TYPES.EVENT || this.visibility === "organization";
         }
     }
 })
