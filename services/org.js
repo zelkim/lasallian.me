@@ -141,6 +141,14 @@ export const AddOrgMember = async (req, res) => {
         const { orgId } = req.params;
         const userId = req.user._id;
 
+        const org = await Org.findById(orgId);
+        if (!org) {
+            return res.status(404).json({
+                status: "error",
+                msg: "Organization not found"
+            });
+        }
+
         // check if already a member
         const existingMember = await OrgMember.findOne({
             author: userId,
@@ -157,7 +165,11 @@ export const AddOrgMember = async (req, res) => {
             author: userId,
             org: orgId,
             joindate: new Date(),
-            position: 'MEM' // default position
+            position: req.body.position || 'MEM', // default position
+            meta: {
+                created_at: new Date(),
+                updated_at: new Date()
+            }
         });
 
         // add member ref to org members array
@@ -169,15 +181,15 @@ export const AddOrgMember = async (req, res) => {
             }
         );
 
-        return res.status(200).json({
+        return res.status(201).json({
             status: "success",
             member: newMember
         });
     } catch (err) {
-        console.error(err);
+        console.error("AddOrgMember Error:", err);
         return res.status(400).json({
             status: "error",
-            msg: "Could not add member to organization"
+            msg: err.message || "Could not add member to organization"
         });
     }
 };
@@ -192,9 +204,9 @@ export const GetOrgMembers = async (req, res) => {
                 path: 'members',
                 populate: {
                     path: 'author',
-                    select: 'vanity info'
+                    select: 'vanity info meta'
                 }
-            });
+            }).select('members');
         if (!org) {
             return res.status(404).json({
                 status: "error",
@@ -202,15 +214,24 @@ export const GetOrgMembers = async (req, res) => {
             });
         }
 
+        const members = org.members.map(member => ({
+            _id: member._id,
+            user: member.author,
+            position: member.position,
+            joindate: member.joindate,
+            meta: member.meta
+        }));
+
         return res.status(200).json({
             status: "success",
-            members: org.members
+            count: members.length,
+            members
         });
     } catch (err) {
-        console.error(err);
+        console.error("GetOrgMembers Error:", err);
         return res.status(400).json({
             status: "error",
-            msg: "Could not get organization members"
+            msg: err.message || "Could not get organization members"
         });
     }
 };

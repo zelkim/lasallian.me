@@ -8,6 +8,7 @@ import {
     AddOrgMember,
     GetOrgMembers,
 } from "../services/org.js";
+import { validateSession } from "../services/session.js";
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ const router = express.Router();
  * @description Creates a new organization.
  * @access Public
  */
-router.post("/", createOrg);
+router.post("/", validateSession, createOrg);
 
 /**
  * @route GET /:id
@@ -39,16 +40,16 @@ router.get("/acronym/:acronym", getOrgByAcronym);
  * @description Updates organization information.
  * @access Public
  */
-router.put("/:id", UpdateOrgInfo);
+router.put("/:id", validateSession, UpdateOrgInfo);
 
 /**
  * @route DELETE /:id
  * @description Deletes an organization by its ID.
  * @access Public
  */
-router.delete("/:id", DeleteOrgInfo);
+router.delete("/:id", validateSession, DeleteOrgInfo);
 
-router.post("/:id/members", AddOrgMember)
-router.get("/:id/members", GetOrgMembers)
+router.post("/:orgId/members", validateSession, AddOrgMember)
+router.get("/:orgId/members", validateSession, GetOrgMembers)
 
 export default router;
