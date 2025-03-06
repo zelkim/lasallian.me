@@ -3,7 +3,7 @@ export const parseHashtags = (body) => {
   return matches ? matches : [];
 };
 
-const searchHashtags = async (query) => {
+export const searchHashtags = async (query) => {
   const regex = new RegExp(`^${query}`, "i");
 
   const result = await Post.aggregate([
