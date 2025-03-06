@@ -6,6 +6,11 @@
 # - hover cursor on a request you want to run and :Rest run
 #
 
+### vars
+@authToken = 
+@orgId = 67c981837c12b0d3b83b702d
+### @baseUrl = http://localhost:3000
+
 ### get all post
 GET http://localhost:3000/post/all
 
@@ -51,7 +56,7 @@ Content-Type: application/json
 ### create post
 POST http://localhost:3000/post
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTI1ODU0NCwiZXhwIjoxNzQxMjYyMTQ0fQ.hN3qGdcgoJQwWOIlAgWIMv1Q7ZpP40yj4Hf0rCaKH48
+Authorization: Bearer {{authToken}}
 
 {
     "title": "another normal post test title",
@@ -64,15 +69,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4Z
 
 ### fetch all normal posts of user
 GET http://localhost:3000/post/normal
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTI1ODU0NCwiZXhwIjoxNzQxMjYyMTQ0fQ.hN3qGdcgoJQwWOIlAgWIMv1Q7ZpP40yj4Hf0rCaKH48
+Authorization: Bearer {{authToken}}
 
 ### fetch all project posts of user
 GET http://localhost:3000/post/project
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTI1ODU0NCwiZXhwIjoxNzQxMjYyMTQ0fQ.hN3qGdcgoJQwWOIlAgWIMv1Q7ZpP40yj4Hf0rCaKH48
+Authorization: Bearer {{authToken}}
 
 ### fetch all event posts of user
 GET http://localhost:3000/post/event
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTI1ODU0NCwiZXhwIjoxNzQxMjYyMTQ0fQ.hN3qGdcgoJQwWOIlAgWIMv1Q7ZpP40yj4Hf0rCaKH48
+Authorization: Bearer {{authToken}}
 
 ### --- Organization Routes --- ###
 
@@ -102,7 +107,7 @@ Content-Type: application/json
 
 ### Get Organization by ID
 ### Usage: http://localhost:3000/org/<org-id>
-GET http://localhost:3000/org/67c981837c12b0d3b83b702d
+GET http://localhost:3000/org/{{orgId}}
 
 ### Get Organization by Acronym
 ### Usage: http://localhost:3000/org/acronym/<org-acronym>
@@ -110,7 +115,7 @@ GET http://localhost:3000/org/acronym/SORG
 
 ### Update Organization
 ### Usage: http://localhost:3000/org/<org-id>
-PUT http://localhost:3000/org/67c981837c12b0d3b83b702d
+PUT http://localhost:3000/org/{{orgId}}
 Content-Type: application/json
 
 {
@@ -130,17 +135,17 @@ Content-Type: application/json
 
 ### Delete Organization
 ### Usage: http://localhost:3000/org/<org-id>
-DELETE http://localhost:3000/org/67c981837c12b0d3b83b702d
+DELETE http://localhost:3000/org/{{orgId}}
 
 ### Add Member to Organization
 ### Usage: http://localhost:3000/org/<org-id>/members
 # Note: Requires authentication
-POST http://localhost:3000/org/67c981837c12b0d3b83b702d/members
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTI3NTI4MSwiZXhwIjoxNzQxMjc4ODgxfQ.-YlAl6_Zd7XRkbNfvLNt98Ql6E6LoLapH36Yd9mFu-w
+POST http://localhost:3000/org/{{orgId}}/members
+Authorization: Bearer {{authToken}}
 
 ### Add Member to Organization (with optional req.body)
 # Note: Requires authentication
-POST http://localhost:3000/org/67c981837c12b0d3b83b702d/members
+POST http://localhost:3000/org/{{orgId}}/members
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
@@ -150,5 +155,5 @@ Authorization: Bearer {{authToken}}
 
 ### Get Organization Members
 ### Usage: http://localhost:3000/org/<org-id>/members
-GET http://localhost:3000/org/67c981837c12b0d3b83b702d/members
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTI3NTI4MSwiZXhwIjoxNzQxMjc4ODgxfQ.-YlAl6_Zd7XRkbNfvLNt98Ql6E6LoLapH36Yd9mFu-w
+GET http://localhost:3000/org/{{orgId}}/members
+Authorization: Bearer {{authToken}}
