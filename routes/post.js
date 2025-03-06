@@ -1,37 +1,39 @@
-import express from 'express'
+import express from "express";
 import {
-    GetAllPosts,
-    GetNormalPostsByAuthor,
-    GetProjectPostsByAuthor,
-    GetEventPostsByAuthor,
-    GetNormalPostById,
-    GetProjectPostById,
-    GetEventPostById,
-    CreatePost,
-    UpdatePost,
-    DeletePost
-} from '../services/post.js'
-import { validateSession } from '../services/session.js'
+  GetAllPosts,
+  GetNormalPostsByAuthor,
+  GetProjectPostsByAuthor,
+  GetEventPostsByAuthor,
+  GetNormalPostById,
+  GetProjectPostById,
+  GetEventPostById,
+  CreatePost,
+  UpdatePost,
+  DeletePost,
+  GetAllPostsByHashtag,
+} from "../services/post.js";
+import { validateSession } from "../services/session.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.get("/all", GetAllPosts) // /post
+router.get("/all", GetAllPosts); // /post
+router.get("/:hashtag", validateSession, GetAllPostsByHashtag);
 
 // normal posts
-router.get("/normal", validateSession, GetNormalPostsByAuthor) // gets all normal posts of authenticated user
-router.get("/normal/:id", validateSession, GetNormalPostById)
+router.get("/normal", validateSession, GetNormalPostsByAuthor); // gets all normal posts of authenticated user
+router.get("/normal/:id", validateSession, GetNormalPostById);
 
 // project posts (visible to recruiters)
-router.get("/project", validateSession, GetProjectPostsByAuthor)
-router.get("/project/:id", validateSession, GetProjectPostById)
+router.get("/project", validateSession, GetProjectPostsByAuthor);
+router.get("/project/:id", validateSession, GetProjectPostById);
 
 // event posts
-router.get("/event", validateSession, GetEventPostsByAuthor)
-router.get("/event/:id", validateSession, GetEventPostById)
+router.get("/event", validateSession, GetEventPostsByAuthor);
+router.get("/event/:id", validateSession, GetEventPostById);
 
 // Generic post creation/update/delete (handles all types)
-router.post("/", validateSession, CreatePost)
-router.put("/:id", validateSession, UpdatePost)
-router.delete("/:id", validateSession, DeletePost)
+router.post("/", validateSession, CreatePost);
+router.put("/:id", validateSession, UpdatePost);
+router.delete("/:id", validateSession, DeletePost);
 
-export default router
+export default router;
