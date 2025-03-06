@@ -1,19 +1,23 @@
-import Post, { POST_TYPES } from '../models/Post.js'
-import UserInfo from '../models/UserInfo.js'
-import Org from '../models/Org.js'
-import { getOrgMemberRole, GetUserOrganizations, IsUserInOrganization } from '../services/org.js'
+import Post, { POST_TYPES } from '../models/Post.js';
+import UserInfo from '../models/UserInfo.js';
+import Org from '../models/Org.js';
+import {
+  getOrgMemberRole,
+  GetUserOrganizations,
+  IsUserInOrganization,
+} from '../services/org.js';
 
 export const GetAllPosts = async (req, res) => {
   try {
     const allPosts = await Post.find()
-      .populate("author", "vanity info")
-      .populate("comments")
-      .populate("organization");
+      .populate('author', 'vanity info')
+      .populate('comments')
+      .populate('organization');
 
     return res.status(200).json(allPosts);
   } catch (err) {
     console.error(err);
-    return res.status(404).json({ error: "GetAllPosts error" });
+    return res.status(404).json({ error: 'GetAllPosts error' });
   }
 };
 
@@ -21,15 +25,15 @@ export const GetAllPostsByHashtag = async (req, res) => {
   try {
     const hashtag = req.params.hashtag;
 
-    const allPosts = await Post.find({ "hashtags.tag": hashtag })
-      .populate("author", "vanity info")
-      .populate("comments")
-      .populate("organization");
+    const allPosts = await Post.find({ 'hashtags.tag': hashtag })
+      .populate('author', 'vanity info')
+      .populate('comments')
+      .populate('organization');
 
     return res.status(200).json(allPosts);
   } catch (err) {
     console.error(err);
-    return res.status(404).json({ error: "GetAllPosts error" });
+    return res.status(404).json({ error: 'GetAllPosts error' });
   }
 };
 
@@ -40,20 +44,22 @@ export const GetNormalPostsByAuthor = async (req, res) => {
 
     const user = await UserInfo.findById(authorId);
     if (!user) {
-      return res.status(404).json({ error: "User not found." });
+      return res.status(404).json({ error: 'User not found.' });
     }
 
     const userNormalPosts = await Post.find({
       author: authorId,
       type: POST_TYPES.NORMAL,
     })
-      .populate("author", "vanity info")
-      .populate("comments");
+      .populate('author', 'vanity info')
+      .populate('comments');
 
     return res.status(200).json(userNormalPosts);
   } catch (err) {
     console.error(err);
-    return res.status(404).json({ error: "GetAllNormalPostByAuthor error" });
+    return res
+      .status(404)
+      .json({ error: 'GetAllNormalPostByAuthor error' });
   }
 };
 
@@ -63,72 +69,57 @@ export const GetProjectPostsByAuthor = async (req, res) => {
 
     const user = await UserInfo.findById(authorId);
     if (!user) {
-      return res.status(404).json({ error: "User not found." });
+      return res.status(404).json({ error: 'User not found.' });
     }
 
     const posts = await Post.find({
       author: authorId,
       type: POST_TYPES.PROJECT,
     })
-      .populate("author", "vanity info")
-      .populate("comments");
+      .populate('author', 'vanity info')
+      .populate('comments');
 
     return res.status(200).json(posts);
   } catch (error) {
-    console.error("Error fetching project posts:", error);
+    console.error('Error fetching project posts:', error);
     return res
       .status(500)
-      .json({ error: "An error occurred while fetching project posts." });
+      .json({ error: 'An error occurred while fetching project posts.' });
   }
 };
 
 export const GetEventPostsByAuthor = async (req, res) => {
-    try {
-        const authorId = req.user._id
+  try {
+    const authorId = req.user._id;
 
-        const user = await UserInfo.findById(authorId);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found.' });
-        }
-
-        const userOrgs = await GetUserOrganizations(authorId)
-
-        const posts = await Post.find({
-            author: authorId,
-            type: POST_TYPES.EVENT,
-            $or: [
-                { visibility: 'public' },
-                {
-                    visibility: 'public',
-                    organization: { $in: userOrgs },
-                }
-            ]
-        })
-            .populate('author', 'vanity info')
-            .populate('comments')
-            .populate('organization')
-
-        return res.status(200).json(posts);
-    } catch (error) {
-        console.error('Error fetching event posts:', error);
-        return res.status(500).json({ error: 'An error occurred while fetching event posts.' });
+    const user = await UserInfo.findById(authorId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
     }
+
+    const userOrgs = await GetUserOrganizations(authorId);
 
     const posts = await Post.find({
       author: authorId,
       type: POST_TYPES.EVENT,
-      $or: [{ visibility: "public" }, { organization: req.user.organization }],
+      $or: [
+        { visibility: 'public' },
+        {
+          visibility: 'public',
+          organization: { $in: userOrgs },
+        },
+      ],
     })
-      .populate("author", "vanity info")
-      .populate("comments")
-      .populate("organization");
+      .populate('author', 'vanity info')
+      .populate('comments')
+      .populate('organization');
 
     return res.status(200).json(posts);
   } catch (error) {
-    console.error("Error fetching event posts:", error);
+    console.error('Error fetching event posts:', error);
     return res
       .status(500)
-      .json({ error: "An error occurred while fetching event posts." });
+      .json({ error: 'An error occurred while fetching event posts.' });
   }
 };
 
@@ -143,21 +134,21 @@ export const GetNormalPostById = async (req, res) => {
       _id: postId,
       type: POST_TYPES.NORMAL,
     })
-      .populate("author", "vanity info")
-      .populate("comments");
+      .populate('author', 'vanity info')
+      .populate('comments');
 
     if (!post) {
       return res.status(404).json({
-        error: "Normal post not found.",
+        error: 'Normal post not found.',
       });
     }
 
     return res.status(200).json(post);
   } catch (error) {
-    console.error("Error fetching normal post:", error);
+    console.error('Error fetching normal post:', error);
     return res
       .status(500)
-      .json({ error: "An error occurred while fetching normal post." });
+      .json({ error: 'An error occurred while fetching normal post.' });
   }
 };
 
@@ -170,21 +161,21 @@ export const GetProjectPostById = async (req, res) => {
       _id: postId,
       type: POST_TYPES.PROJECT,
     })
-      .populate("author", "vanity info")
-      .populate("comments");
+      .populate('author', 'vanity info')
+      .populate('comments');
 
     if (!post) {
       return res.status(404).json({
-        error: "Project post not found.",
+        error: 'Project post not found.',
       });
     }
 
     return res.status(200).json(post);
   } catch (error) {
-    console.error("Error fetching normal post:", error);
+    console.error('Error fetching normal post:', error);
     return res
       .status(500)
-      .json({ error: "An error occurred while fetching normal post." });
+      .json({ error: 'An error occurred while fetching normal post.' });
   }
 };
 
@@ -197,147 +188,115 @@ export const GetEventPostById = async (req, res) => {
       _id: postId,
       type: POST_TYPES.EVENT,
     })
-      .populate("author", "vanity info")
-      .populate("comments")
-      .populate("organization");
+      .populate('author', 'vanity info')
+      .populate('comments')
+      .populate('organization');
 
     if (!post) {
       return res.status(404).json({
-        error: "Event post not found.",
+        error: 'Event post not found.',
       });
     }
 
     return res.status(200).json(post);
   } catch (error) {
-    console.error("Error fetching normal post:", error);
+    console.error('Error fetching normal post:', error);
     return res
       .status(500)
-      .json({ error: "An error occurred while fetching normal post." });
+      .json({ error: 'An error occurred while fetching normal post.' });
   }
 };
 
 export const CreatePost = async (req, res) => {
-    try {
-        // get authenticated user (assume it is stored in session)
-        const authorId = req.user._id
+  try {
+    // get authenticated user (assume it is stored in session)
+    const authorId = req.user._id;
 
-        const user = await UserInfo.findById(authorId);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found.' });
-        }
-
-        const { title, content, media, type, visibility, organization } = req.body;
-
-        if (!content || typeof content !== 'object') {
-            return res.status(400).json({ error: 'Content is required and must be an object.' });
-        }
-        if (type && !Object.values(POST_TYPES).includes(req.body.type)) {
-            return res.status(400).json({ error: 'Invalid post type.' });
-        }
-
-        if (visibility && !['public', 'organization', 'private'].includes(visibility)) {
-            return res.status(400).json({ error: 'Invalid visibility option.' });
-        }
-        if (visibility === 'organization') {
-            const isMember = await IsUserInOrganization(authorId, organization);
-            if (!isMember) {
-                return res.status(403).json({
-                    error: 'You must be a member of the organization to create organization-visible posts.'
-                });
-            }
-        }
-
-        if (type === POST_TYPES.EVENT) {
-            if (!organization) {
-                return res.status(400).json({ error: 'Event posts require an organization.' });
-            }
-
-            const orgExists = await Org.findById(organization);
-            if (!orgExists) {
-                return res.status(404).json({ error: 'Organization not found.' });
-            }
-        }
-
-        if (organization || type === POST_TYPES.EVENT) {
-            const memberRole = await getOrgMemberRole(authorId, organization);
-
-            if (!memberRole) {
-                return res.status(403).json({
-                    error: 'You must be a member of the organization to create this post.'
-                });
-            }
-
-            // for events, verify if user has appropriate position/role
-            if (type === POST_TYPES.EVENT) {
-                // const allowedPositions = ['PRES', 'EVP', 'VP', 'AVP'];
-                const allowedPositions = ['PRES', 'EVP', 'VP', 'AVP', 'CT', 'JO', 'MEM']; // NOTE: for now allow all for testing
-                if (!allowedPositions.includes(memberRole)) {
-                    return res.status(403).json({
-                        error: 'You do not have permission to create event posts.'
-                    });
-                }
-            }
-        }
-
-        // create new post
-        const post = new Post({
-            title,
-            content,
-            media: Array.isArray(media) ? media : [],
-            type: type || POST_TYPES.NORMAL,
-            visibility: visibility || 'public',
-            author: authorId,
-            organization: organization,
-            meta: {
-                created_at: new Date(),
-                updated_at: new Date()
-            }
-        });
-
-        const savedPost = await post.save()
-        return res.status(201).json({
-            status: 'success',
-            savedPost
-        })
-    } catch (err) {
-        console.error(err)
-        return res.status(400).send({ status: 'error', msg: err })
+    const user = await UserInfo.findById(authorId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
     }
 
-    // Validate organization for event posts
+    const { title, content, media, type, visibility, organization } =
+      req.body;
+
+    if (!content || typeof content !== 'object') {
+      return res
+        .status(400)
+        .json({ error: 'Content is required and must be an object.' });
+    }
+    if (type && !Object.values(POST_TYPES).includes(req.body.type)) {
+      return res.status(400).json({ error: 'Invalid post type.' });
+    }
+
+    if (
+      visibility &&
+      !['public', 'organization', 'private'].includes(visibility)
+    ) {
+      return res
+        .status(400)
+        .json({ error: 'Invalid visibility option.' });
+    }
+    if (visibility === 'organization') {
+      const isMember = await IsUserInOrganization(authorId, organization);
+      if (!isMember) {
+        return res.status(403).json({
+          error: 'You must be a member of the organization to create organization-visible posts.',
+        });
+      }
+    }
+
     if (type === POST_TYPES.EVENT) {
       if (!organization) {
         return res
           .status(400)
-          .json({ error: "Event posts require an organization." });
+          .json({ error: 'Event posts require an organization.' });
       }
 
-      const orgExists = await OrgInfo.findById(organization);
+      const orgExists = await Org.findById(organization);
       if (!orgExists) {
-        return res.status(404).json({ error: "Organization not found." });
+        return res
+          .status(404)
+          .json({ error: 'Organization not found.' });
+      }
+    }
+
+    if (organization || type === POST_TYPES.EVENT) {
+      const memberRole = await getOrgMemberRole(authorId, organization);
+
+      if (!memberRole) {
+        return res.status(403).json({
+          error: 'You must be a member of the organization to create this post.',
+        });
+      }
+
+      // for events, verify if user has appropriate position/role
+      if (type === POST_TYPES.EVENT) {
+        // const allowedPositions = ['PRES', 'EVP', 'VP', 'AVP'];
+        const allowedPositions = [
+          'PRES',
+          'EVP',
+          'VP',
+          'AVP',
+          'CT',
+          'JO',
+          'MEM',
+        ]; // NOTE: for now allow all for testing
+        if (!allowedPositions.includes(memberRole)) {
+          return res.status(403).json({
+            error: 'You do not have permission to create event posts.',
+          });
+        }
       }
     }
 
     // create new post
-    // const post = new Post({
-    //     title,
-    //     content,
-    //     media: media || [],
-    //     type: req.body.type,
-    //     visibility: req.body.visibility || 'public',
-    //     author: authorId,
-    //     organization: req.body.organization,
-    //     meta: {
-    //         created_at: new Date,
-    //         updated_at: new Date
-    //     },
-    // })
     const post = new Post({
       title,
       content,
       media: Array.isArray(media) ? media : [],
       type: type || POST_TYPES.NORMAL,
-      visibility: visibility || "public",
+      visibility: visibility || 'public',
       author: authorId,
       organization: organization,
       meta: {
@@ -348,12 +307,12 @@ export const CreatePost = async (req, res) => {
 
     const savedPost = await post.save();
     return res.status(201).json({
-      status: "success",
+      status: 'success',
       savedPost,
     });
   } catch (err) {
     console.error(err);
-    return res.status(400).send({ status: "error", msg: err });
+    return res.status(400).send({ status: 'error', msg: err });
   }
 };
 
@@ -363,45 +322,61 @@ export const UpdatePost = async (req, res) => {
     const { id } = req.params;
     const authorId = req.user._id;
 
-    const allowedUpdates = ["title", "content", "media", "type", "visibility"];
+    const allowedUpdates = [
+      'title',
+      'content',
+      'media',
+      'type',
+      'visibility',
+    ];
     const updates = Object.keys(req.body);
     const isValidOperation = updates.every((update) =>
-      allowedUpdates.includes(update),
+      allowedUpdates.includes(update)
     );
     if (!isValidOperation) {
       return res.status(400).json({
-        status: "error",
-        msg: "Invalid updates. Only title, content and media can be updated.",
+        status: 'error',
+        msg: 'Invalid updates. Only title, content and media can be updated.',
       });
     }
 
     const existingPost = await Post.findById(id);
     if (!existingPost) {
-      return res.status(404).json({ status: "error", msg: "Post not found" });
+      return res
+        .status(404)
+        .json({ status: 'error', msg: 'Post not found' });
     }
 
     if (!existingPost.author.equals(authorId)) {
       return res
         .status(403)
-        .json({ status: "error", msg: "Not authorized to update this post" });
+        .json({
+          status: 'error',
+          msg: 'Not authorized to update this post',
+        });
     }
 
     // required fields should not be empty
-    if (req.body.content && typeof req.body.content !== "object") {
+    if (req.body.content && typeof req.body.content !== 'object') {
       return res
         .status(400)
-        .json({ status: "error", msg: "Content must be an object" });
+        .json({ status: 'error', msg: 'Content must be an object' });
     }
 
-    if (req.body.type && !Object.values(POST_TYPES).includes(req.body.type)) {
-      return res.status(400).json({ error: "Invalid post type." });
+    if (
+      req.body.type &&
+      !Object.values(POST_TYPES).includes(req.body.type)
+    ) {
+      return res.status(400).json({ error: 'Invalid post type.' });
     }
 
     if (
       req.body.visibility &&
-      !["public", "organization", "private"].includes(req.body.visibility)
+      !['public', 'organization', 'private'].includes(req.body.visibility)
     ) {
-      return res.status(400).json({ error: "Invalid visibility option." });
+      return res
+        .status(400)
+        .json({ error: 'Invalid visibility option.' });
     }
 
     const updateData = {
@@ -417,16 +392,16 @@ export const UpdatePost = async (req, res) => {
     const updatedPost = await Post.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
-    }).populate("author", "vanity info");
+    }).populate('author', 'vanity info');
 
     res.status(200).json({
-      status: "success",
+      status: 'success',
       post: updatedPost,
     });
   } catch (err) {
-    console.error("UpdatePost Error:", err);
+    console.error('UpdatePost Error:', err);
     res.status(400).json({
-      status: "error",
+      status: 'error',
       msg: err.message,
     });
   }
@@ -434,39 +409,32 @@ export const UpdatePost = async (req, res) => {
 
 // expects id as param
 export const DeletePost = async (req, res) => {
-    try {
-        // get authenticated user (assume it is stored in session)
-        const authorId = req.user._id
+  try {
+    // get authenticated user (assume it is stored in session)
+    const authorId = req.user._id;
 
-        const user = await UserInfo.findById(authorId);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found.' });
-        }
-
-        const post = await Post.findById(req.params.id);
-        if (!post) {
-            return res.status(404).json({ error: 'Post not found.' });
-        }
-        if (!post.author.equals(authorId)) {
-            return res.status(403).json({ error: 'Not authorized to delete this post.' });
-        }
-        await Post.findByIdAndDelete(req.params.id);
-
-        return res.status(200).json({
-            status: 'success',
-            message: 'Post deleted successfully.'
-        })
-    } catch (err) {
-        console.error(err)
-        return res.status(400).send({ status: 'error', msg: err })
+    const user = await UserInfo.findById(authorId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
     }
 
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ error: 'Post not found.' });
+    }
+    if (!post.author.equals(authorId)) {
+      return res
+        .status(403)
+        .json({ error: 'Not authorized to delete this post.' });
+    }
+    await Post.findByIdAndDelete(req.params.id);
+
     return res.status(200).json({
-      status: "success",
-      message: "Post deleted successfully.",
+      status: 'success',
+      message: 'Post deleted successfully.',
     });
   } catch (err) {
     console.error(err);
-    return res.status(400).send({ status: "error", msg: err });
+    return res.status(400).send({ status: 'error', msg: err });
   }
 };
