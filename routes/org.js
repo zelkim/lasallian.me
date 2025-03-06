@@ -5,6 +5,8 @@ import {
     getOrgByAcronym,
     UpdateOrgInfo,
     DeleteOrgInfo,
+    AddOrgMember,
+    GetOrgMembers,
 } from "../services/org.js";
 
 const router = express.Router();
@@ -45,5 +47,8 @@ router.put("/:id", UpdateOrgInfo);
  * @access Public
  */
 router.delete("/:id", DeleteOrgInfo);
+
+router.post("/:id/members", AddOrgMember)
+router.get("/:id/members", GetOrgMembers)
 
 export default router;
