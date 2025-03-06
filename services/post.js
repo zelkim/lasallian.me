@@ -39,8 +39,8 @@ export const GetAllPostsByHashtag = async (req, res) => {
 
 // gets all normal posts of signed in user
 export const GetNormalPostsByAuthor = async (req, res) => {
-  try {
-    const authorId = req.user._id;
+    try {
+        const authorId = req.user._id
 
     const user = await UserInfo.findById(authorId);
     if (!user) {
@@ -64,8 +64,8 @@ export const GetNormalPostsByAuthor = async (req, res) => {
 };
 
 export const GetProjectPostsByAuthor = async (req, res) => {
-  try {
-    const authorId = req.user._id;
+    try {
+        const authorId = req.user._id
 
     const user = await UserInfo.findById(authorId);
     if (!user) {
@@ -122,6 +122,7 @@ export const GetEventPostsByAuthor = async (req, res) => {
       .json({ error: 'An error occurred while fetching event posts.' });
   }
 };
+
 
 // TODO: for these services (getting post by id), can restrict to posts created by the authenticated user, just add req.user._id check
 
@@ -438,3 +439,4 @@ export const DeletePost = async (req, res) => {
     return res.status(400).send({ status: 'error', msg: err });
   }
 };
+
