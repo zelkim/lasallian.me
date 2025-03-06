@@ -1,11 +1,14 @@
 import express from "express";
 import {
-  createOrg,
-  getOrgById,
-  getOrgByAcronym,
-  UpdateOrgInfo,
-  DeleteOrgInfo,
+    createOrg,
+    getOrgById,
+    getOrgByAcronym,
+    UpdateOrgInfo,
+    DeleteOrgInfo,
+    AddOrgMember,
+    GetOrgMembers,
 } from "../services/org.js";
+import { validateSession } from "../services/session.js";
 
 const router = express.Router();
 
@@ -14,7 +17,7 @@ const router = express.Router();
  * @description Creates a new organization.
  * @access Public
  */
-router.post("/", createOrg);
+router.post("/", validateSession, createOrg);
 
 /**
  * @route GET /:id
@@ -30,18 +33,23 @@ router.get("/:id", getOrgById);
  */
 router.get("/acronym/:acronym", getOrgByAcronym);
 
+// TODO: add auth middleware below to check if current user is valid org member with permissions to update and delete the org
+
 /**
  * @route PUT /:id
  * @description Updates organization information.
  * @access Public
  */
-router.put("/:id", UpdateOrgInfo);
+router.put("/:id", validateSession, UpdateOrgInfo);
 
 /**
  * @route DELETE /:id
  * @description Deletes an organization by its ID.
  * @access Public
  */
-router.delete("/:id", DeleteOrgInfo);
+router.delete("/:id", validateSession, DeleteOrgInfo);
+
+router.post("/:orgId/members", validateSession, AddOrgMember)
+router.get("/:orgId/members", validateSession, GetOrgMembers)
 
 export default router;

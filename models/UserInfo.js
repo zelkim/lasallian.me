@@ -5,7 +5,7 @@ const userInfoSchema = new Schema({
     vanity: {
         display_photo: { type: String, required: false },
         cover_photo: { type: String, required: false },
-        badges: [Schema.Types.ObjectId]
+        badges: [{ type: Schema.Types.ObjectId, ref: 'badges' }]
     },
     info: {
         name: {

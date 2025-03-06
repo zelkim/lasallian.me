@@ -1,5 +1,7 @@
-import Post, { POST_TYPES } from "../models/Post.js";
-import UserInfo from "../models/UserInfo.js";
+import Post, { POST_TYPES } from '../models/Post.js'
+import UserInfo from '../models/UserInfo.js'
+import Org from '../models/Org.js'
+import { getOrgMemberRole, GetUserOrganizations, IsUserInOrganization } from '../services/org.js'
 
 export const GetAllPosts = async (req, res) => {
   try {
@@ -81,12 +83,35 @@ export const GetProjectPostsByAuthor = async (req, res) => {
 };
 
 export const GetEventPostsByAuthor = async (req, res) => {
-  try {
-    const authorId = req.user._id;
+    try {
+        const authorId = req.user._id
 
-    const user = await UserInfo.findById(authorId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found." });
+        const user = await UserInfo.findById(authorId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        const userOrgs = await GetUserOrganizations(authorId)
+
+        const posts = await Post.find({
+            author: authorId,
+            type: POST_TYPES.EVENT,
+            $or: [
+                { visibility: 'public' },
+                {
+                    visibility: 'public',
+                    organization: { $in: userOrgs },
+                }
+            ]
+        })
+            .populate('author', 'vanity info')
+            .populate('comments')
+            .populate('organization')
+
+        return res.status(200).json(posts);
+    } catch (error) {
+        console.error('Error fetching event posts:', error);
+        return res.status(500).json({ error: 'An error occurred while fetching event posts.' });
     }
 
     const posts = await Post.find({
@@ -191,33 +216,92 @@ export const GetEventPostById = async (req, res) => {
   }
 };
 
-// expects: title, content, media (optional for now)
 export const CreatePost = async (req, res) => {
-  try {
-    // get authenticated user (assume it is stored in session)
-    const authorId = req.user._id;
+    try {
+        // get authenticated user (assume it is stored in session)
+        const authorId = req.user._id
 
-    const user = await UserInfo.findById(authorId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found." });
-    }
+        const user = await UserInfo.findById(authorId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
 
-    const { title, content, media, type, visibility, organization } = req.body;
+        const { title, content, media, type, visibility, organization } = req.body;
 
-    if (!content || typeof content !== "object") {
-      return res
-        .status(400)
-        .json({ error: "Content is required and must be an object." });
-    }
-    if (type && !Object.values(POST_TYPES).includes(req.body.type)) {
-      return res.status(400).json({ error: "Invalid post type." });
-    }
+        if (!content || typeof content !== 'object') {
+            return res.status(400).json({ error: 'Content is required and must be an object.' });
+        }
+        if (type && !Object.values(POST_TYPES).includes(req.body.type)) {
+            return res.status(400).json({ error: 'Invalid post type.' });
+        }
 
-    if (
-      visibility &&
-      !["public", "organization", "private"].includes(visibility)
-    ) {
-      return res.status(400).json({ error: "Invalid visibility option." });
+        if (visibility && !['public', 'organization', 'private'].includes(visibility)) {
+            return res.status(400).json({ error: 'Invalid visibility option.' });
+        }
+        if (visibility === 'organization') {
+            const isMember = await IsUserInOrganization(authorId, organization);
+            if (!isMember) {
+                return res.status(403).json({
+                    error: 'You must be a member of the organization to create organization-visible posts.'
+                });
+            }
+        }
+
+        if (type === POST_TYPES.EVENT) {
+            if (!organization) {
+                return res.status(400).json({ error: 'Event posts require an organization.' });
+            }
+
+            const orgExists = await Org.findById(organization);
+            if (!orgExists) {
+                return res.status(404).json({ error: 'Organization not found.' });
+            }
+        }
+
+        if (organization || type === POST_TYPES.EVENT) {
+            const memberRole = await getOrgMemberRole(authorId, organization);
+
+            if (!memberRole) {
+                return res.status(403).json({
+                    error: 'You must be a member of the organization to create this post.'
+                });
+            }
+
+            // for events, verify if user has appropriate position/role
+            if (type === POST_TYPES.EVENT) {
+                // const allowedPositions = ['PRES', 'EVP', 'VP', 'AVP'];
+                const allowedPositions = ['PRES', 'EVP', 'VP', 'AVP', 'CT', 'JO', 'MEM']; // NOTE: for now allow all for testing
+                if (!allowedPositions.includes(memberRole)) {
+                    return res.status(403).json({
+                        error: 'You do not have permission to create event posts.'
+                    });
+                }
+            }
+        }
+
+        // create new post
+        const post = new Post({
+            title,
+            content,
+            media: Array.isArray(media) ? media : [],
+            type: type || POST_TYPES.NORMAL,
+            visibility: visibility || 'public',
+            author: authorId,
+            organization: organization,
+            meta: {
+                created_at: new Date(),
+                updated_at: new Date()
+            }
+        });
+
+        const savedPost = await post.save()
+        return res.status(201).json({
+            status: 'success',
+            savedPost
+        })
+    } catch (err) {
+        console.error(err)
+        return res.status(400).send({ status: 'error', msg: err })
     }
 
     // Validate organization for event posts
@@ -350,18 +434,31 @@ export const UpdatePost = async (req, res) => {
 
 // expects id as param
 export const DeletePost = async (req, res) => {
-  try {
-    // get authenticated user (assume it is stored in session)
-    const authorId = req.user._id;
+    try {
+        // get authenticated user (assume it is stored in session)
+        const authorId = req.user._id
 
-    const user = await UserInfo.findById(authorId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found." });
-    }
+        const user = await UserInfo.findById(authorId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
 
-    const post = await Post.findByIdAndDelete(req.params.id);
-    if (!post) {
-      return res.status(404).json({ error: "Post not found." });
+        const post = await Post.findById(req.params.id);
+        if (!post) {
+            return res.status(404).json({ error: 'Post not found.' });
+        }
+        if (!post.author.equals(authorId)) {
+            return res.status(403).json({ error: 'Not authorized to delete this post.' });
+        }
+        await Post.findByIdAndDelete(req.params.id);
+
+        return res.status(200).json({
+            status: 'success',
+            message: 'Post deleted successfully.'
+        })
+    } catch (err) {
+        console.error(err)
+        return res.status(400).send({ status: 'error', msg: err })
     }
 
     return res.status(200).json({
