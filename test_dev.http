@@ -1,0 +1,144 @@
+### HTTP test file (https://www.jetbrains.com/help/idea/exploring-http-syntax.html)
+#
+# NOTE: Usage (for nvim):
+# - install luarocks and lua-5.1/lua5.1/compat-lua (via package manager)
+# - install rest.nvim plugin 
+# - hover cursor on a request you want to run and :Rest run
+#
+
+### get all post
+GET http://localhost:3000/post/all
+
+### register
+POST http://localhost:3000/user/register
+Content-Type: application/json 
+
+{
+    "credentials": {
+        "email": "w2helloworld@dlsu.edu.ph",
+        "password": "12345678@Aa"
+    }
+}
+
+### setup
+POST http://localhost:3000/user/setup
+Content-Type: application/json
+Authorization: Bearer <insert-token>
+
+{
+    "info": {
+        "name": {
+            "first": "w2helloworld",
+            "last": "YES"
+        },
+        "username": "@w2helloworld",
+        "batchid": "123",
+        "program": "BSIT"
+    }
+}
+
+### login
+POST http://localhost:3000/user/login
+Content-Type: application/json
+
+{
+    "credentials": {
+        "email": "w2helloworld@dlsu.edu.ph",
+        "password": "12345678@Aa"
+    }
+}
+
+### create post
+POST http://localhost:3000/post
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTI1ODU0NCwiZXhwIjoxNzQxMjYyMTQ0fQ.hN3qGdcgoJQwWOIlAgWIMv1Q7ZpP40yj4Hf0rCaKH48
+
+{
+    "title": "another normal post test title",
+    "content": {
+        "text": "NORMAL econtentyes yes content example something"
+    },
+    "type": "normal",
+    "visibility": "private"
+}
+
+### fetch all normal posts of user
+GET http://localhost:3000/post/normal
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTI1ODU0NCwiZXhwIjoxNzQxMjYyMTQ0fQ.hN3qGdcgoJQwWOIlAgWIMv1Q7ZpP40yj4Hf0rCaKH48
+
+### fetch all project posts of user
+GET http://localhost:3000/post/project
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTI1ODU0NCwiZXhwIjoxNzQxMjYyMTQ0fQ.hN3qGdcgoJQwWOIlAgWIMv1Q7ZpP40yj4Hf0rCaKH48
+
+### fetch all event posts of user
+GET http://localhost:3000/post/event
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTI1ODU0NCwiZXhwIjoxNzQxMjYyMTQ0fQ.hN3qGdcgoJQwWOIlAgWIMv1Q7ZpP40yj4Hf0rCaKH48
+
+### --- Organization Routes --- ###
+
+### create organization
+POST http://localhost:3000/org
+Content-Type: application/json
+
+{
+    "info": {
+        "name": "Sample Organization",
+        "acronym": "SORG",
+        "founding": "2024-03-01",
+        "bio": "A sample organization for testing",
+        "links": {
+            "linkedin": "https://linkedin.com/sampleorg",
+            "facebook": "https://facebook.com/sampleorg",
+            "instagram": "https://instagram.com/sampleorg",
+            "other": ["https://other-link.com"]
+        }
+    },
+    "vanity": {
+        "display_photo": "https://example.com/display.jpg",
+        "cover_photo": "https://example.com/cover.jpg",
+        "badges": []
+    }
+}
+
+### Get Organization by ID
+### Usage: http://localhost:3000/org/<org-id>
+GET http://localhost:3000/org/67c981837c12b0d3b83b702d
+
+### Get Organization by Acronym
+### Usage: http://localhost:3000/org/acronym/<org-acronym>
+GET http://localhost:3000/org/acronym/SORG
+
+### Update Organization
+### Usage: http://localhost:3000/org/<org-id>
+PUT http://localhost:3000/org/67c981837c12b0d3b83b702d
+Content-Type: application/json
+
+{
+    "info": {
+        "name": "Updated Organization Name",
+        "acronym": "SORG",
+        "bio": "Updated organization description",
+        "links": {
+            "linkedin": "https://linkedin.com/updated",
+            "facebook": "https://facebook.com/updated"
+        }
+    },
+    "vanity": {
+        "display_photo": "https://example.com/new-display.jpg"
+    }
+}
+
+### Delete Organization
+### Usage: http://localhost:3000/org/<org-id>
+DELETE http://localhost:3000/org/67c981837c12b0d3b83b702d
+
+### Add Member to Organization
+### Usage: http://localhost:3000/org/<org-id>/members
+# Note: Requires authentication
+POST http://localhost:3000/org/67c981837c12b0d3b83b702d/members
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTI3Mzk3OSwiZXhwIjoxNzQxMjc3NTc5fQ.b2nPLAkV6dhjXVpUMWTpiumj-lWKMUwnZRgf3Lr-Zq8
+
+### Get Organization Members
+### Usage: http://localhost:3000/org/<org-id>/members
+GET http://localhost:3000/org/67c981837c12b0d3b83b702d/members
+Authorization: Bearer <your-auth-token>
