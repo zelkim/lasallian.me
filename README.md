@@ -262,6 +262,159 @@ curl -X POST localhost:3000/user/login -H "Content-Type: application/json" -d \
 
 ---
 
+### GET /user
+
+* Gets the currently authenticated user's information
+* Requires JWT session token as `Authorization: Bearer <JWT>` header
+
+**Request (via `curl`):**
+```bash
+curl -X GET localhost:3000/user -H "Authorization: Bearer <token>"
+```
+
+**Response:**
+```json
+{
+  "credentials": {
+    "email": "test@dlsu.edu.ph"
+  },
+  "vanity": {
+    "display_photo": "photolink",
+    "cover_photo": "photolink",
+    "badges": []
+  },
+  "info": {
+    "name": {
+      "first": "Test",
+      "last": "User"
+    },
+    "username": "@testuser",
+    "batchid": "123",
+    "program": "BSCS-ST",
+    "bio": "Test bio",
+    "links": {
+      "linkedin": "",
+      "facebook": "",
+      "instagram": "",
+      "other": []
+    }
+  },
+  "meta": {
+    "created_at": "2025-02-26T18:47:25.218Z",
+    "updated_at": "2025-02-26T18:47:25.218Z"
+  }
+}
+```
+
+---
+
+### GET /user/:id
+
+* Gets user information by user ID
+* Requires JWT session token as `Authorization: Bearer <JWT>` header
+
+**Request (via `curl`):**
+```json
+curl -X GET localhost:3000/user/<user-id> -H "Authorization: Bearer <token>"
+```
+
+**Response:**
+```json
+{
+  "credentials": {
+    "_id": "67bf6181633a58782901247c",
+    "email": "test@dlsu.edu.ph"
+  },
+  "vanity": {
+    "display_photo": "photolink",
+    "cover_photo": "photolink",
+    "badges": []
+  },
+  "info": {
+    "name": {
+      "first": "Test",
+      "last": "User"
+    },
+    "username": "@testuser",
+    "batchid": "123", 
+    "program": "BSCS-ST",
+    "bio": "Test bio",
+    "links": {
+      "linkedin": "",
+      "facebook": "",
+      "instagram": "",
+      "other": []
+    }
+  },
+  "meta": {
+    "created_at": "2025-02-26T18:47:25.218Z",
+    "updated_at": "2025-02-26T18:47:25.218Z"
+  },
+  "_id": "67bf61bd633a58782901247e"
+}
+```
+
+---
+
+### POST /user/get-by-email
+
+* Gets user information by email address
+* Requires JWT session token as `Authorization: Bearer <JWT>` header
+
+**Request:**
+```json
+// requires Authorization: Bearer <JWT>
+{
+    "email": "test101@dlsu.edu.ph"
+}
+```
+
+**Request (via `curl`):**
+```bash
+curl -X POST localhost:3000/user/get-by-email \
+-H "Content-Type: application/json" \
+-H "Authorization: Bearer <token>" \
+-d '{"email": "test101@dlsu.edu.ph"}'
+```
+
+**Response:**
+```json
+{
+  "credentials": {
+    "_id": "67bf6181633a58782901247c",
+    "email": "test101@dlsu.edu.ph"
+  },
+  "vanity": {
+    "display_photo": "photolink",
+    "cover_photo": "photolink",
+    "badges": []
+  },
+  "info": {
+    "name": {
+      "first": "Test",
+      "last": "User"
+    },
+    "username": "@testuser",
+    "batchid": "123",
+    "program": "BSCS-ST",
+    "bio": "Test bio",
+    "links": {
+      "linkedin": "",
+      "facebook": "",
+      "instagram": "",
+      "other": []
+    }
+  },
+  "meta": {
+    "created_at": "2025-02-26T18:47:25.218Z",
+    "updated_at": "2025-02-26T18:47:25.218Z"
+  },
+  "_id": "67bf61bd633a58782901247e"
+}
+```
+
+---
+
 # Posts
 
 ### GET /post/all
@@ -361,6 +514,110 @@ curl -X GET localhost:3000/post/all
     },
     "__v": 0
   },
+]
+```
+
+---
+
+### GET /post/hashtag/:tag
+
+* Gets all posts containing the specified hashtag
+* Requires JWT session token as `Authorization: Bearer <JWT>` header
+
+**Request (via `curl`):**
+```bash
+curl -X GET localhost:3000/post/hashtag/<hashtag> -H "Authorization: Bearer <token>"
+
+# example with "test" hashtag
+curl -X GET localhost:3000/post/hashtag/test -H "Authorization: Bearer <token>"
+```
+
+**Response:**
+```json
+// with "test" hashtag
+[
+  {
+    "meta": {
+      "created_at": "2025-03-07T06:21:18.952Z",
+      "updated_at": "2025-03-07T06:21:18.952Z"
+    },
+    "_id": "67ca905ed2ec1cc0267c90c7",
+    "title": "Post with hashtags 3",
+    "content": {
+      "text": "Testing hastag post #test #javascript"
+    },
+    "media": [],
+    "type": "normal",
+    "visibility": "public",
+    "author": {
+      "vanity": {
+        "badges": []
+      },
+      "info": {
+        "name": {
+          "first": "w2helloworld",
+          "last": "YES"
+        },
+        "links": {
+          "other": []
+        },
+        "username": "@w2helloworld",
+        "batchid": "123",
+        "program": "BSIT"
+      },
+      "_id": "67c8478d8e9f541dfe96893e"
+    },
+    "hashtags": [
+      {
+        "tag": "#test",
+        "_id": "67ca905ed2ec1cc0267c90c8"
+      },
+      {
+        "tag": "#javascript",
+        "_id": "67ca905ed2ec1cc0267c90c9"
+      }
+    ],
+    "__v": 0
+  },
+  {
+    "meta": {
+      "created_at": "2025-03-07T06:45:57.545Z",
+      "updated_at": "2025-03-07T06:45:57.545Z"
+    },
+    "_id": "67ca96256d1229bbc5009f47",
+    "title": "Post with hashtags 4",
+    "content": {
+      "text": "Testing hastag post 2#test"
+    },
+    "media": [],
+    "type": "normal",
+    "visibility": "public",
+    "author": {
+      "vanity": {
+        "badges": []
+      },
+      "info": {
+        "name": {
+          "first": "w2helloworld",
+          "last": "YES"
+        },
+        "links": {
+          "other": []
+        },
+        "username": "@w2helloworld",
+        "batchid": "123",
+        "program": "BSIT"
+      },
+      "_id": "67c8478d8e9f541dfe96893e"
+    },
+    "hashtags": [
+      {
+        "tag": "#test",
+        "_id": "67ca96256d1229bbc5009f48"
+      }
+    ],
+    "__v": 0
+  }
 ]
 ```
 
@@ -1083,6 +1340,42 @@ curl -X DELETE localhost:3000/post/normal/<post-id> -H "Authorization: Bearer <t
   "status": "success",
   "message": "Post deleted successfully."
 }
+```
+
+# Hashtag Routes
+
+### GET /hashtag/:tag
+
+* Searches for hashtags matching the given tag
+* Requires JWT session token as `Authorization: Bearer <JWT>` header
+
+**Request:**
+```bash
+curl -X GET localhost:3000/hashtag/test -H "Authorization: Bearer <token>"
+```
+
+**Response:**
+```json
+[
+  {
+    "tag": "#test",
+    "postCount": 2,
+    "posts": [
+      {
+        "postId": "67ca905ed2ec1cc0267c90c7",
+        "title": "Post with hashtags 3",
+        "type": "normal",
+        "visibility": "public"
+      },
+      {
+        "postId": "67ca96256d1229bbc5009f47",
+        "title": "Post with hashtags 4",
+        "type": "normal",
+        "visibility": "public"
+      }
+    ]
+  }
+]
 ```
 
 # Organization

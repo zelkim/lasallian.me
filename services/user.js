@@ -219,3 +219,4 @@ export const authenticate = async (req, res) => {
         return res.status(400).send({ status: "error", msg: 'Authentication failed' })
     }
 }
+
