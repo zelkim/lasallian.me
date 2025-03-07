@@ -34,6 +34,6 @@ const reactionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Reaction = mongoose.model('Reaction', reactionSchema);
+const Reaction = mongoose.model('reaction', reactionSchema);
 
 export default Reaction;
