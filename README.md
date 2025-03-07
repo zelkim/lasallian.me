@@ -365,7 +365,7 @@ curl -X GET localhost:3000/user/<user-id> -H "Authorization: Bearer <token>"
 ```json
 // requires Authorization: Bearer <JWT>
 {
-    "email": "test101@dlsu.edu.ph"
+    "email": "w2helloworld@dlsu.edu.ph"
 }
 ```
 
@@ -374,42 +374,36 @@ curl -X GET localhost:3000/user/<user-id> -H "Authorization: Bearer <token>"
 curl -X POST localhost:3000/user/get-by-email \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer <token>" \
--d '{"email": "test101@dlsu.edu.ph"}'
+-d '{"email": "w2helloworld@dlsu.edu.ph"}'
 ```
 
 **Response:**
 ```json
 {
   "credentials": {
-    "_id": "67bf6181633a58782901247c",
-    "email": "test101@dlsu.edu.ph"
+    "_id": "67c846968e9f541dfe96893c",
+    "email": "w2helloworld@dlsu.edu.ph"
   },
   "vanity": {
-    "display_photo": "photolink",
-    "cover_photo": "photolink",
     "badges": []
   },
   "info": {
     "name": {
-      "first": "Test",
-      "last": "User"
+      "first": "w2helloworld",
+      "last": "YES"
     },
-    "username": "@testuser",
-    "batchid": "123",
-    "program": "BSCS-ST",
-    "bio": "Test bio",
     "links": {
-      "linkedin": "",
-      "facebook": "",
-      "instagram": "",
       "other": []
-    }
+    },
+    "username": "@w2helloworld",
+    "batchid": "123",
+    "program": "BSIT"
   },
   "meta": {
-    "created_at": "2025-02-26T18:47:25.218Z",
-    "updated_at": "2025-02-26T18:47:25.218Z"
+    "created_at": "2025-03-05T12:46:05.075Z",
+    "updated_at": "2025-03-05T12:46:05.075Z"
   },
-  "_id": "67bf61bd633a58782901247e"
+  "_id": "67c8478d8e9f541dfe96893e"
 }
 ```
 
@@ -1380,191 +1374,259 @@ curl -X GET localhost:3000/hashtag/test -H "Authorization: Bearer <token>"
 
 # Organization
 
-### Create a New Organization
+## Create a New Organization
 
 **Endpoint:**
-
 ```
 POST /org/
 ```
 
 **Description:**
-Creates a new organization.
+* Creates a new organization. 
+* Requires  `Authorization: Bearer <JWT>` header
 
 **Request Body:**
-
 ```json
 {
-  "name": "string",
-  "acronym": "string",
-  "description": "string",
-  "contact": {
-    "email": "string",
-    "phone": "string"
-  },
-  "socials": {
-    "facebook": "string",
-    "twitter": "string",
-    "website": "string"
-  }
+    "info": {
+        "name": "Sample Organization",
+        "acronym": "SORG",
+        "founding": "2024-03-01",
+        "bio": "A sample organization for testing",
+        "links": {
+            "linkedin": "https://linkedin.com/sampleorg",
+            "facebook": "https://facebook.com/sampleorg",
+            "instagram": "https://instagram.com/sampleorg",
+            "other": ["https://other-link.com"]
+        }
+    },
+    "vanity": {
+        "display_photo": "https://example.com/display.jpg",
+        "cover_photo": "https://example.com/cover.jpg",
+        "badges": []
+    }
 }
 ```
 
 **Response:**
-
 ```json
 {
-  "_id": "string",
-  "name": "string",
-  "acronym": "string",
-  "description": "string",
-  "contact": {
-    "email": "string",
-    "phone": "string"
-  },
-  "socials": {
-    "facebook": "string",
-    "twitter": "string",
-    "website": "string"
-  }
+    "status": "ok",
+    "msg": "Organization created.",
+    "data": {
+        "vanity": {
+            "display_photo": "https://example.com/display.jpg",
+            "cover_photo": "https://example.com/cover.jpg",
+            "badges": []
+        },
+        "info": {
+            "name": "Sample Organization",
+            "acronym": "SORG",
+            "founding": "2024-03-01T00:00:00.000Z",
+            "bio": "A sample organization for testing",
+            "links": {
+                "linkedin": "https://linkedin.com/sampleorg",
+                "facebook": "https://facebook.com/sampleorg",
+                "instagram": "https://instagram.com/sampleorg",
+                "other": ["https://other-link.com"]
+            }
+        },
+        "members": [],
+        "meta": {
+            "created_at": "2024-03-07T06:21:18.952Z",
+            "updated_at": "2024-03-07T06:21:18.952Z"
+        },
+        "_id": "67ca905ed2ec1cc0267c90c7"
+    }
 }
 ```
 
----
-
-### Get an Organization by ID
+## Get Organization by ID
 
 **Endpoint:**
-
 ```
 GET /org/:id
 ```
 
-**Description:**
-Retrieves an organization by its unique ID.
-
 **Response:**
-
 ```json
 {
-  "_id": "string",
-  "name": "string",
-  "acronym": "string",
-  "description": "string",
-  "contact": {
-    "email": "string",
-    "phone": "string"
-  },
-  "socials": {
-    "facebook": "string",
-    "twitter": "string",
-    "website": "string"
+  "status": "ok",
+  "data": {
+    "vanity": {
+      "badges": [],
+      "display_photo": "https://example.com/new-display.jpg"
+    },
+    "info": {
+      "links": {
+        "other": [],
+        "linkedin": "https://linkedin.com/updated",
+        "facebook": "https://facebook.com/updated"
+      },
+      "name": "Updated Organization Name",
+      "acronym": "SORG",
+      "bio": "Updated organization description"
+    },
+    "meta": {
+      "created_at": "2025-03-06T11:05:39.032Z",
+      "updated_at": "2025-03-06T15:35:10.546Z"
+    },
+    "_id": "67c981837c12b0d3b83b702d",
+    "members": [
+      "67c9c0aec3169561f04ecf77"
+    ],
+    "__v": 0
   }
 }
 ```
 
----
-
-### Get an Organization by Acronym
+## Get Organization by Acronym
 
 **Endpoint:**
-
 ```
 GET /org/acronym/:acronym
 ```
 
-**Description:**
-Retrieves an organization by its acronym.
-
 **Response:**
+Same format as Get Organization by ID.
 
-```json
-{
-  "_id": "string",
-  "name": "string",
-  "acronym": "string",
-  "description": "string",
-  "contact": {
-    "email": "string",
-    "phone": "string"
-  },
-  "socials": {
-    "facebook": "string",
-    "twitter": "string",
-    "website": "string"
-  }
-}
-```
-
----
-
-### Update an Organization
+## Update Organization
 
 **Endpoint:**
-
 ```
 PUT /org/:id
 ```
 
 **Description:**
-Updates an existing organization.
+Updates an existing organization. Requires authentication.
 
-**Request Body:** _(Only include fields to update)_
-
+**Request Body:** (include only fields to update)
 ```json
 {
-  "name": "string",
-  "acronym": "string",
-  "description": "string",
-  "contact": {
-    "email": "string",
-    "phone": "string"
-  },
-  "socials": {
-    "facebook": "string",
-    "twitter": "string",
-    "website": "string"
-  }
+    "info": {
+        "name": "Updated Organization Name",
+        "acronym": "SORG",
+        "bio": "Updated organization description",
+        "links": {
+            "linkedin": "https://linkedin.com/updated",
+            "facebook": "https://facebook.com/updated"
+        }
+    },
+    "vanity": {
+        "display_photo": "https://example.com/new-display.jpg"
+    }
 }
 ```
 
 **Response:**
-
 ```json
 {
-  "_id": "string",
-  "name": "string",
-  "acronym": "string",
-  "description": "string",
-  "contact": {
-    "email": "string",
-    "phone": "string"
-  },
-  "socials": {
-    "facebook": "string",
-    "twitter": "string",
-    "website": "string"
-  }
+    "status": "success",
+    "organization": {
+        // Updated organization object
+    }
 }
 ```
 
----
-
-### Delete an Organization
+## Delete Organization
 
 **Endpoint:**
-
 ```
 DELETE /org/:id
 ```
 
 **Description:**
-Deletes an organization by its unique ID.
+Deletes an organization. Requires authentication.
 
 **Response:**
-
 ```json
 {
-  "message": "Organization deleted successfully"
+    "status": "success",
+    "message": "Organization deleted successfully."
+}
+```
+
+## Add Member to Organization
+
+**Endpoint:**
+```
+POST /org/:orgId/members
+```
+
+**Description:**
+Adds the authenticated user as a member of the organization.
+
+**Request Body:** (optional)
+```json
+{
+    "position": "MEM"  // Optional: Default is "MEM"
+}
+```
+
+**Response:**
+```json
+{
+    "status": "success",
+    "member": {
+        "author": "user_id",
+        "org": "org_id",
+        "joindate": "2024-03-07T06:21:18.952Z",
+        "position": "MEM",
+        "meta": {
+            "created_at": "2024-03-07T06:21:18.952Z",
+            "updated_at": "2024-03-07T06:21:18.952Z"
+        }
+    }
+}
+```
+
+## Get Organization Members
+
+**Endpoint:**
+```
+GET /org/:orgId/members
+```
+
+**Description:**
+Gets all members of an organization. Requires authentication.
+
+**Response:**
+```json
+{
+  "status": "success",
+  "count": 1,
+  "members": [
+    {
+      "_id": "67c9c0aec3169561f04ecf77",
+      "user": {
+        "vanity": {
+          "badges": []
+        },
+        "info": {
+          "name": {
+            "first": "w2helloworld",
+            "last": "YES"
+          },
+          "links": {
+            "other": []
+          },
+          "username": "@w2helloworld",
+          "batchid": "123",
+          "program": "BSIT"
+        },
+        "meta": {
+          "created_at": "2025-03-05T12:46:05.075Z",
+          "updated_at": "2025-03-05T12:46:05.075Z"
+        },
+        "_id": "67c8478d8e9f541dfe96893e"
+      },
+      "position": "MEM",
+      "joindate": "2025-03-06T15:35:10.481Z",
+      "meta": {
+        "created_at": "2025-03-06T15:35:10.481Z",
+        "updated_at": "2025-03-06T15:35:10.481Z"
+      }
+    }
+  ]
 }
 ```
