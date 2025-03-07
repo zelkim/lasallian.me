@@ -28,7 +28,7 @@ const reactionSchema = new mongoose.Schema(
     targetModel: {
       type: String,
       required: true,
-      enum: ['Post', 'Comment'],
+      enum: ['posts', 'comments'],
     },
   },
   { timestamps: true }

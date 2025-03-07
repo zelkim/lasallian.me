@@ -11,9 +11,15 @@ import { parseHashtags } from './hashtag.js';
 export const GetAllPosts = async (req, res) => {
     try {
         const allPosts = await Post.find()
-            .populate('author', 'vanity info')
-            .populate('comments')
-            .populate('organization');
+            .populate('author', 'vanity info') // Fetch specific fields from user
+            .populate({
+                path: 'comments',
+                populate: { path: 'reaction' }, // Populate reactions inside comments
+            })
+            .populate({
+                path: 'reactions',
+                match: { targetModel: 'posts' },
+            }); // Populate post reactions
 
         return res.status(200).json(allPosts);
     } catch (err) {
@@ -80,7 +86,8 @@ export const GetProjectPostsByAuthor = async (req, res) => {
             type: POST_TYPES.PROJECT,
         })
             .populate('author', 'vanity info')
-            .populate('comments');
+            .populate('comments', 'reactions')
+            .populate('reactions');
 
         return res.status(200).json(posts);
     } catch (error) {

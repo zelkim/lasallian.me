@@ -5,13 +5,13 @@ import Reaction from '../models/Reaction.js';
  */
 export const addReactionToPost = async (req, res) => {
   try {
-    const { postId, reactionType } = req.body;
+    const { postid, reaction } = req.body;
     const userId = req.user._id; // Assuming req.user contains authenticated user info
 
     // Check if user has already reacted to this post
     const existingReaction = await Reaction.findOne({
       user: userId,
-      target: postId,
+      target: postid,
       targetModel: 'Post',
     });
 
@@ -23,14 +23,16 @@ export const addReactionToPost = async (req, res) => {
     }
 
     // Create new reaction
-    const reaction = await Reaction.create({
+    const newReaction = await Reaction.create({
       user: userId,
-      target: postId,
-      targetModel: 'Post',
-      type: reactionType,
+      target: postid,
+      targetModel: 'posts',
+      type: reaction,
     });
 
-    return res.status(201).json({ message: 'Reaction added.', reaction });
+    return res
+      .status(201)
+      .json({ message: 'Reaction added.', newReaction });
   } catch (error) {
     console.error('addReactionToPost', error);
   }
@@ -41,14 +43,14 @@ export const addReactionToPost = async (req, res) => {
  */
 export const addReactionToComment = async (req, res) => {
   try {
-    const { commentId, reactionType } = req.body;
+    const { commentid, reaction } = req.body;
     const userId = req.user._id; // Assuming req.user contains authenticated user info
 
     // Check if user has already reacted to this comment
     const existingReaction = await Reaction.findOne({
       user: userId,
-      target: commentId,
-      targetModel: 'Comment',
+      target: commentid,
+      targetModel: 'comments',
     });
 
     // Ensures a user cannot react more than once to the same comment.
@@ -59,14 +61,16 @@ export const addReactionToComment = async (req, res) => {
     }
 
     // Create new reaction
-    const reaction = await Reaction.create({
+    const newReaction = await Reaction.create({
       user: userId,
-      target: commentId,
-      targetModel: 'Comment',
-      type: reactionType,
+      target: commentid,
+      targetModel: 'comments',
+      type: reaction,
     });
 
-    return res.status(201).json({ message: 'Reaction added.', reaction });
+    return res
+      .status(201)
+      .json({ message: 'Reaction added.', newReaction });
   } catch (error) {
     console.error('addReactionToComment', error);
   }
@@ -77,14 +81,14 @@ export const addReactionToComment = async (req, res) => {
  */
 export const removeReactionFromPost = async (req, res) => {
   try {
-    const { postId } = req.body;
+    const { postid } = req.body;
     const userId = req.user._id; // Assuming req.user contains authenticated user info
 
     // Find the user's reaction to the post
     const reaction = await Reaction.findOneAndDelete({
       user: userId,
-      target: postId,
-      targetModel: 'Post',
+      target: postid,
+      targetModel: 'posts',
     });
 
     if (!reaction) {
@@ -103,14 +107,14 @@ export const removeReactionFromPost = async (req, res) => {
  */
 export const removeReactionFromComment = async (req, res) => {
   try {
-    const { commentId } = req.body;
+    const { commentid } = req.body;
     const userId = req.user._id; // Assuming req.user contains authenticated user info
 
     // Find the user's reaction to the comment
     const reaction = await Reaction.findOneAndDelete({
       user: userId,
-      target: commentId,
-      targetModel: 'Comment',
+      target: commentid,
+      targetModel: 'comments',
     });
 
     if (!reaction) {
@@ -129,21 +133,23 @@ export const removeReactionFromComment = async (req, res) => {
  */
 export const updateReactionOnPost = async (req, res) => {
   try {
-    const { postId, reactionType } = req.body;
+    const { postid, reaction } = req.body;
     const userId = req.user._id; // Assuming req.user contains authenticated user info
 
     // Find the user's reaction to the post
-    const reaction = await Reaction.findOneAndUpdate(
-      { user: userId, target: postId, targetModel: 'Post' },
-      { type: reactionType },
+    const newReaction = await Reaction.findOneAndUpdate(
+      { user: userId, target: postid, targetModel: 'posts' },
+      { type: reaction },
       { new: true }
     );
 
-    if (!reaction) {
+    if (!newReaction) {
       return res.status(404).json({ message: 'Reaction not found.' });
     }
 
-    return res.status(200).json({ message: 'Reaction updated.', reaction });
+    return res
+      .status(200)
+      .json({ message: 'Reaction updated.', newReaction });
   } catch (error) {
     console.error('updateReactionOnPost', error);
     res.status(500).json({ message: 'Internal server error.' });
@@ -155,21 +161,23 @@ export const updateReactionOnPost = async (req, res) => {
  */
 export const updateReactionOnComment = async (req, res) => {
   try {
-    const { commentId, reactionType } = req.body;
+    const { commentid, reaction } = req.body;
     const userId = req.user._id; // Assuming req.user contains authenticated user info
 
     // Find the user's reaction to the comment
-    const reaction = await Reaction.findOneAndUpdate(
-      { user: userId, target: commentId, targetModel: 'Comment' },
-      { type: reactionType },
+    const newReaction = await Reaction.findOneAndUpdate(
+      { user: userId, target: commentid, targetModel: 'comments' },
+      { type: reaction },
       { new: true }
     );
 
-    if (!reaction) {
+    if (!newReaction) {
       return res.status(404).json({ message: 'Reaction not found.' });
     }
 
-    return res.status(200).json({ message: 'Reaction updated.', reaction });
+    return res
+      .status(200)
+      .json({ message: 'Reaction updated.', newReaction });
   } catch (error) {
     console.error('updateReactionOnComment', error);
     res.status(500).json({ message: 'Internal server error.' });
