@@ -7,6 +7,7 @@ import {
     GetNormalPostById,
     GetProjectPostById,
     GetEventPostById,
+    GetAllPostsByHashtag,
     CreatePost,
     UpdatePost,
     DeletePost
@@ -33,5 +34,8 @@ router.get("/event/:id", validateSession, GetEventPostById)
 router.post("/", validateSession, CreatePost)
 router.put("/:id", validateSession, UpdatePost)
 router.delete("/:id", validateSession, DeletePost)
+
+
+router.get("/hashtag/:hashtag", validateSession, GetAllPostsByHashtag);
 
 export default router

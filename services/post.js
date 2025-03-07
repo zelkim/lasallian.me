@@ -26,7 +26,9 @@ export const GetAllPostsByHashtag = async (req, res) => {
     try {
         const hashtag = req.params.hashtag;
 
-        const allPosts = await Post.find({ 'hashtags.tag': hashtag })
+        const cleanHashtag = hashtag.startsWith('#') ? hashtag : `#${hashtag}`;
+
+        const allPosts = await Post.find({ 'hashtags.tag': cleanHashtag })
             .populate('author', 'vanity info')
             .populate('comments')
             .populate('organization');
@@ -300,7 +302,7 @@ export const CreatePost = async (req, res) => {
             visibility: visibility || 'public',
             author: authorId,
             organization: organization,
-            hashtags: parseHashtags(content),
+            hashtags: parseHashtags(content.text),
             meta: {
                 created_at: new Date(),
                 updated_at: new Date(),
@@ -382,7 +384,7 @@ export const UpdatePost = async (req, res) => {
         const updateData = {
             $set: {
                 ...req.body,
-                hashtags: parseHashtags(req.body.content),
+                hashtags: parseHashtags(req.body.content.text),
                 meta: {
                     ...existingPost.meta,
                     updated_at: new Date(),

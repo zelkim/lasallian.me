@@ -9,26 +9,26 @@
 ### vars
 @authToken = 
 @orgId = 67c981837c12b0d3b83b702d
-### @baseUrl = http://localhost:3000
+@baseUrl = http://localhost:3000
 
 ### get all post
-GET http://localhost:3000/post/all
+GET {{baseUrl}}/post/all
 
 ### register
-POST http://localhost:3000/user/register
+POST {{baseUrl}}/user/register
 Content-Type: application/json 
 
 {
     "credentials": {
-        "email": "w2helloworld@dlsu.edu.ph",
+        "email": "w2helloworld1234@dlsu.edu.ph",
         "password": "12345678@Aa"
     }
 }
 
 ### setup
-POST http://localhost:3000/user/setup
+POST {{baseUrl}}/user/setup
 Content-Type: application/json
-Authorization: Bearer <insert-token>
+Authorization: Bearer {{authToken}}
 
 {
     "info": {
@@ -43,7 +43,7 @@ Authorization: Bearer <insert-token>
 }
 
 ### login
-POST http://localhost:3000/user/login
+POST {{baseUrl}}/user/login
 Content-Type: application/json
 
 {
@@ -53,12 +53,12 @@ Content-Type: application/json
     }
 }
 
-### get user by id
-GET http://localhost:3000/user/67c8478d8e9f541dfe96893e
+### get user by id 67ca8ecd00ad39b18b9a01fc
+GET {{baseUrl}}/user/67c8478d8e9f541dfe96893e
 Authorization: Bearer {{authToken}}
 
 ### get user by email
-POST http://localhost:3000/user/get-by-email
+POST {{baseUrl}}/user/get-by-email
 Authorization: Bearer {{authToken}}
 
 {
@@ -66,7 +66,7 @@ Authorization: Bearer {{authToken}}
 }
 
 ### create post
-POST http://localhost:3000/post
+POST {{baseUrl}}/post
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
@@ -76,25 +76,51 @@ Authorization: Bearer {{authToken}}
         "text": "NORMAL econtentyes yes content example something"
     },
     "type": "normal",
-    "visibility": "private"
+    "visibility": "public"
 }
 
+### create post with hashtags
+POST {{baseUrl}}/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "title": "Post with hashtags 4",
+    "content": {
+        "text": "Testing hastag post 2#test"
+    },
+    "type": "normal",
+    "visibility": "public"
+}
+
+### delete post
+DELETE {{baseUrl}}/post/67ca8d9600ad39b18b9a01f9
+Authorization: Bearer {{authToken}}
+
+### search hashtags
+GET {{baseUrl}}/hashtag/test
+Authorization: Bearer {{authToken}}
+
+### get posts by hashtag
+GET {{baseUrl}}/post/hashtag/test
+Authorization: Bearer {{authToken}}
+
 ### fetch all normal posts of user
-GET http://localhost:3000/post/normal
+GET {{baseUrl}}/post/normal
 Authorization: Bearer {{authToken}}
 
 ### fetch all project posts of user
-GET http://localhost:3000/post/project
+GET {{baseUrl}}/post/project
 Authorization: Bearer {{authToken}}
 
 ### fetch all event posts of user
-GET http://localhost:3000/post/event
+GET {{baseUrl}}/post/event
 Authorization: Bearer {{authToken}}
 
 ### --- Organization Routes --- ###
 
 ### create organization
-POST http://localhost:3000/org
+POST {{baseUrl}}/org
 Content-Type: application/json
 
 {
@@ -119,15 +145,15 @@ Content-Type: application/json
 
 ### Get Organization by ID
 ### Usage: http://localhost:3000/org/<org-id>
-GET http://localhost:3000/org/{{orgId}}
+GET {{baseUrl}}/org/{{orgId}}
 
 ### Get Organization by Acronym
 ### Usage: http://localhost:3000/org/acronym/<org-acronym>
-GET http://localhost:3000/org/acronym/SORG
+GET {{baseUrl}}/org/acronym/SORG
 
 ### Update Organization
 ### Usage: http://localhost:3000/org/<org-id>
-PUT http://localhost:3000/org/{{orgId}}
+PUT {{baseUrl}}/org/{{orgId}}
 Content-Type: application/json
 
 {
@@ -147,17 +173,17 @@ Content-Type: application/json
 
 ### Delete Organization
 ### Usage: http://localhost:3000/org/<org-id>
-DELETE http://localhost:3000/org/{{orgId}}
+DELETE {{baseUrl}}/org/{{orgId}}
 
 ### Add Member to Organization
 ### Usage: http://localhost:3000/org/<org-id>/members
 # Note: Requires authentication
-POST http://localhost:3000/org/{{orgId}}/members
+POST {{baseUrl}}/org/{{orgId}}/members
 Authorization: Bearer {{authToken}}
 
 ### Add Member to Organization (with optional req.body)
 # Note: Requires authentication
-POST http://localhost:3000/org/{{orgId}}/members
+POST {{baseUrl}}/org/{{orgId}}/members
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
@@ -167,5 +193,5 @@ Authorization: Bearer {{authToken}}
 
 ### Get Organization Members
 ### Usage: http://localhost:3000/org/<org-id>/members
-GET http://localhost:3000/org/{{orgId}}/members
+GET {{baseUrl}}/org/{{orgId}}/members
 Authorization: Bearer {{authToken}}

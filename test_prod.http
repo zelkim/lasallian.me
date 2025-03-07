@@ -28,15 +28,15 @@ Content-Type: application/json
 ### setup
 POST {{baseUrl}}/user/setup
 Content-Type: application/json
-Authorization: Bearer <insert-token>
+Authorization: Bearer {{authToken}}
 
 {
     "info": {
         "name": {
-            "first": "w2helloworld",
+            "first": "w2helloworld123",
             "last": "YES"
         },
-        "username": "@w2helloworld",
+        "username": "@w2helloworld123",
         "batchid": "123",
         "program": "BSIT"
     }
@@ -48,7 +48,7 @@ Content-Type: application/json
 
 {
     "credentials": {
-        "email": "w2helloworld@dlsu.edu.ph",
+        "email": "w2helloworld123@dlsu.edu.ph",
         "password": "12345678@Aa"
     }
 }
@@ -76,8 +76,34 @@ Authorization: Bearer {{authToken}}
         "text": "NORMAL econtentyes yes content example something"
     },
     "type": "normal",
-    "visibility": "private"
+    "visibility": "public"
 }
+
+### create post with hashtags
+POST http://localhost:3000/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "title": "Post with hashtags 4",
+    "content": {
+        "text": "Testing hastag post 2#test"
+    },
+    "type": "normal",
+    "visibility": "public"
+}
+
+### delete post
+DELETE http://localhost:3000/post/67ca8d9600ad39b18b9a01f9
+Authorization: Bearer {{authToken}}
+
+### search hashtags
+GET http://localhost:3000/hashtag/test
+Authorization: Bearer {{authToken}}
+
+### get posts by hashtag
+GET http://localhost:3000/post/hashtag/test
+Authorization: Bearer {{authToken}}
 
 ### fetch all normal posts of user
 GET {{baseUrl}}/post/normal

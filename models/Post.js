@@ -36,7 +36,7 @@ const postSchema = new mongoose.Schema({
             tag: {
                 type: String,
                 match: /^#[a-zA-Z0-9_]+$/,
-                required: true,
+                required: false,
             },
         },
     ],

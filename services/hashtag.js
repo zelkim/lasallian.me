@@ -7,8 +7,20 @@ import Post from '../models/Post.js';
  * @returns {string[]} An array of extracted hashtags.
  */
 export const parseHashtags = (body) => {
-    const hashtags = body.match(/#[a-zA-Z0-9_]+/g);
-    return hashtags ? hashtags : [];
+    try {
+        const text = typeof body === 'object' ? body.text : body;
+
+        if (typeof text !== 'string') {
+            return [];
+        }
+        const hashtags = text.match(/#[a-zA-Z0-9_]+/g);
+
+        return hashtags ? hashtags.map(tag => ({ tag })) : [];
+    }
+    catch (err) {
+        console.error('Error parsing hashtags:', err);
+        return [];
+    }
 };
 
 /**
@@ -19,27 +31,45 @@ export const parseHashtags = (body) => {
  */
 export const searchHashtags = async (req, res) => {
     try {
-        const { query } = req.params;
-        const regex = new RegExp(`^${query}`, 'i');
+        const { hashtag } = req.params;
+
+        const searchTerm = hashtag.startsWith('#') ? hashtag : `#${hashtag}`;
+
+        // const regex = new RegExp(`^${query}`, 'i');
 
         const result = await Post.aggregate([
             { $unwind: '$hashtags' },
             {
-                $match: { 'hashtags.tag': regex },
+                $match: {
+                    'hashtags.tag': {
+                        $regex: `^${searchTerm}`,
+                        $options: 'i'
+                    }
+                }
             },
             {
                 $group: {
                     _id: '$hashtags.tag',
-                    posts: { $sum: 1 },
+                    count: { $sum: 1 },
+                    posts: {
+                        $push: {
+                            postId: '$_id',
+                            title: '$title',
+                            type: '$type',
+                            visibility: '$visibility'
+                        }
+                    }
                 },
             },
             {
                 $project: {
                     _id: 0,
                     tag: '$_id',
-                    posts: 1,
+                    postCount: '$count',
+                    posts: '$posts'
                 },
             },
+            { $sort: { postCount: -1 } }
         ]);
 
         return res.status(200).json(result);
