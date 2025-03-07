@@ -1,0 +1,171 @@
+### HTTP test file (https://www.jetbrains.com/help/idea/exploring-http-syntax.html)
+#
+# NOTE: Usage (for nvim):
+# - install luarocks and lua-5.1/lua5.1/compat-lua (via package manager)
+# - install rest.nvim plugin 
+# - hover cursor on a request you want to run and :Rest run
+#
+
+### vars
+@authToken = 
+@orgId = 67c981837c12b0d3b83b702d
+@baseUrl = http://api.zel.kim
+
+### get all post
+GET {{baseUrl}}/post/all
+
+### register
+POST {{baseUrl}}/user/register
+Content-Type: application/json 
+
+{
+    "credentials": {
+        "email": "w2helloworld@dlsu.edu.ph",
+        "password": "12345678@Aa"
+    }
+}
+
+### setup
+POST {{baseUrl}}/user/setup
+Content-Type: application/json
+Authorization: Bearer <insert-token>
+
+{
+    "info": {
+        "name": {
+            "first": "w2helloworld",
+            "last": "YES"
+        },
+        "username": "@w2helloworld",
+        "batchid": "123",
+        "program": "BSIT"
+    }
+}
+
+### login
+POST {{baseUrl}}/user/login
+Content-Type: application/json
+
+{
+    "credentials": {
+        "email": "w2helloworld@dlsu.edu.ph",
+        "password": "12345678@Aa"
+    }
+}
+
+### get user by id
+GET {{baseUrl}}/user/67c8478d8e9f541dfe96893e
+Authorization: Bearer {{authToken}}
+
+### get user by email
+POST {{baseUrl}}/user/get-by-email
+Authorization: Bearer {{authToken}}
+
+{
+    "email": "w2helloworld@dlsu.edu.ph"
+}
+
+### create post
+POST {{baseUrl}}/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "title": "another normal post test title",
+    "content": {
+        "text": "NORMAL econtentyes yes content example something"
+    },
+    "type": "normal",
+    "visibility": "private"
+}
+
+### fetch all normal posts of user
+GET {{baseUrl}}/post/normal
+Authorization: Bearer {{authToken}}
+
+### fetch all project posts of user
+GET {{baseUrl}}/post/project
+Authorization: Bearer {{authToken}}
+
+### fetch all event posts of user
+GET {{baseUrl}}/post/event
+Authorization: Bearer {{authToken}}
+
+### --- Organization Routes --- ###
+
+### create organization
+POST {{baseUrl}}/org
+Content-Type: application/json
+
+{
+    "info": {
+        "name": "Sample Organization",
+        "acronym": "SORG",
+        "founding": "2024-03-01",
+        "bio": "A sample organization for testing",
+        "links": {
+            "linkedin": "https://linkedin.com/sampleorg",
+            "facebook": "https://facebook.com/sampleorg",
+            "instagram": "https://instagram.com/sampleorg",
+            "other": ["https://other-link.com"]
+        }
+    },
+    "vanity": {
+        "display_photo": "https://example.com/display.jpg",
+        "cover_photo": "https://example.com/cover.jpg",
+        "badges": []
+    }
+}
+
+### Get Organization by ID
+### Usage: {{baseUrl}}/org/<org-id>
+GET {{baseUrl}}/org/{{orgId}}
+
+### Get Organization by Acronym
+### Usage: {{baseUrl}}/org/acronym/<org-acronym>
+GET {{baseUrl}}/org/acronym/SORG
+
+### Update Organization
+### Usage: {{baseUrl}}/org/<org-id>
+PUT {{baseUrl}}/org/{{orgId}}
+Content-Type: application/json
+
+{
+    "info": {
+        "name": "Updated Organization Name",
+        "acronym": "SORG",
+        "bio": "Updated organization description",
+        "links": {
+            "linkedin": "https://linkedin.com/updated",
+            "facebook": "https://facebook.com/updated"
+        }
+    },
+    "vanity": {
+        "display_photo": "https://example.com/new-display.jpg"
+    }
+}
+
+### Delete Organization
+### Usage: {{baseUrl}}/org/<org-id>
+DELETE {{baseUrl}}/org/{{orgId}}
+
+### Add Member to Organization
+### Usage: {{baseUrl}}/org/<org-id>/members
+# Note: Requires authentication
+POST {{baseUrl}}/org/{{orgId}}/members
+Authorization: Bearer {{authToken}}
+
+### Add Member to Organization (with optional req.body)
+# Note: Requires authentication
+POST {{baseUrl}}/org/{{orgId}}/members
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "position": "MEM"
+}
+
+### Get Organization Members
+### Usage: {{baseUrl}}/org/<org-id>/members
+GET {{baseUrl}}/org/{{orgId}}/members
+Authorization: Bearer {{authToken}}
