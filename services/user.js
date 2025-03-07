@@ -30,51 +30,83 @@ export const getSessionUser = async (req, res) => {
 
 export const getUserByEmail = async (req, res) => {
     try {
-        const user_credentials = await UserCredentials.findOne({ "credentials.email": req.body.email }).exec();
-        if (!user_credentials)
-            return res.status(400).json({ status: 'error', error: 'could not find user' })
+        const userCredentials = await UserCredentials.findOne({
+            "credentials.email": req.body.email
+        }).exec();
 
-        const userInfo = await UserInfo.findOne({ credentials: user_credentials._id }).exec();
-        if (!userInfo) {
-            return res.status(400).json({ status: 'error', error: 'User info not found' });
+        if (!userCredentials) {
+            return res.status(400).json({
+                status: 'error',
+                error: 'Could not find user'
+            });
         }
+
+        const userInfo = await UserInfo.findOne({
+            credentials: userCredentials._id
+        }).populate({
+            path: 'credentials',
+            select: 'credentials.email'
+        }).exec();
+
+        if (!userInfo) {
+            return res.status(400).json({
+                status: 'error',
+                error: 'User info not found'
+            });
+        }
+
+        const userObj = userInfo.toObject();
 
         const user = {
             credentials: {
-                email: user_credentials.credentials.email
+                _id: userObj.credentials._id,
+                email: userObj.credentials.credentials.email
             },
-            ...userInfo.toObject()
+            vanity: userObj.vanity,
+            info: userObj.info,
+            meta: userObj.meta,
+            _id: userObj._id
         };
-
 
         return res.status(200).json(user);
     } catch (err) {
-        console.error(err)
-        return res.status(400).json({ status: 'error', error: 'could not get user' })
+        console.error('Error in getUserByEmail:', err);
+        return res.status(400).json({
+            status: 'error',
+            error: 'Could not get user'
+        });
     }
 }
 
 export const getUserById = async (req, res) => {
     try {
-        const user_credentials = await UserCredentials.findById(req.params.id).exec();
-        if (!user_credentials)
-            return res.status(400).json({ status: 'error', error: 'could not find user' })
-
-        const userInfo = await UserInfo.findOne({ credentials: user_credentials._id }).exec();
+        const userInfo = await UserInfo.findById(req.params.id)
+            .populate({
+                path: 'credentials',
+                select: 'credentials.email'
+            })
+            .exec();
         if (!userInfo) {
+            console.log('No user info found for ID:', req.params.id);
             return res.status(400).json({ status: 'error', error: 'User info not found' });
         }
 
+        const userObj = userInfo.toObject();
+
         const user = {
             credentials: {
-                email: user_credentials.credentials.email
+                _id: userObj.credentials._id,
+                email: userObj.credentials.credentials.email
             },
-            ...userInfo.toObject()
+            vanity: userObj.vanity,
+            info: userObj.info,
+            meta: userObj.meta,
+            _id: userObj._id
         };
 
         return res.status(200).json(user);
     } catch (err) {
-        console.error(err)
+        console.error('Error in getUserById:', err);
         return res.status(400).json({ status: 'error', error: 'could not get user' });
     }
 }

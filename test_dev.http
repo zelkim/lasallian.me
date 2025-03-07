@@ -53,6 +53,18 @@ Content-Type: application/json
     }
 }
 
+### get user by id
+GET http://localhost:3000/user/67c8478d8e9f541dfe96893e
+Authorization: Bearer {{authToken}}
+
+### get user by email
+POST http://localhost:3000/user/get-by-email
+Authorization: Bearer {{authToken}}
+
+{
+    "email": "w2helloworld@dlsu.edu.ph"
+}
+
 ### create post
 POST http://localhost:3000/post
 Content-Type: application/json
