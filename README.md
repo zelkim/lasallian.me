@@ -1,10 +1,51 @@
 # Lasallian.me
 
+# Table of Contents
+
+- [Lasallian.me](#lasallianme)
+  - [Development](#development)
+    - [File Structure](#file-structure)
+- [API Documentation](#api-documentation)
+  - [Authentication](#authentication)
+    - [POST /user/register](#post-userregister)
+    - [POST /user/setup](#post-usersetup)
+    - [POST /user/login](#post-userlogin)
+    - [GET /user](#get-user)
+    - [GET /user/:id](#get-userid)
+    - [POST /user/get-by-email](#post-userget-by-email)
+  - [Posts](#posts)
+    - [GET /post/all](#get-postall)
+    - [GET /post/hashtag/:tag](#get-posthashtagtag)
+    - [GET /post/normal](#get-postnormal)
+    - [GET /post/project](#get-postproject)
+    - [GET /post/event](#get-postevent)
+    - [GET /post/normal/:id](#get-postnormalid)
+    - [GET /post/project/:id](#get-postprojectid)
+    - [GET /post/event/:id](#get-posteventid)
+  - [Generic Post Routes](#generic-post-routes)
+    - [POST /post](#post-post)
+    - [PUT /post/:id](#put-postid)
+    - [DELETE /post/:id](#delete-postid)
+  - [Hashtag Routes](#hashtag-routes)
+    - [GET /hashtag/:tag](#get-hashtagtag)
+  - [Organization](#organization)
+    - [Create a New Organization](#create-a-new-organization)
+    - [Get Organization by ID](#get-organization-by-id)
+    - [Get Organization by Acronym](#get-organization-by-acronym)
+    - [Update Organization](#update-organization)
+    - [Delete Organization](#delete-organization)
+    - [Add Member to Organization](#add-member-to-organization)
+    - [Get Organization Members](#get-organization-members)
+
+---
+
 ## Development
 
 ```bash
 node index.js
 ```
+
+---
 
 ### File Structure
 
@@ -12,6 +53,8 @@ node index.js
 - `routes/` - all http-related things, uses services, return status codes
 - `services/` (also known as `handlers`) - all business logic, uses db operations (CRUD), map db objects to models
 - `models/` - all domain-related objects
+
+---
 
 # API Documentation
 
