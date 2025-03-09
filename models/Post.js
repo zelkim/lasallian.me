@@ -40,7 +40,9 @@ const postSchema = new mongoose.Schema({
             },
         },
     ],
-    reactions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'reaction' }],
+    reactions: [
+        { type: mongoose.Schema.Types.ObjectId, ref: 'post_reactions' },
+    ],
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'org_info',

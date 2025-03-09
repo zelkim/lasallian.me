@@ -12,14 +12,8 @@ export const GetAllPosts = async (req, res) => {
     try {
         const allPosts = await Post.find()
             .populate('author', 'vanity info') // Fetch specific fields from user
-            .populate({
-                path: 'comments',
-                populate: { path: 'reaction' }, // Populate reactions inside comments
-            })
-            .populate({
-                path: 'reactions',
-                match: { targetModel: 'posts' },
-            }); // Populate post reactions
+            .populate('reactions') // Populate post reactions
+            .populate('comments');
 
         return res.status(200).json(allPosts);
     } catch (err) {

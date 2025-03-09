@@ -8,7 +8,9 @@ const ReactionType = Object.freeze({
   ANGRY: '😡',
 });
 
-const reactionSchema = new mongoose.Schema(
+const baseReactionSchema = {};
+
+const commentReactionSchema = new mongoose.Schema(
   {
     type: {
       type: String,
@@ -17,23 +19,44 @@ const reactionSchema = new mongoose.Schema(
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'posts',
       required: true,
     },
     target: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      refPath: 'targetModel',
-    },
-    targetModel: {
-      type: String,
-      required: true,
-      enum: ['posts', 'comments'],
+      ref: 'comments',
     },
   },
   { timestamps: true }
 );
 
-const Reaction = mongoose.model('reaction', reactionSchema);
+const postReactionSchema = new mongoose.Schema(
+  {
+    type: {
+      type: String,
+      enum: Object.values(ReactionType),
+      required: true,
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'users',
+      required: true,
+    },
+    target: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'posts',
+    },
+  },
+  { timestamps: true }
+);
 
-export default Reaction;
+export const PostReaction = mongoose.model(
+  'post_reactions',
+  postReactionSchema
+);
+export const CommentReaction = mongoose.model(
+  'comment_reactions',
+  commentReactionSchema
+);

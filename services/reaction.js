@@ -1,4 +1,4 @@
-import Reaction from '../models/Reaction.js';
+import { PostReaction, CommentReaction } from '../models/Reaction.js';
 
 /**
  * Controller to add a reaction to a post.
@@ -9,10 +9,9 @@ export const addReactionToPost = async (req, res) => {
     const userId = req.user._id; // Assuming req.user contains authenticated user info
 
     // Check if user has already reacted to this post
-    const existingReaction = await Reaction.findOne({
+    const existingReaction = await PostReaction.findOne({
       user: userId,
       target: postid,
-      targetModel: 'Post',
     });
 
     // Ensures a user cannot react more than once to the same post.
@@ -23,10 +22,9 @@ export const addReactionToPost = async (req, res) => {
     }
 
     // Create new reaction
-    const newReaction = await Reaction.create({
+    const newReaction = await PostReaction.create({
       user: userId,
       target: postid,
-      targetModel: 'posts',
       type: reaction,
     });
 
@@ -47,10 +45,9 @@ export const addReactionToComment = async (req, res) => {
     const userId = req.user._id; // Assuming req.user contains authenticated user info
 
     // Check if user has already reacted to this comment
-    const existingReaction = await Reaction.findOne({
+    const existingReaction = await CommentReaction.findOne({
       user: userId,
       target: commentid,
-      targetModel: 'comments',
     });
 
     // Ensures a user cannot react more than once to the same comment.
@@ -61,10 +58,9 @@ export const addReactionToComment = async (req, res) => {
     }
 
     // Create new reaction
-    const newReaction = await Reaction.create({
+    const newReaction = await CommentReaction.create({
       user: userId,
       target: commentid,
-      targetModel: 'comments',
       type: reaction,
     });
 
@@ -85,10 +81,9 @@ export const removeReactionFromPost = async (req, res) => {
     const userId = req.user._id; // Assuming req.user contains authenticated user info
 
     // Find the user's reaction to the post
-    const reaction = await Reaction.findOneAndDelete({
+    const reaction = await PostReaction.findOneAndDelete({
       user: userId,
       target: postid,
-      targetModel: 'posts',
     });
 
     if (!reaction) {
@@ -111,10 +106,9 @@ export const removeReactionFromComment = async (req, res) => {
     const userId = req.user._id; // Assuming req.user contains authenticated user info
 
     // Find the user's reaction to the comment
-    const reaction = await Reaction.findOneAndDelete({
+    const reaction = await CommentReaction.findOneAndDelete({
       user: userId,
       target: commentid,
-      targetModel: 'comments',
     });
 
     if (!reaction) {
@@ -137,8 +131,8 @@ export const updateReactionOnPost = async (req, res) => {
     const userId = req.user._id; // Assuming req.user contains authenticated user info
 
     // Find the user's reaction to the post
-    const newReaction = await Reaction.findOneAndUpdate(
-      { user: userId, target: postid, targetModel: 'posts' },
+    const newReaction = await PostReaction.findOneAndUpdate(
+      { user: userId, target: postid },
       { type: reaction },
       { new: true }
     );
@@ -165,8 +159,8 @@ export const updateReactionOnComment = async (req, res) => {
     const userId = req.user._id; // Assuming req.user contains authenticated user info
 
     // Find the user's reaction to the comment
-    const newReaction = await Reaction.findOneAndUpdate(
-      { user: userId, target: commentid, targetModel: 'comments' },
+    const newReaction = await CommentReaction.findOneAndUpdate(
+      { user: userId, target: commentid },
       { type: reaction },
       { new: true }
     );
