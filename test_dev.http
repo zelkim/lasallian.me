@@ -7,10 +7,13 @@
 #
 
 ### vars
-@authToken = 
+# @authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTM2NjI4NywiZXhwIjoxNzQxMzY5ODg3fQ.0xBCnKfnQVw2YsWbNFxNPDR7rKLWr0RGqKhRVOpB88A
+# @authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTM2NjU2NiwiZXhwIjoxNzQxMzcwMTY2fQ.YmtGGJK2aqlNwUGqe-9pRVDsfdybkVTlwEEIjB-5_Lk
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTUwMjgwMiwiZXhwIjoxNzQxNTA2NDAyfQ.P3COq-rGdTqkPZVWlWtLis3mM6Y4sHU_WlTot_7G5yw
 @orgId = 67c981837c12b0d3b83b702d
 # @baseUrl = http://localhost:3000
-@baseUrl = http://api.zel.kim
+# @baseUrl = http://api.zel.kim
+@baseUrl = http://localhost:3001
 
 ### get all post
 GET {{baseUrl}}/post/all
@@ -118,6 +121,10 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/post/event
 Authorization: Bearer {{authToken}}
 
+### fetch all posts
+GET {{baseUrl}}/post/all
+Authorization: Bearer {{authToken}}
+
 ### --- Organization Routes --- ###
 
 ### create organization
@@ -199,3 +206,15 @@ Authorization: Bearer {{authToken}}
 ### Usage: http://localhost:3000/org/<org-id>/members
 GET {{baseUrl}}/org/{{orgId}}/members
 Authorization: Bearer {{authToken}}
+
+### Create reaction
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "reaction": "❤️",
+    "postid": "67cd3b750ddeeaa2a76f833f"
+}
+
+
