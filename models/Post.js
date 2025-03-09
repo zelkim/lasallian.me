@@ -30,7 +30,13 @@ const postSchema = new mongoose.Schema({
         ref: 'user_info',
         required: true,
     },
-    comments: { type: mongoose.Schema.Types.ObjectId, ref: 'comments' },
+    comments: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'comments',
+        },
+    ],
     hashtags: [
         {
             tag: {

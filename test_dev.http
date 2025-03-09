@@ -7,17 +7,23 @@
 #
 
 ### vars
-# @authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTM2NjI4NywiZXhwIjoxNzQxMzY5ODg3fQ.0xBCnKfnQVw2YsWbNFxNPDR7rKLWr0RGqKhRVOpB88A
-# @authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTM2NjU2NiwiZXhwIjoxNzQxMzcwMTY2fQ.YmtGGJK2aqlNwUGqe-9pRVDsfdybkVTlwEEIjB-5_Lk
-@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wNVQxMjo0NjowNS4wNzVaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDVUMTI6NDY6MDUuMDc1WiJ9LCJfX3YiOjAsImlhdCI6MTc0MTUwMjgwMiwiZXhwIjoxNzQxNTA2NDAyfQ.P3COq-rGdTqkPZVWlWtLis3mM6Y4sHU_WlTot_7G5yw
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2NhODY5NTk2MmU4NTZmM2EwY2NiMjEiLCJjcmVkZW50aWFscyI6IjY3Y2E4NjU3OWMxOTM3OWJkYzFhMDAwNyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkMTIzIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQxMjMiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wN1QwNTozOTozMy4yNDBaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDdUMDU6Mzk6MzMuMjQwWiJ9LCJfX3YiOjAsImlhdCI6MTc0MTUxNTkwMCwiZXhwIjoxNzQxNTE5NTAwfQ.CwMfCapJIrM9eOLUdwti-o3DZ7ZGhEVn8AMIHR310dg
 @orgId = 67c981837c12b0d3b83b702d
-# @baseUrl = http://localhost:3000
-# @baseUrl = http://api.zel.kim
-@baseUrl = http://localhost:3001
+@baseUrl = http://localhost:3000
+// @baseUrl = http://api.zel.kim
 
 ### get all post
 GET {{baseUrl}}/post/all
 
+### create comment
+POST {{baseUrl}}/comment/
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+        "post_id": "67ca96256d1229bbc5009f47",
+        "content": "harru warudo"
+}
 ### register
 POST {{baseUrl}}/user/register
 Content-Type: application/json 
@@ -53,9 +59,13 @@ Content-Type: application/json
 {
     "credentials": {
         "email": "w2helloworld@dlsu.edu.ph",
-        "password": "12345678@Aa"
+        "password": "NewPassword123!"
     }
 }
+
+### get user info of currently authenticated user
+GET {{baseUrl}}/user
+Authorization: Bearer {{authToken}}
 
 ### get user by id
 GET {{baseUrl}}/user/67c8478d8e9f541dfe96893e
@@ -67,6 +77,52 @@ Authorization: Bearer {{authToken}}
 
 {
     "email": "w2helloworld@dlsu.edu.ph"
+}
+
+### update user profile (minimal changes)
+PUT {{baseUrl}}/user
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "info": {
+        "bio": "Updated bio text",
+        "links": {
+            "linkedin": "https://linkedin.com/in/newprofile"
+        }
+    }
+}
+
+### update user profile (many changes)
+PUT {{baseUrl}}/user
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "credentials": {
+        "email": "w2helloworld@dlsu.edu.ph",
+        "password": "NewPassword123!"
+    },
+    "info": {
+        "name": {
+            "first": "w2",
+            "last": "helloworld"
+        },
+        "username": "@w2helloworld",
+        "batchid": "123",
+        "program": "BSIT",
+        "bio": "My updated professional bio",
+        "links": {
+            "linkedin": "https://linkedin.com/in/updated",
+            "facebook": "https://facebook.com/updated",
+            "instagram": "https://instagram.com/updated",
+            "other": ["https://github.com/updated"]
+        }
+    },
+    "vanity": {
+        "display_photo": "https://new-photo-url.com/photo.jpg",
+        "cover_photo": "https://new-photo-url.com/cover.jpg"
+    }
 }
 
 ### create post
@@ -89,9 +145,9 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "Post with hashtags 4",
+    "title": "POST w2helloworld normal",
     "content": {
-        "text": "Testing hastag post 2#test"
+        "text": "Testing hastag post 2 #test"
     },
     "type": "normal",
     "visibility": "public"
@@ -207,6 +263,36 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/org/{{orgId}}/members
 Authorization: Bearer {{authToken}}
 
+### --- Search Posts --- ###
+
+### Basic search
+GET {{baseUrl}}/post/search?query=test
+Authorization: Bearer {{authToken}}
+
+### Default limit (10)
+GET {{baseUrl}}/post/search?query=sigma
+Authorization: Bearer {{authToken}}
+
+### Custom limit (e.g., 20)
+GET {{baseUrl}}/post/search?query=test&limit=20
+Authorization: Bearer {{authToken}}
+
+### Search with type filter
+GET {{baseUrl}}/post/search?query=test&type=normal
+Authorization: Bearer {{authToken}}
+
+### Search with visibility filter
+GET {{baseUrl}}/post/search?query=test&visibility=public
+Authorization: Bearer {{authToken}}
+
+### Search with 3 filters and default limit (10)
+GET {{baseUrl}}/post/search?query=sigma&type=project&visibility=public
+Authorization: Bearer {{authToken}}
+
+### With all parameters
+GET {{baseUrl}}/post/search?query=test&type=normal&visibility=public&limit=15
+Authorization: Bearer {{authToken}}
+
 ### Create reaction
 POST {{baseUrl}}/reaction/post
 Content-Type: application/json
@@ -216,5 +302,3 @@ Authorization: Bearer {{authToken}}
     "reaction": "❤️",
     "postid": "67cd3b750ddeeaa2a76f833f"
 }
-
-

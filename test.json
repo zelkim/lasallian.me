@@ -5,6 +5,7 @@
             "updated_at": "2025-03-07T06:45:57.545Z"
         },
         "reactions": [],
+        "comments": [],
         "_id": "67ca96256d1229bbc5009f47",
         "title": "Post with hashtags 4",
         "content": { "text": "Testing hastag post 2#test" },
@@ -12,13 +13,23 @@
         "type": "normal",
         "visibility": "public",
         "author": {
-            "vanity": { "badges": [] },
+            "vanity": {
+                "badges": [],
+                "cover_photo": "https://new-photo-url.com/cover.jpg",
+                "display_photo": "https://new-photo-url.com/photo.jpg"
+            },
             "info": {
-                "name": { "first": "w2helloworld", "last": "YES" },
-                "links": { "other": [] },
+                "name": { "first": "w2", "last": "helloworld" },
+                "links": {
+                    "other": ["https://github.com/updated"],
+                    "linkedin": "https://linkedin.com/in/newprofile",
+                    "facebook": "https://facebook.com/updated",
+                    "instagram": "https://instagram.com/updated"
+                },
                 "username": "@w2helloworld",
                 "batchid": "123",
-                "program": "BSIT"
+                "program": "BSIT",
+                "bio": "Updated bio text"
             },
             "_id": "67c8478d8e9f541dfe96893e"
         },
@@ -31,6 +42,7 @@
             "updated_at": "2025-03-08T05:04:01.911Z"
         },
         "reactions": [],
+        "comments": [],
         "_id": "67cabb8e0ddeeaa2a76f76a3",
         "content": { "text": "hiaaaap ok? huhu lol" },
         "media": [],
@@ -57,6 +69,7 @@
             "updated_at": "2025-03-07T14:08:50.007Z"
         },
         "reactions": [],
+        "comments": [],
         "_id": "67cafddf0ddeeaa2a76f7d00",
         "content": { "text": "I will wait" },
         "media": [],
@@ -83,6 +96,7 @@
             "updated_at": "2025-03-08T05:10:52.325Z"
         },
         "reactions": [],
+        "comments": [],
         "_id": "67cbd15c0ddeeaa2a76f7ed6",
         "content": { "text": "huhuhuhu" },
         "media": [],
@@ -108,6 +122,7 @@
             "updated_at": "2025-03-08T05:13:01.863Z"
         },
         "reactions": [],
+        "comments": [],
         "_id": "67cbd1dd0ddeeaa2a76f7f0f",
         "content": { "text": "ok na?" },
         "media": [],
@@ -133,6 +148,7 @@
             "updated_at": "2025-03-09T06:30:56.372Z"
         },
         "reactions": [],
+        "comments": [],
         "_id": "67cd35a00ddeeaa2a76f82f8",
         "content": { "text": "pogi ako" },
         "media": [],
@@ -159,6 +175,7 @@
             "updated_at": "2025-03-09T06:47:15.783Z"
         },
         "reactions": [],
+        "comments": [],
         "_id": "67cd39730ddeeaa2a76f831e",
         "content": { "text": "" },
         "media": ["https://oss.zel.kim/67cd39739b7270de932fb6cc"],
@@ -184,6 +201,7 @@
             "updated_at": "2025-03-09T06:55:49.359Z"
         },
         "reactions": [],
+        "comments": [],
         "_id": "67cd3b750ddeeaa2a76f833f",
         "content": { "text": "what the sigma #boy" },
         "media": [],
@@ -210,6 +228,7 @@
             "updated_at": "2025-03-09T07:01:06.859Z"
         },
         "reactions": [],
+        "comments": [],
         "_id": "67cd3cb20ddeeaa2a76f8377",
         "content": { "text": "" },
         "media": ["https://oss.zel.kim/67cd3cb29b7270de932fb6d3"],
@@ -235,6 +254,7 @@
             "updated_at": "2025-03-09T07:01:34.935Z"
         },
         "reactions": [],
+        "comments": [],
         "_id": "67cd3cce0ddeeaa2a76f837e",
         "content": { "text": "" },
         "media": ["https://oss.zel.kim/67cd3cce9b7270de932fb6d7"],
@@ -252,6 +272,104 @@
             "_id": "67c83d118e9f541dfe96891f"
         },
         "hashtags": [],
+        "__v": 0
+    },
+    {
+        "meta": {
+            "created_at": "2025-03-09T08:44:48.519Z",
+            "updated_at": "2025-03-09T08:44:48.519Z"
+        },
+        "comments": [],
+        "_id": "67cd5500303878647c86348d",
+        "title": "POST w2helloworld project",
+        "content": { "text": "Testing hastag post 2 #test" },
+        "media": [],
+        "type": "project",
+        "visibility": "public",
+        "author": {
+            "vanity": {
+                "badges": [],
+                "cover_photo": "https://new-photo-url.com/cover.jpg",
+                "display_photo": "https://new-photo-url.com/photo.jpg"
+            },
+            "info": {
+                "name": { "first": "w2", "last": "helloworld" },
+                "links": {
+                    "other": ["https://github.com/updated"],
+                    "linkedin": "https://linkedin.com/in/newprofile",
+                    "facebook": "https://facebook.com/updated",
+                    "instagram": "https://instagram.com/updated"
+                },
+                "username": "@w2helloworld",
+                "batchid": "123",
+                "program": "BSIT",
+                "bio": "Updated bio text"
+            },
+            "_id": "67c8478d8e9f541dfe96893e"
+        },
+        "hashtags": [{ "tag": "#test", "_id": "67cd5500303878647c86348e" }],
+        "__v": 0
+    },
+    {
+        "meta": {
+            "created_at": "2025-03-09T08:47:48.111Z",
+            "updated_at": "2025-03-09T08:47:48.111Z"
+        },
+        "comments": [],
+        "_id": "67cd55b44385737d06cd55c3",
+        "content": { "text": "tara beh suntukan" },
+        "media": [],
+        "type": "normal",
+        "visibility": "public",
+        "author": {
+            "vanity": { "badges": [] },
+            "info": {
+                "name": { "first": "Sean Denzel", "last": "Robenta" },
+                "links": { "other": [] },
+                "username": "@zelkim",
+                "batchid": "123",
+                "program": "BS Computer Science Major in Software Technology",
+                "bio": "tite"
+            },
+            "_id": "67cd35870ddeeaa2a76f82f0"
+        },
+        "hashtags": [],
+        "__v": 0
+    },
+    {
+        "meta": {
+            "created_at": "2025-03-09T09:01:07.492Z",
+            "updated_at": "2025-03-09T09:01:07.492Z"
+        },
+        "comments": [],
+        "_id": "67cd58d32287dd04c274682d",
+        "title": "POST w2helloworld normal",
+        "content": { "text": "Testing hastag post 2 #test" },
+        "media": [],
+        "type": "normal",
+        "visibility": "public",
+        "author": {
+            "vanity": {
+                "badges": [],
+                "cover_photo": "https://new-photo-url.com/cover.jpg",
+                "display_photo": "https://new-photo-url.com/photo.jpg"
+            },
+            "info": {
+                "name": { "first": "w2", "last": "helloworld" },
+                "links": {
+                    "other": ["https://github.com/updated"],
+                    "linkedin": "https://linkedin.com/in/newprofile",
+                    "facebook": "https://facebook.com/updated",
+                    "instagram": "https://instagram.com/updated"
+                },
+                "username": "@w2helloworld",
+                "batchid": "123",
+                "program": "BSIT",
+                "bio": "Updated bio text"
+            },
+            "_id": "67c8478d8e9f541dfe96893e"
+        },
+        "hashtags": [{ "tag": "#test", "_id": "67cd58d32287dd04c274682e" }],
         "__v": 0
     }
 ]

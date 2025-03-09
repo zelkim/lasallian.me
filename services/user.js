@@ -5,22 +5,37 @@ import { createSession } from '../services/session.js'
 
 export const getSessionUser = async (req, res) => {
     try {
-        const user_credentials = await UserCredentials.findById(req.user._id).exec();
-        if (!user_credentials) {
-            return res.status(400).json({ status: 'error', error: 'User not found.' });
+        const userInfo = await UserInfo.findById(req.user._id)
+            .populate('credentials', 'credentials.email')
+            .exec();
+        if (!userInfo) {
+            return res.status(404).json({
+                status: 'error',
+                error: 'User info not found'
+            });
         }
 
-        const userInfo = await UserInfo.findOne({ credentials: user_credentials._id }).exec();
-        if (!userInfo) {
-            return res.status(400).json({ status: 'error', error: 'User info not found.' });
+        const userCredentials = await UserCredentials.findById(userInfo.credentials).exec();
+        if (!userCredentials) {
+            return res.status(404).json({
+                status: 'error',
+                error: 'User credentials not found'
+            });
         }
+
+        const userObj = userInfo.toObject();
 
         const user = {
             credentials: {
-                email: user_credentials.credentials.email
+                _id: userObj.credentials._id,
+                email: userObj.credentials.credentials.email
             },
-            ...userInfo.toObject()
+            vanity: userObj.vanity,
+            info: userObj.info,
+            meta: userObj.meta,
+            _id: userObj._id
         };
+
         return res.status(200).json(user);
     } catch (err) {
         console.error(err)
@@ -220,3 +235,121 @@ export const authenticate = async (req, res) => {
     }
 }
 
+export const updateInfo = async (req, res) => {
+    try {
+        const userInfo = await UserInfo.findById(req.user._id).exec();
+        if (!userInfo) {
+            return res.status(404).json({
+                status: 'error',
+                error: 'User info not found'
+            });
+        }
+
+        const userCredentials = await UserCredentials.findById(userInfo.credentials._id).exec();
+        if (!userCredentials) {
+            return res.status(404).json({
+                status: 'error',
+                error: 'User credentials not found'
+            });
+        }
+
+        if (req.body.credentials) {
+            const updates = {};
+
+            if (req.body.credentials.email) {
+                const existingUser = await UserCredentials.findOne({
+                    _id: { $ne: userCredentials._id },
+                    "credentials.email": req.body.credentials.email
+                }).exec();
+                if (existingUser) {
+                    return res.status(400).json({
+                        status: 'error',
+                        error: 'Email already in use'
+                    });
+                }
+                updates["credentials.email"] = req.body.credentials.email;
+            }
+            if (req.body.credentials.password) {
+                const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+                if (!req.body.credentials.password.match(passwordRegex)) {
+                    return res.status(400).json({
+                        status: 'error',
+                        error: 'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character'
+                    });
+                }
+                updates["credentials.password"] = hashSync(req.body.credentials.password, 12);
+            }
+
+            updates["meta.updated_at"] = new Date();
+
+            await UserCredentials.findByIdAndUpdate(userCredentials._id, {
+                $set: updates
+            });
+        }
+
+        if (req.body.info || req.body.vanity) {
+            const updates = {};
+
+            if (req.body.info) {
+                for (const [key, value] of Object.entries(req.body.info)) {
+                    if (key === 'name') {
+                        for (const [nameKey, nameValue] of Object.entries(value)) {
+                            if (nameValue) {
+                                updates[`info.name.${nameKey}`] = nameValue;
+                            }
+                        }
+                    } else if (key === 'links') {
+                        for (const [linkKey, linkValue] of Object.entries(value)) {
+                            if (linkValue !== undefined) {
+                                updates[`info.links.${linkKey}`] = linkValue;
+                            }
+                        }
+                    } else if (value) {
+                        updates[`info.${key}`] = value;
+                    }
+                }
+            }
+            if (req.body.vanity) {
+                for (const [key, value] of Object.entries(req.body.vanity)) {
+                    if (value !== undefined) {
+                        updates[`vanity.${key}`] = value;
+                    }
+                }
+            }
+
+            updates["meta.updated_at"] = new Date();
+
+            await UserInfo.findByIdAndUpdate(userInfo._id, {
+                $set: updates
+            });
+        }
+
+        const updatedUserInfo = await UserInfo.findOne({ credentials: userCredentials._id })
+            .populate({
+                path: 'credentials',
+                select: 'credentials.email'
+            })
+            .exec();
+
+        const updatedUser = {
+            credentials: {
+                email: updatedUserInfo.credentials.credentials.email
+            },
+            vanity: updatedUserInfo.vanity,
+            info: updatedUserInfo.info,
+            meta: updatedUserInfo.meta
+        };
+
+        return res.status(200).json({
+            status: 'success',
+            user: updatedUser
+        });
+
+    } catch (err) {
+        console.error('Error in updateInfo:', err);
+        return res.status(500).json({
+            status: 'error',
+            error: 'Could not update user information'
+        });
+    }
+};
