@@ -445,13 +445,21 @@ export const DeletePost = async (req, res) => {
 // search happens on query params
 export const SearchPosts = async (req, res) => {
     try {
-        const { query, type, visibility } = req.query;
+        const { query, type, visibility, limit = 10 } = req.query;
         const userId = req.user._id;
 
         if (!query) {
             return res.status(400).json({
                 status: 'error',
                 error: 'Search query is required'
+            });
+        }
+
+        const resultLimit = parseInt(limit);
+        if (isNaN(resultLimit) || resultLimit < 1) {
+            return res.status(400).json({
+                status: 'error',
+                error: 'Invalid limit value. Must be a positive number.'
             });
         }
 
@@ -489,7 +497,7 @@ export const SearchPosts = async (req, res) => {
             .populate('organization')
             .populate('comments')
             .sort({ 'meta.created_at': -1 })
-            .limit(10); // NOTE: 10 for pagination purposes? maybe higher (like 50) then client-side paginates it to 10
+            .limit(resultLimit);
 
         return res.status(200).json({
             status: 'success',
