@@ -38,6 +38,13 @@
     - [Delete Organization](#delete-organization)
     - [Add Member to Organization](#add-member-to-organization)
     - [Get Organization Members](#get-organization-members)
+  - [Comment Routes](#comment-routes)
+    - [POST /comment](#post-comment)
+    - [GET /comment/post/:postid](#get-commentpostpostid)
+    - [GET /comment/user/:userid](#get-commentuseruserid)
+    - [GET /comment/:commentid](#get-commentcommentid)
+    - [PUT /comment/:commentid](#put-commentcommentid)
+    - [DELETE /comment/:commentid](#delete-commentcommentid)
 ---
 
 ## Development
@@ -2029,7 +2036,7 @@ Gets all members of an organization. Requires authentication.
 
 ---
 
-## Comment API
+## Comment Routes
 
 ### POST `/comment/`
 
