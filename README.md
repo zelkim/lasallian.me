@@ -6,45 +6,46 @@
     - [Development](#development)
         - [File Structure](#file-structure)
 - [API Documentation](#api-documentation)
-  - [Authentication](#authentication)
-    - [POST /user/register](#post-userregister)
-    - [POST /user/setup](#post-usersetup)
-    - [POST /user/login](#post-userlogin)
-    - [GET /user](#get-user)
-    - [GET /user/:id](#get-userid)
-    - [POST /user/get-by-email](#post-userget-by-email)
-    - [PUT /user](#put-user)
-  - [Posts](#posts)
-    - [GET /post/all](#get-postall)
-    - [GET /post/hashtag/:tag](#get-posthashtagtag)
-    - [GET /post/normal](#get-postnormal)
-    - [GET /post/project](#get-postproject)
-    - [GET /post/event](#get-postevent)
-    - [GET /post/normal/:id](#get-postnormalid)
-    - [GET /post/project/:id](#get-postprojectid)
-    - [GET /post/event/:id](#get-posteventid)
-  - [Generic Post Routes](#generic-post-routes)
-    - [POST /post](#post-post)
-    - [PUT /post/:id](#put-postid)
-    - [DELETE /post/:id](#delete-postid)
-    - [GET /post/search](#get-postsearch)
-  - [Hashtag Routes](#hashtag-routes)
-    - [GET /hashtag/:tag](#get-hashtagtag)
-  - [Organization](#organization)
-    - [Create a New Organization](#create-a-new-organization)
-    - [Get Organization by ID](#get-organization-by-id)
-    - [Get Organization by Acronym](#get-organization-by-acronym)
-    - [Update Organization](#update-organization)
-    - [Delete Organization](#delete-organization)
-    - [Add Member to Organization](#add-member-to-organization)
-    - [Get Organization Members](#get-organization-members)
-  - [Comment Routes](#comment-routes)
-    - [POST /comment](#post-comment)
-    - [GET /comment/post/:postid](#get-commentpostpostid)
-    - [GET /comment/user/:userid](#get-commentuseruserid)
-    - [GET /comment/:commentid](#get-commentcommentid)
-    - [PUT /comment/:commentid](#put-commentcommentid)
-    - [DELETE /comment/:commentid](#delete-commentcommentid)
+    - [Authentication](#authentication)
+        - [POST /user/register](#post-userregister)
+        - [POST /user/setup](#post-usersetup)
+        - [POST /user/login](#post-userlogin)
+        - [GET /user](#get-user)
+        - [GET /user/:id](#get-userid)
+        - [POST /user/get-by-email](#post-userget-by-email)
+        - [PUT /user](#put-user)
+    - [Posts](#posts)
+        - [GET /post/all](#get-postall)
+        - [GET /post/hashtag/:tag](#get-posthashtagtag)
+        - [GET /post/normal](#get-postnormal)
+        - [GET /post/project](#get-postproject)
+        - [GET /post/event](#get-postevent)
+        - [GET /post/normal/:id](#get-postnormalid)
+        - [GET /post/project/:id](#get-postprojectid)
+        - [GET /post/event/:id](#get-posteventid)
+    - [Generic Post Routes](#generic-post-routes)
+        - [POST /post](#post-post)
+        - [PUT /post/:id](#put-postid)
+        - [DELETE /post/:id](#delete-postid)
+        - [GET /post/search](#get-postsearch)
+    - [Hashtag Routes](#hashtag-routes)
+        - [GET /hashtag/:tag](#get-hashtagtag)
+    - [Organization](#organization)
+        - [Create a New Organization](#create-a-new-organization)
+        - [Get Organization by ID](#get-organization-by-id)
+        - [Get Organization by Acronym](#get-organization-by-acronym)
+        - [Update Organization](#update-organization)
+        - [Delete Organization](#delete-organization)
+        - [Add Member to Organization](#add-member-to-organization)
+        - [Get Organization Members](#get-organization-members)
+    - [Comment Routes](#comment-routes)
+        - [POST /comment](#post-comment)
+        - [GET /comment/post/:postid](#get-commentpostpostid)
+        - [GET /comment/user/:userid](#get-commentuseruserid)
+        - [GET /comment/:commentid](#get-commentcommentid)
+        - [PUT /comment/:commentid](#put-commentcommentid)
+        - [DELETE /comment/:commentid](#delete-commentcommentid)
+
 ---
 
 ## Development
@@ -477,6 +478,7 @@ curl -X POST localhost:3000/user/get-by-email \
 ### PUT /user
 
 - Edit/Updates the user profile details of the currently authenticated user
+
     - This route can also be used to change the credentials of the user (read `IMPORTANT` note below)
 
 - Requires: `Authorization: Bearer <token>`
@@ -487,6 +489,7 @@ curl -X POST localhost:3000/user/get-by-email \
 > Everything is optional by default (only include what you want to edit/change/update: `credentials`, `info`, and/or `vanity`) - meaning this retains all of the other profile details if left unchanged
 
 **Request:**
+
 ```http
 ### update user profile (minimal changes)
 PUT http://localhost:3000/user
@@ -536,42 +539,41 @@ Authorization: Bearer <token>
 ```
 
 **Response:**
+
 ```json
 // response for both requests
 {
-  "status": "success",
-  "user": {
-    "credentials": {
-      "email": "w2helloworld@dlsu.edu.ph"
-    },
-    "vanity": {
-      "badges": [],
-      "cover_photo": "https://new-photo-url.com/cover.jpg",
-      "display_photo": "https://new-photo-url.com/photo.jpg"
-    },
-    "info": {
-      "name": {
-        "first": "w2",
-        "last": "helloworld"
-      },
-      "links": {
-        "other": [
-          "https://github.com/updated"
-        ],
-        "linkedin": "https://linkedin.com/in/newprofile",
-        "facebook": "https://facebook.com/updated",
-        "instagram": "https://instagram.com/updated"
-      },
-      "username": "@w2helloworld",
-      "batchid": "123",
-      "program": "BSIT",
-      "bio": "Updated bio text"
-    },
-    "meta": {
-      "created_at": "2025-03-05T12:46:05.075Z",
-      "updated_at": "2025-03-09T09:45:04.383Z"
+    "status": "success",
+    "user": {
+        "credentials": {
+            "email": "w2helloworld@dlsu.edu.ph"
+        },
+        "vanity": {
+            "badges": [],
+            "cover_photo": "https://new-photo-url.com/cover.jpg",
+            "display_photo": "https://new-photo-url.com/photo.jpg"
+        },
+        "info": {
+            "name": {
+                "first": "w2",
+                "last": "helloworld"
+            },
+            "links": {
+                "other": ["https://github.com/updated"],
+                "linkedin": "https://linkedin.com/in/newprofile",
+                "facebook": "https://facebook.com/updated",
+                "instagram": "https://instagram.com/updated"
+            },
+            "username": "@w2helloworld",
+            "batchid": "123",
+            "program": "BSIT",
+            "bio": "Updated bio text"
+        },
+        "meta": {
+            "created_at": "2025-03-05T12:46:05.075Z",
+            "updated_at": "2025-03-09T09:45:04.383Z"
+        }
     }
-  }
 }
 ```
 
@@ -703,310 +705,296 @@ curl -X GET localhost:3000/post/hashtag/test -H "Authorization: Bearer <token>"
 ```json
 // with "test" hashtag
 [
-  {
-    "meta": {
-      "created_at": "2025-03-07T06:45:57.545Z",
-      "updated_at": "2025-03-07T06:45:57.545Z"
-    },
-    "reactions": [],
-    "_id": "67ca96256d1229bbc5009f47",
-    "title": "Post with hashtags 4",
-    "content": {
-      "text": "Testing hastag post 2#test"
-    },
-    "media": [],
-    "type": "normal",
-    "visibility": "public",
-    "author": {
-      "vanity": {
-        "badges": [],
-        "cover_photo": "https://new-photo-url.com/cover.jpg",
-        "display_photo": "https://new-photo-url.com/photo.jpg"
-      },
-      "info": {
-        "name": {
-          "first": "w2",
-          "last": "helloworld"
+    {
+        "meta": {
+            "created_at": "2025-03-07T06:45:57.545Z",
+            "updated_at": "2025-03-07T06:45:57.545Z"
         },
-        "links": {
-          "other": [
-            "https://github.com/updated"
-          ],
-          "linkedin": "https://linkedin.com/in/newprofile",
-          "facebook": "https://facebook.com/updated",
-          "instagram": "https://instagram.com/updated"
+        "reactions": [],
+        "_id": "67ca96256d1229bbc5009f47",
+        "title": "Post with hashtags 4",
+        "content": {
+            "text": "Testing hastag post 2#test"
         },
-        "username": "@w2helloworld",
-        "batchid": "123",
-        "program": "BSIT",
-        "bio": "Updated bio text"
-      },
-      "_id": "67c8478d8e9f541dfe96893e"
-    },
-    "hashtags": [
-      {
-        "tag": "#test",
-        "_id": "67ca96256d1229bbc5009f48"
-      }
-    ],
-    "__v": 1,
-    "comments": []
-  },
-  {
-    "meta": {
-      "created_at": "2025-03-09T08:44:48.519Z",
-      "updated_at": "2025-03-09T08:44:48.519Z"
-    },
-    "comments": [],
-    "reactions": [],
-    "_id": "67cd5500303878647c86348d",
-    "title": "POST w2helloworld project",
-    "content": {
-      "text": "Testing hastag post 2 #test"
-    },
-    "media": [],
-    "type": "project",
-    "visibility": "public",
-    "author": {
-      "vanity": {
-        "badges": [],
-        "cover_photo": "https://new-photo-url.com/cover.jpg",
-        "display_photo": "https://new-photo-url.com/photo.jpg"
-      },
-      "info": {
-        "name": {
-          "first": "w2",
-          "last": "helloworld"
+        "media": [],
+        "type": "normal",
+        "visibility": "public",
+        "author": {
+            "vanity": {
+                "badges": [],
+                "cover_photo": "https://new-photo-url.com/cover.jpg",
+                "display_photo": "https://new-photo-url.com/photo.jpg"
+            },
+            "info": {
+                "name": {
+                    "first": "w2",
+                    "last": "helloworld"
+                },
+                "links": {
+                    "other": ["https://github.com/updated"],
+                    "linkedin": "https://linkedin.com/in/newprofile",
+                    "facebook": "https://facebook.com/updated",
+                    "instagram": "https://instagram.com/updated"
+                },
+                "username": "@w2helloworld",
+                "batchid": "123",
+                "program": "BSIT",
+                "bio": "Updated bio text"
+            },
+            "_id": "67c8478d8e9f541dfe96893e"
         },
-        "links": {
-          "other": [
-            "https://github.com/updated"
-          ],
-          "linkedin": "https://linkedin.com/in/newprofile",
-          "facebook": "https://facebook.com/updated",
-          "instagram": "https://instagram.com/updated"
+        "hashtags": [
+            {
+                "tag": "#test",
+                "_id": "67ca96256d1229bbc5009f48"
+            }
+        ],
+        "__v": 1,
+        "comments": []
+    },
+    {
+        "meta": {
+            "created_at": "2025-03-09T08:44:48.519Z",
+            "updated_at": "2025-03-09T08:44:48.519Z"
         },
-        "username": "@w2helloworld",
-        "batchid": "123",
-        "program": "BSIT",
-        "bio": "Updated bio text"
-      },
-      "_id": "67c8478d8e9f541dfe96893e"
-    },
-    "hashtags": [
-      {
-        "tag": "#test",
-        "_id": "67cd5500303878647c86348e"
-      }
-    ],
-    "__v": 0
-  },
-  {
-    "meta": {
-      "created_at": "2025-03-09T09:01:07.492Z",
-      "updated_at": "2025-03-09T09:01:07.492Z"
-    },
-    "comments": [],
-    "reactions": [],
-    "_id": "67cd58d32287dd04c274682d",
-    "title": "POST w2helloworld normal",
-    "content": {
-      "text": "Testing hastag post 2 #test"
-    },
-    "media": [],
-    "type": "normal",
-    "visibility": "public",
-    "author": {
-      "vanity": {
-        "badges": [],
-        "cover_photo": "https://new-photo-url.com/cover.jpg",
-        "display_photo": "https://new-photo-url.com/photo.jpg"
-      },
-      "info": {
-        "name": {
-          "first": "w2",
-          "last": "helloworld"
+        "comments": [],
+        "reactions": [],
+        "_id": "67cd5500303878647c86348d",
+        "title": "POST w2helloworld project",
+        "content": {
+            "text": "Testing hastag post 2 #test"
         },
-        "links": {
-          "other": [
-            "https://github.com/updated"
-          ],
-          "linkedin": "https://linkedin.com/in/newprofile",
-          "facebook": "https://facebook.com/updated",
-          "instagram": "https://instagram.com/updated"
+        "media": [],
+        "type": "project",
+        "visibility": "public",
+        "author": {
+            "vanity": {
+                "badges": [],
+                "cover_photo": "https://new-photo-url.com/cover.jpg",
+                "display_photo": "https://new-photo-url.com/photo.jpg"
+            },
+            "info": {
+                "name": {
+                    "first": "w2",
+                    "last": "helloworld"
+                },
+                "links": {
+                    "other": ["https://github.com/updated"],
+                    "linkedin": "https://linkedin.com/in/newprofile",
+                    "facebook": "https://facebook.com/updated",
+                    "instagram": "https://instagram.com/updated"
+                },
+                "username": "@w2helloworld",
+                "batchid": "123",
+                "program": "BSIT",
+                "bio": "Updated bio text"
+            },
+            "_id": "67c8478d8e9f541dfe96893e"
         },
-        "username": "@w2helloworld",
-        "batchid": "123",
-        "program": "BSIT",
-        "bio": "Updated bio text"
-      },
-      "_id": "67c8478d8e9f541dfe96893e"
+        "hashtags": [
+            {
+                "tag": "#test",
+                "_id": "67cd5500303878647c86348e"
+            }
+        ],
+        "__v": 0
     },
-    "hashtags": [
-      {
-        "tag": "#test",
-        "_id": "67cd58d32287dd04c274682e"
-      }
-    ],
-    "__v": 0
-  },
-  {
-    "meta": {
-      "created_at": "2025-03-09T12:01:01.702Z",
-      "updated_at": "2025-03-09T12:01:01.703Z"
-    },
-    "_id": "67cd82fd7ee3f662874eea5c",
-    "title": "POST2 w2helloworld normal",
-    "content": {
-      "text": "Testing hastag post 2 #test"
-    },
-    "media": [],
-    "type": "normal",
-    "visibility": "public",
-    "author": {
-      "vanity": {
-        "badges": [],
-        "cover_photo": "https://new-photo-url.com/cover.jpg",
-        "display_photo": "https://new-photo-url.com/photo.jpg"
-      },
-      "info": {
-        "name": {
-          "first": "w2",
-          "last": "helloworld"
+    {
+        "meta": {
+            "created_at": "2025-03-09T09:01:07.492Z",
+            "updated_at": "2025-03-09T09:01:07.492Z"
         },
-        "links": {
-          "other": [
-            "https://github.com/updated"
-          ],
-          "linkedin": "https://linkedin.com/in/newprofile",
-          "facebook": "https://facebook.com/updated",
-          "instagram": "https://instagram.com/updated"
+        "comments": [],
+        "reactions": [],
+        "_id": "67cd58d32287dd04c274682d",
+        "title": "POST w2helloworld normal",
+        "content": {
+            "text": "Testing hastag post 2 #test"
         },
-        "username": "@w2helloworld",
-        "batchid": "123",
-        "program": "BSIT",
-        "bio": "Updated bio text"
-      },
-      "_id": "67c8478d8e9f541dfe96893e"
-    },
-    "comments": [],
-    "hashtags": [
-      {
-        "tag": "#test",
-        "_id": "67cd82fd7ee3f662874eea5d"
-      }
-    ],
-    "reactions": [],
-    "__v": 0
-  },
-  {
-    "meta": {
-      "created_at": "2025-03-09T12:16:17.122Z",
-      "updated_at": "2025-03-09T12:16:17.122Z"
-    },
-    "_id": "67cd869140d5b6ac12402dab",
-    "title": "POST3 w2helloworld normal",
-    "content": {
-      "text": "Testing hastag post 2 #test #w2"
-    },
-    "media": [],
-    "type": "normal",
-    "visibility": "public",
-    "author": {
-      "vanity": {
-        "badges": [],
-        "cover_photo": "https://new-photo-url.com/cover.jpg",
-        "display_photo": "https://new-photo-url.com/photo.jpg"
-      },
-      "info": {
-        "name": {
-          "first": "w2",
-          "last": "helloworld"
+        "media": [],
+        "type": "normal",
+        "visibility": "public",
+        "author": {
+            "vanity": {
+                "badges": [],
+                "cover_photo": "https://new-photo-url.com/cover.jpg",
+                "display_photo": "https://new-photo-url.com/photo.jpg"
+            },
+            "info": {
+                "name": {
+                    "first": "w2",
+                    "last": "helloworld"
+                },
+                "links": {
+                    "other": ["https://github.com/updated"],
+                    "linkedin": "https://linkedin.com/in/newprofile",
+                    "facebook": "https://facebook.com/updated",
+                    "instagram": "https://instagram.com/updated"
+                },
+                "username": "@w2helloworld",
+                "batchid": "123",
+                "program": "BSIT",
+                "bio": "Updated bio text"
+            },
+            "_id": "67c8478d8e9f541dfe96893e"
         },
-        "links": {
-          "other": [
-            "https://github.com/updated"
-          ],
-          "linkedin": "https://linkedin.com/in/newprofile",
-          "facebook": "https://facebook.com/updated",
-          "instagram": "https://instagram.com/updated"
+        "hashtags": [
+            {
+                "tag": "#test",
+                "_id": "67cd58d32287dd04c274682e"
+            }
+        ],
+        "__v": 0
+    },
+    {
+        "meta": {
+            "created_at": "2025-03-09T12:01:01.702Z",
+            "updated_at": "2025-03-09T12:01:01.703Z"
         },
-        "username": "@w2helloworld",
-        "batchid": "123",
-        "program": "BSIT",
-        "bio": "Updated bio text"
-      },
-      "_id": "67c8478d8e9f541dfe96893e"
-    },
-    "comments": [],
-    "hashtags": [
-      {
-        "tag": "#test",
-        "_id": "67cd869140d5b6ac12402dac"
-      },
-      {
-        "tag": "#w2",
-        "_id": "67cd869140d5b6ac12402dad"
-      }
-    ],
-    "reactions": [],
-    "__v": 0
-  },
-  {
-    "meta": {
-      "created_at": "2025-03-09T12:22:06.882Z",
-      "updated_at": "2025-03-09T12:22:06.882Z"
-    },
-    "_id": "67cd87eea05e28753681bdad",
-    "title": "POST4 w2helloworld normal",
-    "content": {
-      "text": "Testing hastag post 2 #test #w2"
-    },
-    "media": [
-      "url-string-test"
-    ],
-    "type": "normal",
-    "visibility": "public",
-    "author": {
-      "vanity": {
-        "badges": [],
-        "cover_photo": "https://new-photo-url.com/cover.jpg",
-        "display_photo": "https://new-photo-url.com/photo.jpg"
-      },
-      "info": {
-        "name": {
-          "first": "w2",
-          "last": "helloworld"
+        "_id": "67cd82fd7ee3f662874eea5c",
+        "title": "POST2 w2helloworld normal",
+        "content": {
+            "text": "Testing hastag post 2 #test"
         },
-        "links": {
-          "other": [
-            "https://github.com/updated"
-          ],
-          "linkedin": "https://linkedin.com/in/newprofile",
-          "facebook": "https://facebook.com/updated",
-          "instagram": "https://instagram.com/updated"
+        "media": [],
+        "type": "normal",
+        "visibility": "public",
+        "author": {
+            "vanity": {
+                "badges": [],
+                "cover_photo": "https://new-photo-url.com/cover.jpg",
+                "display_photo": "https://new-photo-url.com/photo.jpg"
+            },
+            "info": {
+                "name": {
+                    "first": "w2",
+                    "last": "helloworld"
+                },
+                "links": {
+                    "other": ["https://github.com/updated"],
+                    "linkedin": "https://linkedin.com/in/newprofile",
+                    "facebook": "https://facebook.com/updated",
+                    "instagram": "https://instagram.com/updated"
+                },
+                "username": "@w2helloworld",
+                "batchid": "123",
+                "program": "BSIT",
+                "bio": "Updated bio text"
+            },
+            "_id": "67c8478d8e9f541dfe96893e"
         },
-        "username": "@w2helloworld",
-        "batchid": "123",
-        "program": "BSIT",
-        "bio": "Updated bio text"
-      },
-      "_id": "67c8478d8e9f541dfe96893e"
+        "comments": [],
+        "hashtags": [
+            {
+                "tag": "#test",
+                "_id": "67cd82fd7ee3f662874eea5d"
+            }
+        ],
+        "reactions": [],
+        "__v": 0
     },
-    "comments": [],
-    "hashtags": [
-      {
-        "tag": "#test",
-        "_id": "67cd87eea05e28753681bdae"
-      },
-      {
-        "tag": "#w2",
-        "_id": "67cd87eea05e28753681bdaf"
-      }
-    ],
-    "reactions": [],
-    "__v": 0
-  }
+    {
+        "meta": {
+            "created_at": "2025-03-09T12:16:17.122Z",
+            "updated_at": "2025-03-09T12:16:17.122Z"
+        },
+        "_id": "67cd869140d5b6ac12402dab",
+        "title": "POST3 w2helloworld normal",
+        "content": {
+            "text": "Testing hastag post 2 #test #w2"
+        },
+        "media": [],
+        "type": "normal",
+        "visibility": "public",
+        "author": {
+            "vanity": {
+                "badges": [],
+                "cover_photo": "https://new-photo-url.com/cover.jpg",
+                "display_photo": "https://new-photo-url.com/photo.jpg"
+            },
+            "info": {
+                "name": {
+                    "first": "w2",
+                    "last": "helloworld"
+                },
+                "links": {
+                    "other": ["https://github.com/updated"],
+                    "linkedin": "https://linkedin.com/in/newprofile",
+                    "facebook": "https://facebook.com/updated",
+                    "instagram": "https://instagram.com/updated"
+                },
+                "username": "@w2helloworld",
+                "batchid": "123",
+                "program": "BSIT",
+                "bio": "Updated bio text"
+            },
+            "_id": "67c8478d8e9f541dfe96893e"
+        },
+        "comments": [],
+        "hashtags": [
+            {
+                "tag": "#test",
+                "_id": "67cd869140d5b6ac12402dac"
+            },
+            {
+                "tag": "#w2",
+                "_id": "67cd869140d5b6ac12402dad"
+            }
+        ],
+        "reactions": [],
+        "__v": 0
+    },
+    {
+        "meta": {
+            "created_at": "2025-03-09T12:22:06.882Z",
+            "updated_at": "2025-03-09T12:22:06.882Z"
+        },
+        "_id": "67cd87eea05e28753681bdad",
+        "title": "POST4 w2helloworld normal",
+        "content": {
+            "text": "Testing hastag post 2 #test #w2"
+        },
+        "media": ["url-string-test"],
+        "type": "normal",
+        "visibility": "public",
+        "author": {
+            "vanity": {
+                "badges": [],
+                "cover_photo": "https://new-photo-url.com/cover.jpg",
+                "display_photo": "https://new-photo-url.com/photo.jpg"
+            },
+            "info": {
+                "name": {
+                    "first": "w2",
+                    "last": "helloworld"
+                },
+                "links": {
+                    "other": ["https://github.com/updated"],
+                    "linkedin": "https://linkedin.com/in/newprofile",
+                    "facebook": "https://facebook.com/updated",
+                    "instagram": "https://instagram.com/updated"
+                },
+                "username": "@w2helloworld",
+                "batchid": "123",
+                "program": "BSIT",
+                "bio": "Updated bio text"
+            },
+            "_id": "67c8478d8e9f541dfe96893e"
+        },
+        "comments": [],
+        "hashtags": [
+            {
+                "tag": "#test",
+                "_id": "67cd87eea05e28753681bdae"
+            },
+            {
+                "tag": "#w2",
+                "_id": "67cd87eea05e28753681bdaf"
+            }
+        ],
+        "reactions": [],
+        "__v": 0
+    }
 ]
 ```
 
@@ -1026,183 +1014,177 @@ curl -X GET localhost:3000/post/normal -H "Authorization: Bearer <token>"
 
 ```json
 [
-  {
-    "meta": {
-      "created_at": "2025-03-07T06:45:57.545Z",
-      "updated_at": "2025-03-07T06:45:57.545Z"
-    },
-    "reactions": [],
-    "_id": "67ca96256d1229bbc5009f47",
-    "title": "Post with hashtags 4",
-    "content": {
-      "text": "Testing hastag post 2#test"
-    },
-    "media": [],
-    "type": "normal",
-    "visibility": "public",
-    "author": {
-      "vanity": {
-        "badges": [],
-        "cover_photo": "https://new-photo-url.com/cover.jpg",
-        "display_photo": "https://new-photo-url.com/photo.jpg"
-      },
-      "info": {
-        "name": {
-          "first": "w2",
-          "last": "helloworld"
-        },
-        "links": {
-          "other": [
-            "https://github.com/updated"
-          ],
-          "linkedin": "https://linkedin.com/in/newprofile",
-          "facebook": "https://facebook.com/updated",
-          "instagram": "https://instagram.com/updated"
-        },
-        "username": "@w2helloworld",
-        "batchid": "123",
-        "program": "BSIT",
-        "bio": "Updated bio text"
-      },
-      "_id": "67c8478d8e9f541dfe96893e"
-    },
-    "hashtags": [
-      {
-        "tag": "#test",
-        "_id": "67ca96256d1229bbc5009f48"
-      }
-    ],
-    "__v": 1,
-    "comments": [
-      {
+    {
         "meta": {
-          "created_at": "2025-03-09T11:14:40.127Z",
-          "updated_at": "2025-03-09T11:14:40.127Z"
+            "created_at": "2025-03-07T06:45:57.545Z",
+            "updated_at": "2025-03-07T06:45:57.545Z"
         },
         "reactions": [],
-        "_id": "67cd782026e24242b1e25f8f",
+        "_id": "67ca96256d1229bbc5009f47",
+        "title": "Post with hashtags 4",
+        "content": {
+            "text": "Testing hastag post 2#test"
+        },
+        "media": [],
+        "type": "normal",
+        "visibility": "public",
         "author": {
-          "vanity": {
-            "badges": []
-          },
-          "info": {
-            "name": {
-              "first": "w2helloworld123",
-              "last": "YES"
+            "vanity": {
+                "badges": [],
+                "cover_photo": "https://new-photo-url.com/cover.jpg",
+                "display_photo": "https://new-photo-url.com/photo.jpg"
             },
-            "links": {
-              "other": []
+            "info": {
+                "name": {
+                    "first": "w2",
+                    "last": "helloworld"
+                },
+                "links": {
+                    "other": ["https://github.com/updated"],
+                    "linkedin": "https://linkedin.com/in/newprofile",
+                    "facebook": "https://facebook.com/updated",
+                    "instagram": "https://instagram.com/updated"
+                },
+                "username": "@w2helloworld",
+                "batchid": "123",
+                "program": "BSIT",
+                "bio": "Updated bio text"
             },
-            "username": "@w2helloworld123",
-            "batchid": "123",
-            "program": "BSIT"
-          },
-          "_id": "67ca8695962e856f3a0ccb21"
+            "_id": "67c8478d8e9f541dfe96893e"
         },
-        "content": "harru warudo",
-        "post": "67ca96256d1229bbc5009f47",
+        "hashtags": [
+            {
+                "tag": "#test",
+                "_id": "67ca96256d1229bbc5009f48"
+            }
+        ],
+        "__v": 1,
+        "comments": [
+            {
+                "meta": {
+                    "created_at": "2025-03-09T11:14:40.127Z",
+                    "updated_at": "2025-03-09T11:14:40.127Z"
+                },
+                "reactions": [],
+                "_id": "67cd782026e24242b1e25f8f",
+                "author": {
+                    "vanity": {
+                        "badges": []
+                    },
+                    "info": {
+                        "name": {
+                            "first": "w2helloworld123",
+                            "last": "YES"
+                        },
+                        "links": {
+                            "other": []
+                        },
+                        "username": "@w2helloworld123",
+                        "batchid": "123",
+                        "program": "BSIT"
+                    },
+                    "_id": "67ca8695962e856f3a0ccb21"
+                },
+                "content": "harru warudo",
+                "post": "67ca96256d1229bbc5009f47",
+                "__v": 0
+            }
+        ]
+    },
+    {
+        "meta": {
+            "created_at": "2025-03-09T09:01:07.492Z",
+            "updated_at": "2025-03-09T09:01:07.492Z"
+        },
+        "comments": [],
+        "reactions": [],
+        "_id": "67cd58d32287dd04c274682d",
+        "title": "POST w2helloworld normal",
+        "content": {
+            "text": "Testing hastag post 2 #test"
+        },
+        "media": [],
+        "type": "normal",
+        "visibility": "public",
+        "author": {
+            "vanity": {
+                "badges": [],
+                "cover_photo": "https://new-photo-url.com/cover.jpg",
+                "display_photo": "https://new-photo-url.com/photo.jpg"
+            },
+            "info": {
+                "name": {
+                    "first": "w2",
+                    "last": "helloworld"
+                },
+                "links": {
+                    "other": ["https://github.com/updated"],
+                    "linkedin": "https://linkedin.com/in/newprofile",
+                    "facebook": "https://facebook.com/updated",
+                    "instagram": "https://instagram.com/updated"
+                },
+                "username": "@w2helloworld",
+                "batchid": "123",
+                "program": "BSIT",
+                "bio": "Updated bio text"
+            },
+            "_id": "67c8478d8e9f541dfe96893e"
+        },
+        "hashtags": [
+            {
+                "tag": "#test",
+                "_id": "67cd58d32287dd04c274682e"
+            }
+        ],
         "__v": 0
-      }
-    ]
-  },
-  {
-    "meta": {
-      "created_at": "2025-03-09T09:01:07.492Z",
-      "updated_at": "2025-03-09T09:01:07.492Z"
     },
-    "comments": [],
-    "reactions": [],
-    "_id": "67cd58d32287dd04c274682d",
-    "title": "POST w2helloworld normal",
-    "content": {
-      "text": "Testing hastag post 2 #test"
-    },
-    "media": [],
-    "type": "normal",
-    "visibility": "public",
-    "author": {
-      "vanity": {
-        "badges": [],
-        "cover_photo": "https://new-photo-url.com/cover.jpg",
-        "display_photo": "https://new-photo-url.com/photo.jpg"
-      },
-      "info": {
-        "name": {
-          "first": "w2",
-          "last": "helloworld"
+    {
+        "meta": {
+            "created_at": "2025-03-09T12:01:01.702Z",
+            "updated_at": "2025-03-09T12:01:01.703Z"
         },
-        "links": {
-          "other": [
-            "https://github.com/updated"
-          ],
-          "linkedin": "https://linkedin.com/in/newprofile",
-          "facebook": "https://facebook.com/updated",
-          "instagram": "https://instagram.com/updated"
+        "_id": "67cd82fd7ee3f662874eea5c",
+        "title": "POST2 w2helloworld normal",
+        "content": {
+            "text": "Testing hastag post 2 #test"
         },
-        "username": "@w2helloworld",
-        "batchid": "123",
-        "program": "BSIT",
-        "bio": "Updated bio text"
-      },
-      "_id": "67c8478d8e9f541dfe96893e"
-    },
-    "hashtags": [
-      {
-        "tag": "#test",
-        "_id": "67cd58d32287dd04c274682e"
-      }
-    ],
-    "__v": 0
-  },
-  {
-    "meta": {
-      "created_at": "2025-03-09T12:01:01.702Z",
-      "updated_at": "2025-03-09T12:01:01.703Z"
-    },
-    "_id": "67cd82fd7ee3f662874eea5c",
-    "title": "POST2 w2helloworld normal",
-    "content": {
-      "text": "Testing hastag post 2 #test"
-    },
-    "media": [],
-    "type": "normal",
-    "visibility": "public",
-    "author": {
-      "vanity": {
-        "badges": [],
-        "cover_photo": "https://new-photo-url.com/cover.jpg",
-        "display_photo": "https://new-photo-url.com/photo.jpg"
-      },
-      "info": {
-        "name": {
-          "first": "w2",
-          "last": "helloworld"
+        "media": [],
+        "type": "normal",
+        "visibility": "public",
+        "author": {
+            "vanity": {
+                "badges": [],
+                "cover_photo": "https://new-photo-url.com/cover.jpg",
+                "display_photo": "https://new-photo-url.com/photo.jpg"
+            },
+            "info": {
+                "name": {
+                    "first": "w2",
+                    "last": "helloworld"
+                },
+                "links": {
+                    "other": ["https://github.com/updated"],
+                    "linkedin": "https://linkedin.com/in/newprofile",
+                    "facebook": "https://facebook.com/updated",
+                    "instagram": "https://instagram.com/updated"
+                },
+                "username": "@w2helloworld",
+                "batchid": "123",
+                "program": "BSIT",
+                "bio": "Updated bio text"
+            },
+            "_id": "67c8478d8e9f541dfe96893e"
         },
-        "links": {
-          "other": [
-            "https://github.com/updated"
-          ],
-          "linkedin": "https://linkedin.com/in/newprofile",
-          "facebook": "https://facebook.com/updated",
-          "instagram": "https://instagram.com/updated"
-        },
-        "username": "@w2helloworld",
-        "batchid": "123",
-        "program": "BSIT",
-        "bio": "Updated bio text"
-      },
-      "_id": "67c8478d8e9f541dfe96893e"
-    },
-    "comments": [],
-    "hashtags": [
-      {
-        "tag": "#test",
-        "_id": "67cd82fd7ee3f662874eea5d"
-      }
-    ],
-    "reactions": [],
-    "__v": 0
-  }
+        "comments": [],
+        "hashtags": [
+            {
+                "tag": "#test",
+                "_id": "67cd82fd7ee3f662874eea5d"
+            }
+        ],
+        "reactions": [],
+        "__v": 0
+    }
 ]
 ```
 
@@ -1398,93 +1380,92 @@ curl -X GET localhost:3000/post/event -H "Authorization: Bearer <token>"
 - gets specific post, given the post `_id` as path parameter
 
 **Request:**
+
 ```http
 GET http://localhost:3000/post/normal/67cd3b750ddeeaa2a76f833f
 Authorization: Bearer {{authToken}}
 ```
 
 **Response:**
+
 ```json
 {
-  "meta": {
-    "created_at": "2025-03-09T06:55:49.359Z",
-    "updated_at": "2025-03-09T06:55:49.359Z"
-  },
-  "_id": "67cd3b750ddeeaa2a76f833f",
-  "content": {
-    "text": "what the sigma #boy"
-  },
-  "media": [],
-  "type": "normal",
-  "visibility": "public",
-  "author": {
-    "vanity": {
-      "badges": []
+    "meta": {
+        "created_at": "2025-03-09T06:55:49.359Z",
+        "updated_at": "2025-03-09T06:55:49.359Z"
     },
-    "info": {
-      "name": {
-        "first": "Sean Denzel",
-        "last": "Robenta"
-      },
-      "links": {
-        "other": []
-      },
-      "username": "@zelkim",
-      "batchid": "123",
-      "program": "BS Computer Science Major in Software Technology",
-      "bio": "titrebio"
+    "_id": "67cd3b750ddeeaa2a76f833f",
+    "content": {
+        "text": "what the sigma #boy"
     },
-    "_id": "67cd35870ddeeaa2a76f82f0"
-  },
-  "hashtags": [
-    {
-      "tag": "#boy",
-      "_id": "67cd3b750ddeeaa2a76f8340"
-    }
-  ],
-  "__v": 2,
-  "comments": [
-    {
-      "meta": {
-        "created_at": "2025-03-09T12:30:54.795Z",
-        "updated_at": "2025-03-09T12:30:54.795Z"
-      },
-      "_id": "67cd89fe21009c70077678e6",
-      "author": {
+    "media": [],
+    "type": "normal",
+    "visibility": "public",
+    "author": {
         "vanity": {
-          "badges": [],
-          "cover_photo": "https://new-photo-url.com/cover.jpg",
-          "display_photo": "https://new-photo-url.com/photo.jpg"
+            "badges": []
         },
         "info": {
-          "name": {
-            "first": "w2",
-            "last": "helloworld"
-          },
-          "links": {
-            "other": [
-              "https://github.com/updated"
-            ],
-            "linkedin": "https://linkedin.com/in/newprofile",
-            "facebook": "https://facebook.com/updated",
-            "instagram": "https://instagram.com/updated"
-          },
-          "username": "@w2helloworld",
-          "batchid": "123",
-          "program": "BSIT",
-          "bio": "Updated bio text"
+            "name": {
+                "first": "Sean Denzel",
+                "last": "Robenta"
+            },
+            "links": {
+                "other": []
+            },
+            "username": "@zelkim",
+            "batchid": "123",
+            "program": "BS Computer Science Major in Software Technology",
+            "bio": "titrebio"
         },
-        "_id": "67c8478d8e9f541dfe96893e"
-      },
-      "content": "test comment",
-      "post": "67cd3b750ddeeaa2a76f833f",
-      "reactions": [],
-      "__v": 0
-    }
-  ],
-  "reactions": []
+        "_id": "67cd35870ddeeaa2a76f82f0"
+    },
+    "hashtags": [
+        {
+            "tag": "#boy",
+            "_id": "67cd3b750ddeeaa2a76f8340"
+        }
+    ],
+    "__v": 2,
+    "comments": [
+        {
+            "meta": {
+                "created_at": "2025-03-09T12:30:54.795Z",
+                "updated_at": "2025-03-09T12:30:54.795Z"
+            },
+            "_id": "67cd89fe21009c70077678e6",
+            "author": {
+                "vanity": {
+                    "badges": [],
+                    "cover_photo": "https://new-photo-url.com/cover.jpg",
+                    "display_photo": "https://new-photo-url.com/photo.jpg"
+                },
+                "info": {
+                    "name": {
+                        "first": "w2",
+                        "last": "helloworld"
+                    },
+                    "links": {
+                        "other": ["https://github.com/updated"],
+                        "linkedin": "https://linkedin.com/in/newprofile",
+                        "facebook": "https://facebook.com/updated",
+                        "instagram": "https://instagram.com/updated"
+                    },
+                    "username": "@w2helloworld",
+                    "batchid": "123",
+                    "program": "BSIT",
+                    "bio": "Updated bio text"
+                },
+                "_id": "67c8478d8e9f541dfe96893e"
+            },
+            "content": "test comment",
+            "post": "67cd3b750ddeeaa2a76f833f",
+            "reactions": [],
+            "__v": 0
+        }
+    ],
+    "reactions": []
 }
-
 ```
 
 ---
@@ -1634,6 +1615,7 @@ curl -X GET localhost:3000/post/event/67c6e2814911dd82e8dabb94 -H "Authorization
 - for updating a post: `PUT /post/:id`
 - for deleting a post: `DELETE /post/:id`
 - for search a post with query parameters `GET /post/search`
+
 ---
 
 ### POST /post
@@ -1655,6 +1637,7 @@ curl -X GET localhost:3000/post/event/67c6e2814911dd82e8dabb94 -H "Authorization
 > This route is used to create **ALL TYPES** of post
 
 **Request:**
+
 ```http
 ### create post (minimal)
 POST http://localhost:3000/post
@@ -1684,6 +1667,7 @@ Authorization: Bearer {{authToken}}
 ```
 
 **Response:**
+
 ```json
 // create post with required fields only (minimal)
 {
@@ -1913,26 +1897,29 @@ curl -X DELETE localhost:3000/post/normal/<post-id> -H "Authorization: Bearer <t
 - Returns posts that match the search criteria and are visible to the user
 
 **Query Parameters:**
+
 - `query` (required - Search term to look for in post titles, content, and hashtags
 - `type` (optional) - Filter by post type (`normal`, `project`, or `event`)
 - `visibility` (optional) - Filter by post visibility (`public`, `organization`, or `private`)
-- `limit` (optional) -  Maximum number of results to return (default: 10)
+- `limit` (optional) - Maximum number of results to return (default: 10)
 
 **Request:**
+
 ```http
 ### Basic search (defaults to limit: 10)
 GET http://localhost:3000/post/search?query=test
 Authorization: Bearer <token>
 
 ### Search will all filters
-# ---> this searches 15 posts matching: 
-# 1. posts marked as type: normal, visibility: public  
+# ---> this searches 15 posts matching:
+# 1. posts marked as type: normal, visibility: public
 # 2. has "test" in any of the Post's title, content.text, hashtags
 GET http://localhost:3000/post/search?query=test&type=normal&visibility=public&limit=15
 Authorization: Bearer <token>
 ```
 
 **Request (via `curl`):**
+
 ```bash
 # Basic search (defaults to limit: 10)
 curl -X GET "localhost:3000/post/search?query=test" \
@@ -1944,6 +1931,7 @@ curl -X GET "localhost:3000/post/search?query=test&type=normal&visibility=public
 ```
 
 **Response:**
+
 ```json
 // Search with query='sigma'
 {
@@ -2221,11 +2209,13 @@ curl -X GET "localhost:3000/post/search?query=test&type=normal&visibility=public
 ```
 
 > [!NOTE]
+>
 > - Search is case-insensitive
 > - Results are sorted by creation date (newest first)
 > - Only returns posts that the authenticated user has permission to view
 > - The `limit` parameter must be a positive number
-```
+
+````
 
 # Hashtag Routes
 
@@ -2238,7 +2228,7 @@ curl -X GET "localhost:3000/post/search?query=test&type=normal&visibility=public
 
 ```bash
 curl -X GET localhost:3000/hashtag/test -H "Authorization: Bearer <token>"
-```
+````
 
 **Response:**
 
@@ -2735,3 +2725,182 @@ curl -X DELETE localhost:3000/comment/comment_id \
     "msg": "Comment deleted."
 }
 ```
+
+---
+
+## Reaction Routes
+
+## POST `/reaction/post`
+
+- Adds a reaction to a post.
+- Requires a valid session token as `Authorization: Bearer <JWT>` header.
+- **Allowed reactions:** `❤️`, `👏`, `😂`, `😢`, `😡`
+
+### Request
+
+```json
+{
+    "postid": "60d5f9b5e813f8b5d6c4c123",
+    "reaction": "❤️"
+}
+```
+
+### Response
+
+```json
+{
+    "message": "Reaction added.",
+    "newReaction": {
+        "user": "user_id",
+        "target": "60d5f9b5e813f8b5d6c4c123",
+        "type": "❤️",
+        "_id": "reaction_id"
+    }
+}
+```
+
+---
+
+## DELETE `/reaction/post`
+
+- Removes a reaction from a post.
+- Requires a valid session token.
+
+### Request
+
+```json
+{
+    "postid": "60d5f9b5e813f8b5d6c4c123"
+}
+```
+
+### Response
+
+```json
+{
+    "message": "Reaction removed."
+}
+```
+
+---
+
+## PUT `/reaction/post`
+
+- Updates an existing reaction on a post.
+- Requires a valid session token.
+- **Allowed reactions:** `❤️`, `👏`, `😂`, `😢`, `😡`
+
+### Request
+
+```json
+{
+    "postid": "60d5f9b5e813f8b5d6c4c123",
+    "reaction": "👏"
+}
+```
+
+### Response
+
+```json
+{
+    "message": "Reaction updated.",
+    "newReaction": {
+        "user": "user_id",
+        "target": "60d5f9b5e813f8b5d6c4c123",
+        "type": "👏",
+        "_id": "reaction_id"
+    }
+}
+```
+
+---
+
+## POST `/reaction/comment`
+
+- Adds a reaction to a comment.
+- Requires a valid session token.
+- **Allowed reactions:** `❤️`, `👏`, `😂`, `😢`, `😡`
+
+### Request
+
+```json
+{
+    "commentid": "60d5f9b5e813f8b5d6c4c456",
+    "reaction": "😂"
+}
+```
+
+### Response
+
+```json
+{
+    "message": "Reaction added.",
+    "newReaction": {
+        "user": "user_id",
+        "target": "60d5f9b5e813f8b5d6c4c456",
+        "type": "😂",
+        "_id": "reaction_id"
+    }
+}
+```
+
+---
+
+## DELETE `/reaction/comment`
+
+- Removes a reaction from a comment.
+- Requires a valid session token.
+
+### Request
+
+```json
+{
+    "commentid": "60d5f9b5e813f8b5d6c4c456"
+}
+```
+
+### Response
+
+```json
+{
+    "message": "Reaction removed."
+}
+```
+
+---
+
+## PUT `/reaction/comment`
+
+- Updates an existing reaction on a comment.
+- Requires a valid session token.
+- **Allowed reactions:** `❤️`, `👏`, `😂`, `😢`, `😡`
+
+### Request
+
+```json
+{
+    "commentid": "60d5f9b5e813f8b5d6c4c456",
+    "reaction": "😢"
+}
+```
+
+### Response
+
+```json
+{
+    "message": "Reaction updated.",
+    "newReaction": {
+        "user": "user_id",
+        "target": "60d5f9b5e813f8b5d6c4c456",
+        "type": "😢",
+        "_id": "reaction_id"
+    }
+}
+```
+
+---
+
+## Notes:
+
+- The **reaction** field must be one of the predefined values in `ReactionType`: `❤️`, `👏`, `😂`, `😢`, `😡`.
+- Invalid reaction types will result in an error.
