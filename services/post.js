@@ -441,3 +441,86 @@ export const DeletePost = async (req, res) => {
         return res.status(400).send({ status: 'error', msg: err });
     }
 };
+
+// search happens on query params
+export const SearchPosts = async (req, res) => {
+    try {
+        const { query, type, visibility, limit = 10 } = req.query;
+        const userId = req.user._id;
+
+        if (!query) {
+            return res.status(400).json({
+                status: 'error',
+                error: 'Search query is required'
+            });
+        }
+
+        const resultLimit = parseInt(limit);
+        if (isNaN(resultLimit) || resultLimit < 1) {
+            return res.status(400).json({
+                status: 'error',
+                error: 'Invalid limit value. Must be a positive number.'
+            });
+        }
+
+        const searchQuery = {
+            $or: [
+                { title: { $regex: query, $options: 'i' } },
+                { 'content.text': { $regex: query, $options: 'i' } },
+                { 'hashtags.tag': { $regex: query, $options: 'i' } }
+            ]
+        };
+
+        // type and visibility filters are optional (in query param)
+        if (type && Object.values(POST_TYPES).includes(type)) {
+            searchQuery.type = type;
+        }
+        if (visibility) {
+            searchQuery.visibility = visibility;
+        }
+
+        // for organization-specific posts
+        const userOrgs = await GetUserOrganizations(userId);
+        searchQuery.$or = [
+            { visibility: 'public' },
+            { author: userId },
+            {
+                $and: [
+                    { visibility: 'organization' },
+                    { organization: { $in: userOrgs } }
+                ]
+            }
+        ];
+
+        const posts = await Post.find(searchQuery)
+            .populate('author', 'vanity info')
+            .populate('organization')
+            .populate('comments')
+            .sort({ 'meta.created_at': -1 })
+            .limit(resultLimit);
+
+        return res.status(200).json({
+            status: 'success',
+            count: posts.length,
+            posts: posts.map(post => ({
+                _id: post._id,
+                title: post.title,
+                content: post.content,
+                media: post.media,
+                type: post.type,
+                visibility: post.visibility,
+                author: post.author,
+                organization: post.organization,
+                hashtags: post.hashtags,
+                meta: post.meta
+            }))
+        });
+
+    } catch (err) {
+        console.error('SearchPosts Error:', err);
+        res.status(500).json({
+            status: 'error',
+            error: 'An error occurred while searching posts'
+        })
+    }
+}

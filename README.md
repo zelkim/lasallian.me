@@ -6,39 +6,38 @@
     - [Development](#development)
         - [File Structure](#file-structure)
 - [API Documentation](#api-documentation)
-    - [Authentication](#authentication)
-        - [POST /user/register](#post-userregister)
-        - [POST /user/setup](#post-usersetup)
-        - [POST /user/login](#post-userlogin)
-        - [GET /user](#get-user)
-        - [GET /user/:id](#get-userid)
-        - [POST /user/get-by-email](#post-userget-by-email)
-    - [Posts](#posts)
-        - [GET /post/all](#get-postall)
-        - [GET /post/hashtag/:tag](#get-posthashtagtag)
-        - [GET /post/normal](#get-postnormal)
-        - [GET /post/project](#get-postproject)
-        - [GET /post/event](#get-postevent)
-        - [GET /post/normal/:id](#get-postnormalid)
-        - [GET /post/project/:id](#get-postprojectid)
-        - [GET /post/event/:id](#get-posteventid)
-    - [Generic Post Routes](#generic-post-routes)
-        - [POST /post](#post-post)
-        - [PUT /post/:id](#put-postid)
-        - [DELETE /post/:id](#delete-postid)
-    - [Hashtag Routes](#hashtag-routes)
-        - [GET /hashtag/:tag](#get-hashtagtag)
-    - [Organization](#organization)
-        - [Create a New Organization](#create-a-new-organization)
-        - [Get Organization by ID](#get-organization-by-id)
-        - [Get Organization by Acronym](#get-organization-by-acronym)
-        - [Update Organization](#update-organization)
-        - [Delete Organization](#delete-organization)
-        - [Add Member to Organization](#add-member-to-organization)
-        - [Get Organization Members](#get-organization-members)
-
-    - [Comment Routes](#comment-api)
-
+  - [Authentication](#authentication)
+    - [POST /user/register](#post-userregister)
+    - [POST /user/setup](#post-usersetup)
+    - [POST /user/login](#post-userlogin)
+    - [GET /user](#get-user)
+    - [GET /user/:id](#get-userid)
+    - [POST /user/get-by-email](#post-userget-by-email)
+    - [PUT /user](#put-user)
+  - [Posts](#posts)
+    - [GET /post/all](#get-postall)
+    - [GET /post/hashtag/:tag](#get-posthashtagtag)
+    - [GET /post/normal](#get-postnormal)
+    - [GET /post/project](#get-postproject)
+    - [GET /post/event](#get-postevent)
+    - [GET /post/normal/:id](#get-postnormalid)
+    - [GET /post/project/:id](#get-postprojectid)
+    - [GET /post/event/:id](#get-posteventid)
+  - [Generic Post Routes](#generic-post-routes)
+    - [POST /post](#post-post)
+    - [PUT /post/:id](#put-postid)
+    - [DELETE /post/:id](#delete-postid)
+    - [GET /post/search](#get-postsearch)
+  - [Hashtag Routes](#hashtag-routes)
+    - [GET /hashtag/:tag](#get-hashtagtag)
+  - [Organization](#organization)
+    - [Create a New Organization](#create-a-new-organization)
+    - [Get Organization by ID](#get-organization-by-id)
+    - [Get Organization by Acronym](#get-organization-by-acronym)
+    - [Update Organization](#update-organization)
+    - [Delete Organization](#delete-organization)
+    - [Add Member to Organization](#add-member-to-organization)
+    - [Get Organization Members](#get-organization-members)
 ---
 
 ## Development
@@ -463,6 +462,109 @@ curl -X POST localhost:3000/user/get-by-email \
         "updated_at": "2025-03-05T12:46:05.075Z"
     },
     "_id": "67c8478d8e9f541dfe96893e"
+}
+```
+
+---
+
+### PUT /user
+
+- Edit/Updates the user profile details of the currently authenticated user
+    - This route can also be used to change the credentials of the user (read `IMPORTANT` note below)
+
+- Requires: `Authorization: Bearer <token>`
+    - via the `<token>`, the server will know who is the currently authenticated user
+- See sample request for the request body (minimal and full)
+
+> [!IMPORTANT]
+> Everything is optional by default (only include what you want to edit/change/update: `credentials`, `info`, and/or `vanity`) - meaning this retains all of the other profile details if left unchanged
+
+**Request:**
+```http
+### update user profile (minimal changes)
+PUT http://localhost:3000/user
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+    "info": {
+        "bio": "Updated bio text",
+        "links": {
+            "linkedin": "https://linkedin.com/in/newprofile"
+        }
+    }
+}
+
+### update user profile (many changes)
+PUT http://localhost:3000/user
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+    "credentials": {
+        "email": "w2helloworld@dlsu.edu.ph",
+        "password": "NewPassword123!"
+    },
+    "info": {
+        "name": {
+            "first": "w2",
+            "last": "helloworld"
+        },
+        "username": "@w2helloworld",
+        "batchid": "123",
+        "program": "BSIT",
+        "bio": "My updated professional bio",
+        "links": {
+            "linkedin": "https://linkedin.com/in/updated",
+            "facebook": "https://facebook.com/updated",
+            "instagram": "https://instagram.com/updated",
+            "other": ["https://github.com/updated"]
+        }
+    },
+    "vanity": {
+        "display_photo": "https://new-photo-url.com/photo.jpg",
+        "cover_photo": "https://new-photo-url.com/cover.jpg"
+    }
+}
+```
+
+**Response:**
+```json
+// response for both requests
+{
+  "status": "success",
+  "user": {
+    "credentials": {
+      "email": "w2helloworld@dlsu.edu.ph"
+    },
+    "vanity": {
+      "badges": [],
+      "cover_photo": "https://new-photo-url.com/cover.jpg",
+      "display_photo": "https://new-photo-url.com/photo.jpg"
+    },
+    "info": {
+      "name": {
+        "first": "w2",
+        "last": "helloworld"
+      },
+      "links": {
+        "other": [
+          "https://github.com/updated"
+        ],
+        "linkedin": "https://linkedin.com/in/newprofile",
+        "facebook": "https://facebook.com/updated",
+        "instagram": "https://instagram.com/updated"
+      },
+      "username": "@w2helloworld",
+      "batchid": "123",
+      "program": "BSIT",
+      "bio": "Updated bio text"
+    },
+    "meta": {
+      "created_at": "2025-03-05T12:46:05.075Z",
+      "updated_at": "2025-03-09T09:45:04.383Z"
+    }
+  }
 }
 ```
 
@@ -1150,7 +1252,7 @@ curl -X GET localhost:3000/post/event/67c6e2814911dd82e8dabb94 -H "Authorization
 - for creating a post regardless of type: `POST /post`
 - for updating a post: `PUT /post/:id`
 - for deleting a post: `DELETE /post/:id`
-
+- for search a post with query parameters `GET /post/search`
 ---
 
 ### POST /post
@@ -1410,6 +1512,207 @@ curl -X DELETE localhost:3000/post/normal/<post-id> -H "Authorization: Bearer <t
     "status": "success",
     "message": "Post deleted successfully."
 }
+```
+
+---
+
+### GET /post/search
+
+- Searches for posts across title, content, and hashtags
+- Requires JWT session token as `Authorization: Bearer <JWT>` header
+- Returns posts that match the search criteria and are visible to the user
+
+**Query Parameters:**
+- `query` (required - Search term to look for in post titles, content, and hashtags
+- `type` (optional) - Filter by post type (`normal`, `project`, or `event`)
+- `visibility` (optional) - Filter by post visibility (`public`, `organization`, or `private`)
+- `limit` (optional) -  Maximum number of results to return (default: 10)
+
+**Request:**
+```http
+### Basic search (defaults to limit: 10)
+GET http://localhost:3000/post/search?query=test
+Authorization: Bearer <token>
+
+### Search will all filters
+# ---> this searches 15 posts matching: 
+# 1. posts marked as type: normal, visibility: public  
+# 2. has "test" in any of the Post's title, content.text, hashtags
+GET http://localhost:3000/post/search?query=test&type=normal&visibility=public&limit=15
+Authorization: Bearer <token>
+```
+
+**Request (via `curl`):**
+```bash
+# Basic search (defaults to limit: 10)
+curl -X GET "localhost:3000/post/search?query=test" \
+-H "Authorization: Bearer <token>"
+
+# Search with all filters
+curl -X GET "localhost:3000/post/search?query=test&type=normal&visibility=public&limit=15" \
+-H "Authorization: Bearer <token>"
+```
+
+**Response:**
+```json
+// Search with all filters response
+{
+  "status": "success",
+  "count": 12,
+  "posts": [
+    {
+      "_id": "67cd58d32287dd04c274682d",
+      "title": "POST w2helloworld normal",
+      "content": {
+        "text": "Testing hastag post 2 #test"
+      },
+      "media": [],
+      "type": "normal",
+      "visibility": "public",
+      "author": {
+        "vanity": {
+          "badges": []
+        },
+        "info": {
+          "name": {
+            "first": "w2helloworld",
+            "last": "YES"
+          },
+          "links": {
+            "other": []
+          },
+          "username": "@w2helloworld",
+          "batchid": "123",
+          "program": "BSIT"
+        },
+        "_id": "67c8478d8e9f541dfe96893e"
+      },
+      "hashtags": [
+        {
+          "tag": "#test",
+          "_id": "67cd58d32287dd04c274682e"
+        }
+      ],
+      "meta": {
+        "created_at": "2025-03-09T09:01:07.492Z",
+        "updated_at": "2025-03-09T09:01:07.492Z"
+      }
+    },
+    {
+      "_id": "67cd3cce0ddeeaa2a76f837e",
+      "content": {
+        "text": ""
+      },
+      "media": [
+        "https://oss.zel.kim/67cd3cce9b7270de932fb6d7"
+      ],
+      "type": "normal",
+      "visibility": "public",
+      "author": {
+        "vanity": {
+          "badges": []
+        },
+        "info": {
+          "name": {
+            "first": "atas",
+            "last": "a"
+          },
+          "links": {
+            "other": []
+          },
+          "username": "@aaaa",
+          "batchid": "120",
+          "program": "BSCS"
+        },
+        "_id": "67c83d118e9f541dfe96891f"
+      },
+      "hashtags": [],
+      "meta": {
+        "created_at": "2025-03-09T07:01:34.935Z",
+        "updated_at": "2025-03-09T07:01:34.935Z"
+      }
+    },
+    {
+      "_id": "67cd35a00ddeeaa2a76f82f8",
+      "content": {
+        "text": "pogi ako"
+      },
+      "media": [],
+      "type": "normal",
+      "visibility": "public",
+      "author": {
+        "vanity": {
+          "badges": []
+        },
+        "info": {
+          "name": {
+            "first": "Sean Denzel",
+            "last": "Robenta"
+          },
+          "links": {
+            "other": []
+          },
+          "username": "@zelkim",
+          "batchid": "123",
+          "program": "BS Computer Science Major in Software Technology",
+          "bio": "tite"
+        },
+        "_id": "67cd35870ddeeaa2a76f82f0"
+      },
+      "hashtags": [],
+      "meta": {
+        "created_at": "2025-03-09T06:30:56.372Z",
+        "updated_at": "2025-03-09T06:30:56.372Z"
+      }
+    },
+    {
+      "_id": "67ca96256d1229bbc5009f47",
+      "title": "Post with hashtags 4",
+      "content": {
+        "text": "Testing hastag post 2#test"
+      },
+      "media": [],
+      "type": "normal",
+      "visibility": "public",
+      "author": {
+        "vanity": {
+          "badges": []
+        },
+        "info": {
+          "name": {
+            "first": "w2helloworld",
+            "last": "YES"
+          },
+          "links": {
+            "other": []
+          },
+          "username": "@w2helloworld",
+          "batchid": "123",
+          "program": "BSIT"
+        },
+        "_id": "67c8478d8e9f541dfe96893e"
+      },
+      "hashtags": [
+        {
+          "tag": "#test",
+          "_id": "67ca96256d1229bbc5009f48"
+        }
+      ],
+      "meta": {
+        "created_at": "2025-03-07T06:45:57.545Z",
+        "updated_at": "2025-03-07T06:45:57.545Z"
+      }
+    }
+    // ...remaining posts
+  ]
+}
+```
+
+> [!NOTE]
+> - Search is case-insensitive
+> - Results are sorted by creation date (newest first)
+> - Only returns posts that the authenticated user has permission to view
+> - The `limit` parameter must be a positive number
 ```
 
 # Hashtag Routes
