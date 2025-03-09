@@ -177,6 +177,10 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/post/event
 Authorization: Bearer {{authToken}}
 
+### fetch all posts
+GET {{baseUrl}}/post/all
+Authorization: Bearer {{authToken}}
+
 ### --- Organization Routes --- ###
 
 ### create organization
@@ -289,3 +293,12 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/post/search?query=test&type=normal&visibility=public&limit=15
 Authorization: Bearer {{authToken}}
 
+### Create reaction
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "reaction": "❤️",
+    "postid": "67cd3b750ddeeaa2a76f833f"
+}

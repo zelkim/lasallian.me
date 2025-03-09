@@ -12,6 +12,8 @@ import { validateSession } from './services/session.js';
 import badgeRouter from './routes/badge.js';
 import orgRouter from './routes/org.js';
 import hashtagRouter from './routes/hashtag.js';
+import reactionRouter from './routes/reaction.js';
+
 config();
 
 const app = express();
@@ -28,6 +30,7 @@ app.use('/post', postRouter);
 app.use('/org', orgRouter);
 app.use('/badge', badgeRouter);
 app.use('/hashtag', hashtagRouter);
+app.use('/reaction', reactionRouter);
 
 app.get('/test', validateSession, (req, res) => res.send('works'));
 
