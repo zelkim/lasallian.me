@@ -10,7 +10,8 @@ import {
     GetAllPostsByHashtag,
     CreatePost,
     UpdatePost,
-    DeletePost
+    DeletePost,
+    SearchPosts
 } from '../services/post.js'
 import { validateSession } from '../services/session.js'
 
@@ -37,5 +38,7 @@ router.delete("/:id", validateSession, DeletePost)
 
 
 router.get("/hashtag/:hashtag", validateSession, GetAllPostsByHashtag);
+
+router.get("/search", validateSession, SearchPosts)
 
 export default router
