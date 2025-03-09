@@ -9,8 +9,8 @@
 ### vars
 @authToken = 
 @orgId = 67c981837c12b0d3b83b702d
-# @baseUrl = http://localhost:3000
-@baseUrl = http://api.zel.kim
+@baseUrl = http://localhost:3000
+# @baseUrl = http://api.zel.kim
 
 ### get all post
 GET {{baseUrl}}/post/all
@@ -86,9 +86,9 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "Post with hashtags 4",
+    "title": "POST w2helloworld normal",
     "content": {
-        "text": "Testing hastag post 2#test"
+        "text": "Testing hastag post 2 #test"
     },
     "type": "normal",
     "visibility": "public"
@@ -199,3 +199,34 @@ Authorization: Bearer {{authToken}}
 ### Usage: http://localhost:3000/org/<org-id>/members
 GET {{baseUrl}}/org/{{orgId}}/members
 Authorization: Bearer {{authToken}}
+
+### --- Search Posts --- ###
+
+### Basic search
+GET {{baseUrl}}/post/search?query=test
+Authorization: Bearer {{authToken}}
+
+### Default limit (10)
+GET {{baseUrl}}/post/search?query=test
+Authorization: Bearer {{authToken}}
+
+### Custom limit (e.g., 20)
+GET {{baseUrl}}/post/search?query=test&limit=20
+Authorization: Bearer {{authToken}}
+
+### Search with type filter
+GET {{baseUrl}}/post/search?query=test&type=normal
+Authorization: Bearer {{authToken}}
+
+### Search with visibility filter
+GET {{baseUrl}}/post/search?query=test&visibility=public
+Authorization: Bearer {{authToken}}
+
+### Search with 3 filters and default limit (10)
+GET {{baseUrl}}/post/search?query=test&type=project&visibility=public
+Authorization: Bearer {{authToken}}
+
+### With all parameters
+GET {{baseUrl}}/post/search?query=test&type=normal&visibility=public&limit=15
+Authorization: Bearer {{authToken}}
+
