@@ -56,6 +56,7 @@ export const getCommentFromPostId = async (req, res) => {
     const data = req.params;
 
     Comment.find({ post: data.postid })
+        .populate('reactions')
         .then((commentsList) => {
             res.status(200).send({ status: 'ok', data: commentsList });
         })
@@ -78,6 +79,7 @@ export const getComment = async (req, res) => {
     const data = req.params;
 
     Comment.findById(data.commentid)
+        .populate('reactions')
         .then((comment) => {
             res.status(200).send({ status: 'ok', data: comment });
         })
@@ -100,6 +102,7 @@ export const getCommentFromSessionUser = async (req, res) => {
     const user = req.user;
 
     Comment.find({ author: user._id })
+        .populate('reactions')
         .then((commentsList) => {
             res.status(200).send({ status: 'ok', data: commentsList });
         })
