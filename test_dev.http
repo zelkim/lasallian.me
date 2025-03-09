@@ -7,7 +7,7 @@
 #
 
 ### vars
-@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2NhODY5NTk2MmU4NTZmM2EwY2NiMjEiLCJjcmVkZW50aWFscyI6IjY3Y2E4NjU3OWMxOTM3OWJkYzFhMDAwNyIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoidzJoZWxsb3dvcmxkMTIzIiwibGFzdCI6IllFUyJ9LCJsaW5rcyI6eyJvdGhlciI6W119LCJ1c2VybmFtZSI6IkB3MmhlbGxvd29ybGQxMjMiLCJiYXRjaGlkIjoiMTIzIiwicHJvZ3JhbSI6IkJTSVQifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wN1QwNTozOTozMy4yNDBaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMDdUMDU6Mzk6MzMuMjQwWiJ9LCJfX3YiOjAsImlhdCI6MTc0MTUxNTkwMCwiZXhwIjoxNzQxNTE5NTAwfQ.CwMfCapJIrM9eOLUdwti-o3DZ7ZGhEVn8AMIHR310dg
+@authToken = 
 @orgId = 67c981837c12b0d3b83b702d
 @baseUrl = http://localhost:3000
 // @baseUrl = http://api.zel.kim
@@ -21,8 +21,8 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-        "post_id": "67ca96256d1229bbc5009f47",
-        "content": "harru warudo"
+        "post_id": "67cd3b750ddeeaa2a76f833f",
+        "content": "test comment"
 }
 ### register
 POST {{baseUrl}}/user/register
@@ -125,36 +125,34 @@ Authorization: Bearer {{authToken}}
     }
 }
 
-### create post
+### create post (minimal)
 POST {{baseUrl}}/post
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "another normal post test title",
     "content": {
-        "text": "NORMAL econtentyes yes content example something"
-    },
-    "type": "normal",
-    "visibility": "public"
+        "text": "NORMAL MINIMAL POST hehe"
+    }
 }
 
-### create post with hashtags
+### create post with hashtags (all fields)
 POST {{baseUrl}}/post
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "POST w2helloworld normal",
+    "title": "POST4 w2helloworld normal",
     "content": {
-        "text": "Testing hastag post 2 #test"
+        "text": "Testing hastag post 2 #test #w2"
     },
     "type": "normal",
-    "visibility": "public"
+    "visibility": "public",
+    "media": ["url-string-test"]
 }
 
 ### delete post
-DELETE {{baseUrl}}/post/67ca8d9600ad39b18b9a01f9
+DELETE {{baseUrl}}/post/67cd82c249c9b9a2727022ee
 Authorization: Bearer {{authToken}}
 
 ### search hashtags
@@ -175,6 +173,10 @@ Authorization: Bearer {{authToken}}
 
 ### fetch all event posts of user
 GET {{baseUrl}}/post/event
+Authorization: Bearer {{authToken}}
+
+### fetch a normal posts by id
+GET {{baseUrl}}/post/normal/67cd3b750ddeeaa2a76f833f
 Authorization: Bearer {{authToken}}
 
 ### fetch all posts
