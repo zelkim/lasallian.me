@@ -11,9 +11,15 @@ import { parseHashtags } from './hashtag.js';
 export const GetAllPosts = async (req, res) => {
     try {
         const allPosts = await Post.find()
-            .populate('author', 'vanity info') // Fetch specific fields from user
-            .populate('reactions') // Populate post reactions
-            .populate('comments');
+            .populate('author', 'vanity info')
+            .populate('reactions')
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'vanity info'
+                }
+            })
 
         return res.status(200).json(allPosts);
     } catch (err) {
@@ -30,7 +36,13 @@ export const GetAllPostsByHashtag = async (req, res) => {
 
         const allPosts = await Post.find({ 'hashtags.tag': cleanHashtag })
             .populate('author', 'vanity info')
-            .populate('comments')
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'vanity info'
+                }
+            })
             .populate('organization');
 
         return res.status(200).json(allPosts);
@@ -55,7 +67,13 @@ export const GetNormalPostsByAuthor = async (req, res) => {
             type: POST_TYPES.NORMAL,
         })
             .populate('author', 'vanity info')
-            .populate('comments');
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'vanity info'
+                }
+            })
 
         return res.status(200).json(userNormalPosts);
     } catch (err) {
@@ -80,7 +98,13 @@ export const GetProjectPostsByAuthor = async (req, res) => {
             type: POST_TYPES.PROJECT,
         })
             .populate('author', 'vanity info')
-            .populate('comments', 'reactions')
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'vanity info'
+                }
+            })
             .populate('reactions');
 
         return res.status(200).json(posts);
@@ -115,7 +139,13 @@ export const GetEventPostsByAuthor = async (req, res) => {
             ],
         })
             .populate('author', 'vanity info')
-            .populate('comments')
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'vanity info'
+                }
+            })
             .populate('organization');
 
         return res.status(200).json(posts);
@@ -139,7 +169,13 @@ export const GetNormalPostById = async (req, res) => {
             type: POST_TYPES.NORMAL,
         })
             .populate('author', 'vanity info')
-            .populate('comments');
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'vanity info'
+                }
+            })
 
         if (!post) {
             return res.status(404).json({
@@ -166,7 +202,13 @@ export const GetProjectPostById = async (req, res) => {
             type: POST_TYPES.PROJECT,
         })
             .populate('author', 'vanity info')
-            .populate('comments');
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'vanity info'
+                }
+            })
 
         if (!post) {
             return res.status(404).json({
@@ -193,7 +235,13 @@ export const GetEventPostById = async (req, res) => {
             type: POST_TYPES.EVENT,
         })
             .populate('author', 'vanity info')
-            .populate('comments')
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'vanity info'
+                }
+            })
             .populate('organization');
 
         if (!post) {
@@ -303,6 +351,7 @@ export const CreatePost = async (req, res) => {
             visibility: visibility || 'public',
             author: authorId,
             organization: organization,
+            comments: [],
             hashtags: parseHashtags(content.text),
             meta: {
                 created_at: new Date(),
@@ -502,7 +551,13 @@ export const SearchPosts = async (req, res) => {
         const posts = await Post.find(searchCriteria)
             .populate('author', 'vanity info')
             .populate('organization')
-            .populate('comments')
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'vanity info'
+                }
+            })
             .sort({ 'meta.created_at': -1 })
             .limit(resultLimit);
 
