@@ -7,38 +7,43 @@ import Post from '../models/Post.js';
  * @param {import("express").Response} res - The response object.
  * @returns {Promise<void>} Sends a response with the result of the operation.
  */
+
 export const createComment = async (req, res) => {
     const data = req.body;
 
     try {
-        const postExists = await Post.findOne({ _id: data.post_id }).exec();
+        // Check if post exists
+        const post = await Post.findById(data.post_id).exec();
 
-        if (!postExists)
+        if (!post) {
             return res
                 .status(400)
                 .send({ status: 'error', msg: 'Invalid post' });
-    } catch (error) {
-        console.log(error);
-        return res.status(400).send({ status: 'error', msg: 'Invalid post' });
-    }
+        }
 
-    Comment.create({
-        author: req.user._id,
-        post: data.post_id,
-        content: data.content,
-    })
-        .then((comment) => {
-            return res
-                .status(200)
-                .send({ status: 'ok', msg: 'Comment created.', data: comment });
-        })
-        .catch((err) => {
-            console.error(err);
-            return res.status(400).send({
-                status: 'error',
-                msg: 'Comment could not be created.',
-            });
+        // Create the comment
+        const comment = await Comment.create({
+            author: req.user._id,
+            post: data.post_id,
+            content: data.content,
         });
+
+        // Push comment ID into the post's comments array
+        post.comments.push(comment._id);
+        await post.save(); // Save the updated post
+
+        return res.status(200).send({
+            status: 'ok',
+            msg: 'Comment created.',
+            data: comment,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(400).send({
+            status: 'error',
+            msg: 'Comment could not be created.',
+        });
+    }
 };
 
 /**
@@ -149,29 +154,40 @@ export const updateComment = async (req, res) => {
  * @param {import("express").Response} res - The response object.
  * @returns {Promise<void>} Sends a response indicating the delete result.
  */
+
 export const deleteComment = async (req, res) => {
     const { commentid } = req.params;
 
-    Comment.findOneAndDelete({ _id: commentid, author: req.user._id })
-        .then((deletedComment) => {
-            if (!deletedComment) {
-                return res.status(400).send({
-                    status: 'error',
-                    msg: 'Comment not found or unauthorized',
-                });
-            }
-            return res
-                .status(200)
-                .send({ status: 'ok', msg: 'Comment deleted' });
-        })
-        .catch((err) => {
-            console.error(err);
-            return res
-                .status(400)
-                .send({ status: 'error', msg: 'Comment could not be deleted' });
+    try {
+        // Find the comment first
+        const deletedComment = await Comment.findOneAndDelete({
+            _id: commentid,
+            author: req.user._id,
         });
-};
 
+        if (!deletedComment) {
+            return res.status(400).send({
+                status: 'error',
+                msg: 'Comment not found or unauthorized',
+            });
+        }
+
+        // Remove the comment from the associated post
+        await Post.findByIdAndUpdate(
+            deletedComment.post,
+            { $pull: { comments: commentid } }, // Remove the comment ID from the array
+            { new: true }
+        );
+
+        return res.status(200).send({ status: 'ok', msg: 'Comment deleted' });
+    } catch (err) {
+        console.error(err);
+        return res.status(400).send({
+            status: 'error',
+            msg: 'Comment could not be deleted',
+        });
+    }
+};
 /**
  * Retrieves comments from an organization.
  * TODO: Implement this function when organization logic is defined.

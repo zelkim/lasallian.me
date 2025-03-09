@@ -30,7 +30,13 @@ const postSchema = new mongoose.Schema({
         ref: 'user_info',
         required: true,
     },
-    comments: { type: mongoose.Schema.Types.ObjectId, ref: 'comments' },
+    comments: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'comments',
+        },
+    ],
     hashtags: [
         {
             tag: {
@@ -43,7 +49,7 @@ const postSchema = new mongoose.Schema({
     organization: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'org_info',
-        required: function () {
+        required: function() {
             // require organization ref only if the post type is "event"
             return (
                 this.type === POST_TYPES.EVENT ||
