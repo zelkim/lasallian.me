@@ -37,6 +37,8 @@
         - [Add Member to Organization](#add-member-to-organization)
         - [Get Organization Members](#get-organization-members)
 
+    - [Comment Routes](#comment-api)
+
 ---
 
 ## Development
