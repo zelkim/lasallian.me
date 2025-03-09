@@ -445,7 +445,7 @@ export const DeletePost = async (req, res) => {
 // search happens on query params
 export const SearchPosts = async (req, res) => {
     try {
-        const { query, type, visibility, limit = 10 } = req.query;
+        const { query = '', type, visibility, limit = 10 } = req.query;
         const userId = req.user._id;
 
         if (!query) {
@@ -463,36 +463,42 @@ export const SearchPosts = async (req, res) => {
             });
         }
 
-        const searchQuery = {
-            $or: [
-                { title: { $regex: query, $options: 'i' } },
-                { 'content.text': { $regex: query, $options: 'i' } },
-                { 'hashtags.tag': { $regex: query, $options: 'i' } }
+        const userOrgs = await GetUserOrganizations(userId);
+
+        const searchCriteria = {
+            $and: [
+                {
+                    $or: [
+                        { title: { $regex: query, $options: 'i' } },
+                        { 'content.text': { $regex: query, $options: 'i' } },
+                        { 'hashtags.tag': { $regex: query, $options: 'i' } }
+                    ]
+                },
+                // visibility opts
+                {
+                    $or: [
+                        { visibility: 'public' },
+                        { author: userId },
+                        {
+                            $and: [
+                                { visibility: 'organization' },
+                                { organization: { $in: userOrgs } }
+                            ]
+                        }
+                    ]
+                }
             ]
         };
 
-        // type and visibility filters are optional (in query param)
+        // type and visibility is optional 
         if (type && Object.values(POST_TYPES).includes(type)) {
-            searchQuery.type = type;
+            searchCriteria.$and.push({ type });
         }
         if (visibility) {
-            searchQuery.visibility = visibility;
+            searchCriteria.$and.push({ visibility });
         }
 
-        // for organization-specific posts
-        const userOrgs = await GetUserOrganizations(userId);
-        searchQuery.$or = [
-            { visibility: 'public' },
-            { author: userId },
-            {
-                $and: [
-                    { visibility: 'organization' },
-                    { organization: { $in: userOrgs } }
-                ]
-            }
-        ];
-
-        const posts = await Post.find(searchQuery)
+        const posts = await Post.find(searchCriteria)
             .populate('author', 'vanity info')
             .populate('organization')
             .populate('comments')
@@ -502,26 +508,14 @@ export const SearchPosts = async (req, res) => {
         return res.status(200).json({
             status: 'success',
             count: posts.length,
-            posts: posts.map(post => ({
-                _id: post._id,
-                title: post.title,
-                content: post.content,
-                media: post.media,
-                type: post.type,
-                visibility: post.visibility,
-                author: post.author,
-                organization: post.organization,
-                comments: post.comments,
-                hashtags: post.hashtags,
-                meta: post.meta
-            }))
+            posts
         });
 
     } catch (err) {
         console.error('SearchPosts Error:', err);
-        res.status(500).json({
+        return res.status(500).json({
             status: 'error',
             error: 'An error occurred while searching posts'
-        })
+        });
     }
 }

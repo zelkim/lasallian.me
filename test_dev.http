@@ -10,7 +10,7 @@
 @authToken = 
 @orgId = 67c981837c12b0d3b83b702d
 @baseUrl = http://localhost:3000
-# @baseUrl = http://api.zel.kim
+// @baseUrl = http://api.zel.kim
 
 ### get all post
 GET {{baseUrl}}/post/all
@@ -50,7 +50,7 @@ Content-Type: application/json
 {
     "credentials": {
         "email": "w2helloworld@dlsu.edu.ph",
-        "password": "12345678@Aa"
+        "password": "NewPassword123!"
     }
 }
 
@@ -257,7 +257,7 @@ GET {{baseUrl}}/post/search?query=test
 Authorization: Bearer {{authToken}}
 
 ### Default limit (10)
-GET {{baseUrl}}/post/search?query=test
+GET {{baseUrl}}/post/search?query=sigma
 Authorization: Bearer {{authToken}}
 
 ### Custom limit (e.g., 20)
@@ -273,7 +273,7 @@ GET {{baseUrl}}/post/search?query=test&visibility=public
 Authorization: Bearer {{authToken}}
 
 ### Search with 3 filters and default limit (10)
-GET {{baseUrl}}/post/search?query=test&type=project&visibility=public
+GET {{baseUrl}}/post/search?query=sigma&type=project&visibility=public
 Authorization: Bearer {{authToken}}
 
 ### With all parameters
