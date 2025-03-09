@@ -17,9 +17,9 @@ export const GetAllPosts = async (req, res) => {
                 path: 'comments',
                 populate: {
                     path: 'author',
-                    select: 'vanity info'
-                }
-            })
+                    select: 'vanity info',
+                },
+            });
 
         return res.status(200).json(allPosts);
     } catch (err) {
@@ -36,12 +36,13 @@ export const GetAllPostsByHashtag = async (req, res) => {
 
         const allPosts = await Post.find({ 'hashtags.tag': cleanHashtag })
             .populate('author', 'vanity info')
+            .populate('reactions')
             .populate({
                 path: 'comments',
                 populate: {
                     path: 'author',
-                    select: 'vanity info'
-                }
+                    select: 'vanity info',
+                },
             })
             .populate('organization');
 
@@ -67,13 +68,14 @@ export const GetNormalPostsByAuthor = async (req, res) => {
             type: POST_TYPES.NORMAL,
         })
             .populate('author', 'vanity info')
+            .populate('reactions')
             .populate({
                 path: 'comments',
                 populate: {
                     path: 'author',
-                    select: 'vanity info'
-                }
-            })
+                    select: 'vanity info',
+                },
+            });
 
         return res.status(200).json(userNormalPosts);
     } catch (err) {
@@ -98,12 +100,13 @@ export const GetProjectPostsByAuthor = async (req, res) => {
             type: POST_TYPES.PROJECT,
         })
             .populate('author', 'vanity info')
+            .populate('reactions')
             .populate({
                 path: 'comments',
                 populate: {
                     path: 'author',
-                    select: 'vanity info'
-                }
+                    select: 'vanity info',
+                },
             })
             .populate('reactions');
 
@@ -139,12 +142,13 @@ export const GetEventPostsByAuthor = async (req, res) => {
             ],
         })
             .populate('author', 'vanity info')
+            .populate('reactions')
             .populate({
                 path: 'comments',
                 populate: {
                     path: 'author',
-                    select: 'vanity info'
-                }
+                    select: 'vanity info',
+                },
             })
             .populate('organization');
 
@@ -169,13 +173,14 @@ export const GetNormalPostById = async (req, res) => {
             type: POST_TYPES.NORMAL,
         })
             .populate('author', 'vanity info')
+            .populate('reactions')
             .populate({
                 path: 'comments',
                 populate: {
                     path: 'author',
-                    select: 'vanity info'
-                }
-            })
+                    select: 'vanity info',
+                },
+            });
 
         if (!post) {
             return res.status(404).json({
@@ -202,13 +207,14 @@ export const GetProjectPostById = async (req, res) => {
             type: POST_TYPES.PROJECT,
         })
             .populate('author', 'vanity info')
+            .populate('reactions')
             .populate({
                 path: 'comments',
                 populate: {
                     path: 'author',
-                    select: 'vanity info'
-                }
-            })
+                    select: 'vanity info',
+                },
+            });
 
         if (!post) {
             return res.status(404).json({
@@ -235,12 +241,13 @@ export const GetEventPostById = async (req, res) => {
             type: POST_TYPES.EVENT,
         })
             .populate('author', 'vanity info')
+            .populate('reactions')
             .populate({
                 path: 'comments',
                 populate: {
                     path: 'author',
-                    select: 'vanity info'
-                }
+                    select: 'vanity info',
+                },
             })
             .populate('organization');
 
@@ -501,7 +508,7 @@ export const SearchPosts = async (req, res) => {
         if (!query) {
             return res.status(400).json({
                 status: 'error',
-                error: 'Search query is required'
+                error: 'Search query is required',
             });
         }
 
@@ -509,7 +516,7 @@ export const SearchPosts = async (req, res) => {
         if (isNaN(resultLimit) || resultLimit < 1) {
             return res.status(400).json({
                 status: 'error',
-                error: 'Invalid limit value. Must be a positive number.'
+                error: 'Invalid limit value. Must be a positive number.',
             });
         }
 
@@ -521,8 +528,8 @@ export const SearchPosts = async (req, res) => {
                     $or: [
                         { title: { $regex: query, $options: 'i' } },
                         { 'content.text': { $regex: query, $options: 'i' } },
-                        { 'hashtags.tag': { $regex: query, $options: 'i' } }
-                    ]
+                        { 'hashtags.tag': { $regex: query, $options: 'i' } },
+                    ],
                 },
                 // visibility opts
                 {
@@ -532,15 +539,15 @@ export const SearchPosts = async (req, res) => {
                         {
                             $and: [
                                 { visibility: 'organization' },
-                                { organization: { $in: userOrgs } }
-                            ]
-                        }
-                    ]
-                }
-            ]
+                                { organization: { $in: userOrgs } },
+                            ],
+                        },
+                    ],
+                },
+            ],
         };
 
-        // type and visibility is optional 
+        // type and visibility is optional
         if (type && Object.values(POST_TYPES).includes(type)) {
             searchCriteria.$and.push({ type });
         }
@@ -551,12 +558,13 @@ export const SearchPosts = async (req, res) => {
         const posts = await Post.find(searchCriteria)
             .populate('author', 'vanity info')
             .populate('organization')
+            .populate('reactions')
             .populate({
                 path: 'comments',
                 populate: {
                     path: 'author',
-                    select: 'vanity info'
-                }
+                    select: 'vanity info',
+                },
             })
             .sort({ 'meta.created_at': -1 })
             .limit(resultLimit);
@@ -564,14 +572,13 @@ export const SearchPosts = async (req, res) => {
         return res.status(200).json({
             status: 'success',
             count: posts.length,
-            posts
+            posts,
         });
-
     } catch (err) {
         console.error('SearchPosts Error:', err);
         return res.status(500).json({
             status: 'error',
-            error: 'An error occurred while searching posts'
+            error: 'An error occurred while searching posts',
         });
     }
-}
+};
