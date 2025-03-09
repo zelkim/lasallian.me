@@ -13,6 +13,7 @@
     - [GET /user](#get-user)
     - [GET /user/:id](#get-userid)
     - [POST /user/get-by-email](#post-userget-by-email)
+    - [PUT /user](#put-user)
   - [Posts](#posts)
     - [GET /post/all](#get-postall)
     - [GET /post/hashtag/:tag](#get-posthashtagtag)
@@ -448,6 +449,109 @@ curl -X POST localhost:3000/user/get-by-email \
     "updated_at": "2025-03-05T12:46:05.075Z"
   },
   "_id": "67c8478d8e9f541dfe96893e"
+}
+```
+
+---
+
+### PUT /user
+
+- Edit/Updates the user profile details of the currently authenticated user
+    - This route can also be used to change the credentials of the user (read `IMPORTANT` note below)
+
+- Requires: `Authorization: Bearer <token>`
+    - via the `<token>`, the server will know who is the currently authenticated user
+- See sample request for the request body (minimal and full)
+
+> [!IMPORTANT]
+> Everything is optional by default (only include what you want to edit/change/update: `credentials`, `info`, and/or `vanity`) - meaning this retains all of the other profile details if left unchanged
+
+**Request:**
+```http
+### update user profile (minimal changes)
+PUT http://localhost:3000/user
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+    "info": {
+        "bio": "Updated bio text",
+        "links": {
+            "linkedin": "https://linkedin.com/in/newprofile"
+        }
+    }
+}
+
+### update user profile (many changes)
+PUT http://localhost:3000/user
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+    "credentials": {
+        "email": "w2helloworld@dlsu.edu.ph",
+        "password": "NewPassword123!"
+    },
+    "info": {
+        "name": {
+            "first": "w2",
+            "last": "helloworld"
+        },
+        "username": "@w2helloworld",
+        "batchid": "123",
+        "program": "BSIT",
+        "bio": "My updated professional bio",
+        "links": {
+            "linkedin": "https://linkedin.com/in/updated",
+            "facebook": "https://facebook.com/updated",
+            "instagram": "https://instagram.com/updated",
+            "other": ["https://github.com/updated"]
+        }
+    },
+    "vanity": {
+        "display_photo": "https://new-photo-url.com/photo.jpg",
+        "cover_photo": "https://new-photo-url.com/cover.jpg"
+    }
+}
+```
+
+**Response:**
+```json
+// response for both requests
+{
+  "status": "success",
+  "user": {
+    "credentials": {
+      "email": "w2helloworld@dlsu.edu.ph"
+    },
+    "vanity": {
+      "badges": [],
+      "cover_photo": "https://new-photo-url.com/cover.jpg",
+      "display_photo": "https://new-photo-url.com/photo.jpg"
+    },
+    "info": {
+      "name": {
+        "first": "w2",
+        "last": "helloworld"
+      },
+      "links": {
+        "other": [
+          "https://github.com/updated"
+        ],
+        "linkedin": "https://linkedin.com/in/newprofile",
+        "facebook": "https://facebook.com/updated",
+        "instagram": "https://instagram.com/updated"
+      },
+      "username": "@w2helloworld",
+      "batchid": "123",
+      "program": "BSIT",
+      "bio": "Updated bio text"
+    },
+    "meta": {
+      "created_at": "2025-03-05T12:46:05.075Z",
+      "updated_at": "2025-03-09T09:45:04.383Z"
+    }
+  }
 }
 ```
 
