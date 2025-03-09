@@ -511,6 +511,7 @@ export const SearchPosts = async (req, res) => {
                 visibility: post.visibility,
                 author: post.author,
                 organization: post.organization,
+                comments: post.comments,
                 hashtags: post.hashtags,
                 meta: post.meta
             }))
