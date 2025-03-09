@@ -19,7 +19,7 @@ const commentReactionSchema = new mongoose.Schema(
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'posts',
+      ref: 'users',
       required: true,
     },
     target: {
