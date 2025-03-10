@@ -1,5 +1,6 @@
 import { PostReaction, CommentReaction } from '../models/Reaction.js';
 import Post from '../models/Post.js';
+import Comment from '../models/Comment.js'
 
 /**
  * Controller to add a reaction to a post.
