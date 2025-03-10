@@ -19,7 +19,7 @@ const commentReactionSchema = new mongoose.Schema(
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'users',
+      ref: 'user_info',
       required: true,
     },
     target: {
@@ -40,7 +40,7 @@ const postReactionSchema = new mongoose.Schema(
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'users',
+      ref: 'user_info',
       required: true,
     },
     target: {
