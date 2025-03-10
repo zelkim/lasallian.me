@@ -1,6 +1,7 @@
 import express from 'express'
 import {
     GetAllPosts,
+    GetAllUserPosts,
     GetNormalPostsByAuthor,
     GetProjectPostsByAuthor,
     GetEventPostsByAuthor,
@@ -17,7 +18,8 @@ import { validateSession } from '../services/session.js'
 
 const router = express.Router()
 
-router.get("/all", GetAllPosts) // /post
+router.get("/all", GetAllPosts)
+router.get("/all/:id", validateSession, GetAllUserPosts)
 
 // normal posts
 router.get("/normal", validateSession, GetNormalPostsByAuthor) // gets all normal posts of authenticated user

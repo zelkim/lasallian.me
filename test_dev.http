@@ -175,12 +175,24 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/post/event
 Authorization: Bearer {{authToken}}
 
-### fetch a normal posts by id
+### fetch a normal posts by id (sigma)
 GET {{baseUrl}}/post/normal/67cd3b750ddeeaa2a76f833f
+Authorization: Bearer {{authToken}}
+
+### fetch a normal posts by id
+GET {{baseUrl}}/post/normal/67cd8824a05e28753681bdb2
 Authorization: Bearer {{authToken}}
 
 ### fetch all posts
 GET {{baseUrl}}/post/all
+Authorization: Bearer {{authToken}}
+
+### fetch all posts from specific user (by UserInfo _id)
+GET {{baseUrl}}/post/all/67c8478d8e9f541dfe96893e
+Authorization: Bearer {{authToken}}
+
+### fetch all posts from specific user (test user)
+GET {{baseUrl}}/post/all/67cd35870ddeeaa2a76f82f0
 Authorization: Bearer {{authToken}}
 
 ### --- Organization Routes --- ###
@@ -295,6 +307,8 @@ Authorization: Bearer {{authToken}}
 GET {{baseUrl}}/post/search?query=test&type=normal&visibility=public&limit=15
 Authorization: Bearer {{authToken}}
 
+### --- Reaction Routes --- ###
+
 ### Create reaction
 POST {{baseUrl}}/reaction/post
 Content-Type: application/json
@@ -303,4 +317,115 @@ Authorization: Bearer {{authToken}}
 {
     "reaction": "❤️",
     "postid": "67cd3b750ddeeaa2a76f833f"
+}
+
+### Create reaction on post
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd55b44385737d06cd55c3",
+    "reaction": "❤️"
+}
+
+### Update reaction on post
+PUT {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd55b44385737d06cd55c3",
+    "reaction": "👏"
+}
+
+### Delete reaction from post
+DELETE {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd3b750ddeeaa2a76f833f"
+}
+
+### Create reaction on comment
+POST {{baseUrl}}/reaction/comment
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "commentid": "67cd89fe21009c70077678e6",
+    "reaction": "❤️"
+}
+
+### Update reaction on comment
+PUT {{baseUrl}}/reaction/comment
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "commentid": "67cd89fe21009c70077678e6",
+    "reaction": "😂"
+}
+
+### Delete reaction from comment
+DELETE {{baseUrl}}/reaction/comment
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "commentid": "67cd89fe21009c70077678e6"
+}
+
+### ------ FOR TESTING ------- ###
+
+### --- Reactions for Specific Posts --- ###
+
+### Add "clap" reaction to "tara beh suntukan" post
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd55b44385737d06cd55c3",
+    "reaction": "👏"
+}
+
+### Add "love" reaction to "what the sigma #boy" post
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd3b750ddeeaa2a76f833f",
+    "reaction": "❤️"
+}
+
+### Add "laugh" reaction to "pogi ako" post
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd35a00ddeeaa2a76f82f8",
+    "reaction": "😂"
+}
+
+### Update reaction on "what the sigma #boy" post to angry
+PUT {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd3b750ddeeaa2a76f833f",
+    "reaction": "😡"
+}
+
+### Remove reaction from "pogi ako" post
+DELETE {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd35a00ddeeaa2a76f82f8"
 }

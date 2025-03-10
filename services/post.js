@@ -28,6 +28,45 @@ export const GetAllPosts = async (req, res) => {
     }
 };
 
+export const GetAllUserPosts = async (req, res) => {
+    try {
+        const authorId = req.params.id;
+
+        const user = await UserInfo.findById(authorId);
+        if (!user) {
+            return res.status(404).json({
+                status: 'error',
+                error: 'User not found.'
+            });
+        }
+
+        const posts = await Post.find({ author: authorId })
+            .populate('author', 'vanity info')
+            .populate('reactions')
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'vanity info',
+                },
+            })
+            .populate('organization')
+            .sort({ 'meta.created_at': -1 }); // sort by newest
+
+        return res.status(200).json({
+            status: 'success',
+            count: posts.length,
+            posts
+        });
+    } catch (err) {
+        console.error('GetAllUserPosts Error:', err);
+        return res.status(500).json({
+            status: 'error',
+            error: 'An error occurred while fetching user posts.'
+        });
+    }
+};
+
 export const GetAllPostsByHashtag = async (req, res) => {
     try {
         const hashtag = req.params.hashtag;
