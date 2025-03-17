@@ -45,6 +45,7 @@
         - [GET /comment/:commentid](#get-commentcommentid)
         - [PUT /comment/:commentid](#put-commentcommentid)
         - [DELETE /comment/:commentid](#delete-commentcommentid)
+    - [Reaction Routes](#reaction-routes)
 
 ---
 
