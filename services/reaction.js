@@ -212,3 +212,61 @@ export const updateReactionOnComment = async (req, res) => {
         res.status(500).json({ message: 'Internal server error.' });
     }
 };
+
+/**
+ * Controller to add or update a reaction to a post
+ */
+export const upsertReactionOnPost = async (req, res) => {
+    try {
+        const { postid, reaction } = req.body;
+        const userId = req.user._id; // Assuming req.user contains authenticated user info
+
+        
+        // Check if the post exists
+        const post = await Post.findById(postid);
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found.' });
+        }
+
+        // Check if user has already reacted to this post
+        const existingReaction = await PostReaction.findOne({
+            user: userId,
+            target: postid,
+        });
+
+        // Ensures a user cannot react more than once to the same post.
+        if (existingReaction) {
+            
+            // Find the user's reaction to the post
+            const toUpdateReaction = await PostReaction.findOneAndUpdate(
+                { user: userId, target: postid },
+                { type: reaction },
+                { new: true }  
+            );
+
+            return res
+                .status(200)
+                .json({ message: 'Reaction updated.', toUpdateReaction });
+
+            } else {
+            // Create new reaction
+            const newReaction = await PostReaction.create({
+                user: userId,
+                target: postid,
+                type: reaction,
+            });
+    
+            // Push reaction ID into the post's reactions array
+            post.reactions.push(newReaction._id);
+            await post.save();
+    
+            return res
+                .status(201)
+                .json({ message: 'Reaction added.', newReaction });
+        }
+
+    } catch (error) {
+        console.error('addReactionToPost', error);
+        return res.status(500).json({ message: 'Internal server error.' });
+    }
+}
