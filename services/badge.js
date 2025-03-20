@@ -11,8 +11,11 @@ function checkHexCode(request) {
     let regex = /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i
     let errString = 'Invalid hex code provided for:'
 
-    if(!regex.test(request.body.text_color)) {
-        errString += ` text_color: ${request.body.text_color}`
+    if(!regex.test(request.body.main_text_color)) {
+        errString += ` main_text_color: ${request.body.main_text_color}`
+    }
+    if(!regex.test(request.body.sub_text_color)) {
+        errString += ` sub_text_color: ${request.body.sub_text_color}`
     }
     if(!regex.test(request.body.main_color)) {
         errString += ` main_color: ${request.body.main_color}`

@@ -1,6 +1,6 @@
+import Org from '../models/Org.js';
 import Post, { POST_TYPES } from '../models/Post.js';
 import UserInfo from '../models/UserInfo.js';
-import Org from '../models/Org.js';
 import {
     getOrgMemberRole,
     GetUserOrganizations,
@@ -12,6 +12,7 @@ export const GetAllPosts = async (req, res) => {
     try {
         const allPosts = await Post.find()
             .populate('author', 'vanity info')
+            .populate('badge')
             .populate('reactions')
             .populate({
                 path: 'comments',
@@ -42,7 +43,7 @@ export const GetAllUserPosts = async (req, res) => {
 
         const posts = await Post.find({ author: authorId })
             .populate('author', 'vanity info')
-            .populate('reactions')
+            .populate('badge')
             .populate({
                 path: 'comments',
                 populate: {
@@ -76,6 +77,7 @@ export const GetAllPostsByHashtag = async (req, res) => {
         const allPosts = await Post.find({ 'hashtags.tag': cleanHashtag })
             .populate('author', 'vanity info')
             .populate('reactions')
+            .populate('badge')
             .populate({
                 path: 'comments',
                 populate: {
@@ -108,6 +110,7 @@ export const GetNormalPostsByAuthor = async (req, res) => {
         })
             .populate('author', 'vanity info')
             .populate('reactions')
+            .populate('badge')
             .populate({
                 path: 'comments',
                 populate: {
@@ -140,6 +143,7 @@ export const GetProjectPostsByAuthor = async (req, res) => {
         })
             .populate('author', 'vanity info')
             .populate('reactions')
+            .populate('badge')
             .populate({
                 path: 'comments',
                 populate: {
@@ -182,6 +186,7 @@ export const GetEventPostsByAuthor = async (req, res) => {
         })
             .populate('author', 'vanity info')
             .populate('reactions')
+            .populate('badge')
             .populate({
                 path: 'comments',
                 populate: {
@@ -213,6 +218,7 @@ export const GetNormalPostById = async (req, res) => {
         })
             .populate('author', 'vanity info')
             .populate('reactions')
+            .populate('badge')
             .populate({
                 path: 'comments',
                 populate: {
@@ -247,6 +253,7 @@ export const GetProjectPostById = async (req, res) => {
         })
             .populate('author', 'vanity info')
             .populate('reactions')
+            .populate('badge')
             .populate({
                 path: 'comments',
                 populate: {
@@ -281,6 +288,7 @@ export const GetEventPostById = async (req, res) => {
         })
             .populate('author', 'vanity info')
             .populate('reactions')
+            .populate('badge')
             .populate({
                 path: 'comments',
                 populate: {
@@ -305,6 +313,7 @@ export const GetEventPostById = async (req, res) => {
     }
 };
 
+// TODO: Verify correctness
 export const CreatePost = async (req, res) => {
     try {
         // get authenticated user (assume it is stored in session)
@@ -315,7 +324,7 @@ export const CreatePost = async (req, res) => {
             return res.status(404).json({ error: 'User not found.' });
         }
 
-        const { title, content, media, type, visibility, organization } =
+        const { title, content, media, type, visibility, badge, organization } =
             req.body;
 
         if (!content || typeof content !== 'object') {
@@ -396,6 +405,7 @@ export const CreatePost = async (req, res) => {
             type: type || POST_TYPES.NORMAL,
             visibility: visibility || 'public',
             author: authorId,
+            badge: badge,
             organization: organization,
             comments: [],
             hashtags: parseHashtags(content.text),

@@ -1,4 +1,4 @@
-import { hashSync, compareSync } from 'bcrypt'
+import { compareSync, hashSync } from 'bcrypt'
 import UserCredentials from '../models/UserCredentials.js'
 import UserInfo from '../models/UserInfo.js'
 import { createSession } from '../services/session.js'
@@ -7,6 +7,7 @@ export const getSessionUser = async (req, res) => {
     try {
         const userInfo = await UserInfo.findById(req.user._id)
             .populate('credentials', 'credentials.email')
+            .populate('vanity.badges')
             .exec();
         if (!userInfo) {
             return res.status(404).json({
@@ -36,6 +37,8 @@ export const getSessionUser = async (req, res) => {
             _id: userObj._id
         };
 
+        console.log(user)
+
         return res.status(200).json(user);
     } catch (err) {
         console.error(err)
@@ -61,7 +64,7 @@ export const getUserByEmail = async (req, res) => {
         }).populate({
             path: 'credentials',
             select: 'credentials.email'
-        }).exec();
+        }).populate('vanity.badges').exec();
 
         if (!userInfo) {
             return res.status(400).json({
@@ -99,7 +102,7 @@ export const getUserById = async (req, res) => {
             .populate({
                 path: 'credentials',
                 select: 'credentials.email'
-            })
+            }).populate('vanity.badges')
             .exec();
         if (!userInfo) {
             console.log('No user info found for ID:', req.params.id);
@@ -328,7 +331,7 @@ export const updateInfo = async (req, res) => {
             .populate({
                 path: 'credentials',
                 select: 'credentials.email'
-            })
+            }).populate('vanity.badges')
             .exec();
 
         const updatedUser = {
