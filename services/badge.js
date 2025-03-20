@@ -97,6 +97,31 @@ export const DeleteBadge = async (req, res) => {
 
     } catch (err) {
         console.error('Error deleting badge data:', err)
+        return res.status(500).json({ status: 'error', msg: 'An error occurred while deleting badge data.' })
+    }
+}
+
+export const GetBadgeByIdArray = async (req, res) => {
+    try {
+        const badgeIds = req.body.BadgeIds;
+
+        console.log(req.body.BadgeIds);
+
+        // Validate the IDs array
+        if (!Array.isArray(badgeIds) || badgeIds.length === 0) {
+            return res.status(400).json({ error: 'Badge IDs must be provided as an array.' });
+        }
+
+        const badges = await Badge.find({ '_id': { $in: badgeIds } });
+
+        // If no badges found for those ids
+        if (badges.length === 0) {
+            return res.status(404).json({ error: 'No badges found for the provided IDs.' });
+        }
+
+        res.status(200).json(badges);
+    } catch (err) {
+        console.error(`Error getting badges: ${err}`)
         return res.status(500).json({ status: 'error', msg: 'An error occurred while fetching badge data.' })
     }
 }
