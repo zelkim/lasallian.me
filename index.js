@@ -13,6 +13,7 @@ import badgeRouter from './routes/badge.js';
 import orgRouter from './routes/org.js';
 import hashtagRouter from './routes/hashtag.js';
 import reactionRouter from './routes/reaction.js';
+import passwordResetRouter from './routes/passwordreset.js';
 
 config();
 
@@ -31,6 +32,7 @@ app.use('/org', orgRouter);
 app.use('/badge', badgeRouter);
 app.use('/hashtag', hashtagRouter);
 app.use('/reaction', reactionRouter);
+app.use('/resetpassword', passwordResetRouter);
 
 app.get('/test', validateSession, (req, res) => res.send('works'));
 
