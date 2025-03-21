@@ -37,8 +37,6 @@ export const getSessionUser = async (req, res) => {
             _id: userObj._id
         };
 
-        console.log(user)
-
         return res.status(200).json(user);
     } catch (err) {
         console.error(err)
@@ -211,8 +209,8 @@ export const authenticate = async (req, res) => {
         }
 
         // TODO: maybe invalidate the last session (if it exists) before creating a new one for consistency or just set expiry time to shorter time than 1 hour
-
-        const userInfo = await UserInfo.findOne({ credentials: user_credentials._id }).exec();
+        const userInfo = await UserInfo.findOne({ credentials: user_credentials._id }).populate('vanity.badges').exec();
+                
         const user = {
             credentials: {
                 _id: user_credentials._id,

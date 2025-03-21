@@ -318,13 +318,14 @@ export const CreatePost = async (req, res) => {
     try {
         // get authenticated user (assume it is stored in session)
         const authorId = req.user._id;
+        let badge = req.body.badge;
 
         const user = await UserInfo.findById(authorId);
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });
         }
 
-        const { title, content, media, type, visibility, badge, organization } =
+        const { title, content, media, type, visibility, organization } =
             req.body;
 
         if (!content || typeof content !== 'object') {
@@ -334,6 +335,10 @@ export const CreatePost = async (req, res) => {
         }
         if (type && !Object.values(POST_TYPES).includes(req.body.type)) {
             return res.status(400).json({ error: 'Invalid post type.' });
+        }
+
+        if (badge === "") {
+            badge = null;
         }
 
         if (
@@ -438,6 +443,7 @@ export const UpdatePost = async (req, res) => {
             'media',
             'type',
             'visibility',
+            'badge',
         ];
         const updates = Object.keys(req.body);
         const isValidOperation = updates.every((update) =>
@@ -448,6 +454,12 @@ export const UpdatePost = async (req, res) => {
                 status: 'error',
                 msg: 'Invalid updates. Only title, content and media can be updated.',
             });
+        }
+
+        console.log(req.body)
+
+        if (req.body.badge === "") {
+            req.body.badge = null;
         }
 
         const existingPost = await Post.findById(id);
