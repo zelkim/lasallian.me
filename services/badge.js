@@ -1,4 +1,6 @@
 import Badge from '../models/Badge.js';
+import User from '../models/UserInfo.js';
+import Org from '../models/Org.js'
 
 class HexCodeFormatError extends Error {
     constructor(message) {
@@ -126,5 +128,72 @@ export const GetBadgeByIdArray = async (req, res) => {
     } catch (err) {
         console.error(`Error getting badges: ${err}`)
         return res.status(500).json({ status: 'error', msg: 'An error occurred while fetching badge data.' })
+    }
+}
+
+export const GiveBadge = async (req, res) => {
+    try {
+        // TODO: Destructure the contents of req
+        const { target_id, badge_id, type } = req.body
+        let target;
+        const badge = await Badge.findById(badge_id).exec()
+
+        if (!badge) {
+            return res.status(404).json({
+                status: 'error',
+                error: 'Badge not found'
+            });
+        }
+
+        if (!Badge.schema.path('badge_type').enumValues.includes(type)) {
+            return res.status(404).json({
+                status: 'error',
+                error: 'Invalid Badge Type'
+            });
+        }
+        
+        if (badge.badge_type === type && type === 'organization') {
+            target = await Org.findByIdAndUpdate(target_id,
+                {$addToSet: {'vanity.badges': badge_id}},
+                {new: true})
+
+            if (!target) {
+                return res.status(404).json({
+                    status: 'error',
+                    error: 'Organization not found'
+                });
+            }
+
+            return res.status(200).json({
+                status: 'Successfully added badge to organization',
+                org: target
+            })
+
+        } else if (badge.badge_type === type && type === 'user') {
+            target = await User.findByIdAndUpdate(target_id,
+                {$addToSet: {'vanity.badges': badge_id}},
+                {new: true})
+
+            if (!target) {
+                return res.status(404).json({
+                    status: 'error',
+                    error: 'User not found'
+                });
+            }
+
+            return res.status(200).json({
+                status: 'Successfully added badge to user',
+                user: target
+            })
+        }
+
+        return res.status(404).json({
+            status: 'error',
+            error: 'Badge Type does not match with Target Type'
+        });
+
+    } catch (err) {
+        console.error(`Error giving badge: ${err}`)
+        return res.status(500).json({ status: 'error', msg: 'An error occurred while giving badge.' })
     }
 }

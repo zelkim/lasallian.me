@@ -1,5 +1,5 @@
 import express from 'express'
-import { CreateBadge, DeleteBadge, GetAllBadges, GetBadgeById, GetBadgeByIdArray, UpdateBadge } from '../services/badge.js'
+import { CreateBadge, DeleteBadge, GetAllBadges, GetBadgeById, GetBadgeByIdArray, UpdateBadge, GiveBadge } from '../services/badge.js'
 
 const router = express.Router()
 
@@ -12,5 +12,6 @@ router.post("/getByIdArray", GetBadgeByIdArray)
 router.post("/", CreateBadge)
 router.put("/:id", UpdateBadge)
 router.delete("/:id", DeleteBadge)
+router.post("/give-badge", GiveBadge)
 
 export default router
