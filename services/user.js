@@ -1,4 +1,4 @@
-import { hashSync, compareSync } from 'bcrypt'
+import { compareSync, hashSync } from 'bcrypt'
 import UserCredentials from '../models/UserCredentials.js'
 import UserInfo from '../models/UserInfo.js'
 import { createSession } from '../services/session.js'
@@ -7,6 +7,7 @@ export const getSessionUser = async (req, res) => {
     try {
         const userInfo = await UserInfo.findById(req.user._id)
             .populate('credentials', 'credentials.email')
+            .populate('vanity.badges')
             .exec();
         if (!userInfo) {
             return res.status(404).json({
@@ -61,7 +62,7 @@ export const getUserByEmail = async (req, res) => {
         }).populate({
             path: 'credentials',
             select: 'credentials.email'
-        }).exec();
+        }).populate('vanity.badges').exec();
 
         if (!userInfo) {
             return res.status(400).json({
@@ -99,7 +100,7 @@ export const getUserById = async (req, res) => {
             .populate({
                 path: 'credentials',
                 select: 'credentials.email'
-            })
+            }).populate('vanity.badges')
             .exec();
         if (!userInfo) {
             console.log('No user info found for ID:', req.params.id);
@@ -208,8 +209,8 @@ export const authenticate = async (req, res) => {
         }
 
         // TODO: maybe invalidate the last session (if it exists) before creating a new one for consistency or just set expiry time to shorter time than 1 hour
-
-        const userInfo = await UserInfo.findOne({ credentials: user_credentials._id }).exec();
+        const userInfo = await UserInfo.findOne({ credentials: user_credentials._id }).populate('vanity.badges').exec();
+                
         const user = {
             credentials: {
                 _id: user_credentials._id,
@@ -328,7 +329,7 @@ export const updateInfo = async (req, res) => {
             .populate({
                 path: 'credentials',
                 select: 'credentials.email'
-            })
+            }).populate('vanity.badges')
             .exec();
 
         const updatedUser = {

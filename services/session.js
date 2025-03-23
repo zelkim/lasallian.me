@@ -38,7 +38,6 @@ export const validateSession = async (req, res, next) => {
             if (err)
                 return res.status(403).json({ status: 'error', msg: 'Invalid token.' });
 
-            console.log(user)
             req.user = user; // Save the user info for the next middleware
             next();
         });

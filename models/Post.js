@@ -30,6 +30,11 @@ const postSchema = new mongoose.Schema({
         ref: 'user_info',
         required: true,
     },
+    badge: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'badges',
+        required: false,
+    },
     comments: [
         {
             type: mongoose.Schema.Types.ObjectId,
