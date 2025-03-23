@@ -10,9 +10,7 @@ const badgeSchema = new mongoose.Schema({
     sub_title: { type: String, required: [true] },
     sub_color: { type: String, required: [true] },
     badge_expiry: { type: Date, default: null },
-    // Add another field called description
     description: { type: String, required: [true]}
-    // TODO: Integrate this to front end
 })
 
 export default model("badges", badgeSchema)
