@@ -9,7 +9,7 @@ import nodemailer from 'nodemailer';
  * @param {string} [options.html] - HTML content (optional)
  * @returns {Promise<Object>} - Info about the sent email
  */
-const sendEmail = async ({ sender, to, subject, text, html }) => {
+export default async function sendEmail({ sender, to, subject, html }) {
     const transporter = nodemailer.createTransport({
         host: 'smtp.zoho.com',
         port: 465,
@@ -23,13 +23,10 @@ const sendEmail = async ({ sender, to, subject, text, html }) => {
     const mailOptions = {
         from: `"${sender}" <${process.env.MAIL_USER}>`,
         to,
-        subject,
-        text,
-        html,
+        subject: `[lasallian.me] ${subject}`,
+        html: html,
     };
 
     const info = await transporter.sendMail(mailOptions);
     return info;
-};
-
-export default sendEmail;
+}

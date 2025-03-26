@@ -7,10 +7,29 @@
 #
 
 ### vars
-@authToken = 
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2NkMzU4NzBkZGVlYWEyYTc2ZjgyZjAiLCJjcmVkZW50aWFscyI6IjY3Y2QzNTY1MGRkZWVhYTJhNzZmODJlZSIsInZhbml0eSI6eyJiYWRnZXMiOltdfSwiaW5mbyI6eyJuYW1lIjp7ImZpcnN0IjoiU2VhbiBEZW56ZWwiLCJsYXN0IjoiUm9iZW50YSJ9LCJsaW5rcyI6eyJvdGhlciI6W10sImZhY2Vib29rIjoiIiwiaW5zdGFncmFtIjoiIiwibGlua2VkaW4iOiJodHRwczovL2xpbmtlZGluLmNvbS9pbi9zZHlyIn0sInVzZXJuYW1lIjoiQHplbGtpbSIsImJhdGNoaWQiOiIxMjMiLCJwcm9ncmFtIjoiQlMgQ29tcHV0ZXIgU2NpZW5jZSBNYWpvciBpbiBTb2Z0d2FyZSBUZWNobm9sb2d5IiwiYmlvIjoicGluYWthIHBvZ2kgc2EgYnVvbmcgbXVuZG8ifSwibWV0YSI6eyJjcmVhdGVkX2F0IjoiMjAyNS0wMy0wOVQwNjozMDozMS41MDFaIiwidXBkYXRlZF9hdCI6IjIwMjUtMDMtMTBUMDQ6NTU6MjQuNzIxWiJ9LCJfX3YiOjAsImlhdCI6MTc0Mjk4NTIzMSwiZXhwIjoxNzQyOTg4ODMxfQ.zf-VOTgs6UosgNjDjZoMmltGyjcWCWzSUcA9rrIc96A
 @orgId = 67c981837c12b0d3b83b702d
-@baseUrl = http://localhost:3000
+@baseUrl = http://localhost:3001
 // @baseUrl = http://api.zel.kim
+
+# Reset Password actual
+POST {{baseUrl}}/resetpassword
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "token": "67e3dd34eaa6754e71f46eae",
+    "password": "HelloWorld!123"
+}
+
+### send password reset email
+POST {{baseUrl}}/resetpassword/create
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "email": "sean_robenta@dlsu.edu.ph"
+}
 
 ### get all post
 GET {{baseUrl}}/post/all
@@ -58,8 +77,8 @@ Content-Type: application/json
 
 {
     "credentials": {
-        "email": "w2helloworld@dlsu.edu.ph",
-        "password": "NewPassword123!"
+        "email": "sean_robenta@dlsu.edu.ph",
+        "password": "HelloWorld!123"
     }
 }
 

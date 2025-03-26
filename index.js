@@ -14,6 +14,7 @@ import orgRouter from './routes/org.js';
 import hashtagRouter from './routes/hashtag.js';
 import reactionRouter from './routes/reaction.js';
 import passwordResetRouter from './routes/passwordreset.js';
+import sendPasswordResetEmail from './utils/mailer/passwordreset.js';
 
 config();
 
