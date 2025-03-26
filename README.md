@@ -3269,6 +3269,15 @@ curl -X DELETE localhost:3000/comment/comment_id \
 
 # Password Reset API Documentation
 
+> [!IMPORTANT]
+> FLOW:
+>
+> 1. `/resetpassword/create` -> create a password reset "session"
+> 2. frontend doesn't handle this response, as it will be sent thru email, just say "if your email is valid, you will be emailed a link"
+> 3. user will be sent a link thru email like: https://lasallian.me/resetpassword/67e3dd34eaa6754e71f46eae
+> 4. Frontend should create a view for that link, you can use the `/resetpassword/validate` route to validate the token
+> 5. Handle actual password reset through `POST /resetpassword/`
+
 ## POST `/resetpassword/create`
 
 - Creates a password reset session for a user.
