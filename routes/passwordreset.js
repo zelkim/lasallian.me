@@ -1,8 +1,14 @@
 import express from 'express';
-import { createResetPasswordInstance } from '../services/passwordreset.js';
+import {
+  createResetPasswordInstance,
+  handlePasswordReset,
+  validatePasswordResetInstance,
+} from '../services/passwordreset.js';
 
 const router = express.Router();
 
-router.post('/', createResetPasswordInstance);
+router.post('/create', createResetPasswordInstance);
+router.get('/:id', validatePasswordResetInstance);
+router.post('/', handlePasswordReset);
 
 export default router;

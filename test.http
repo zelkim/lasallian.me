@@ -9,6 +9,7 @@
 ### get all post
 GET http://localhost:3000/post/all
 
+
 ### register
 POST http://api.zel.kim/user/register
 Content-Type: application/json 
