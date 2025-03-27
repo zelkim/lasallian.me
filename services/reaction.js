@@ -1,6 +1,6 @@
 import { PostReaction, CommentReaction } from '../models/Reaction.js';
 import Post from '../models/Post.js';
-import Comment from '../models/Comment.js'
+import Comment from '../models/Comment.js';
 
 /**
  * Controller to add a reaction to a post.
@@ -23,11 +23,8 @@ export const addReactionToPost = async (req, res) => {
             target: postid,
         });
 
-        // Ensures a user cannot react more than once to the same post.
         if (existingReaction) {
-            return res
-                .status(400)
-                .json({ message: 'User has already reacted to this post.' });
+            return updateReactionOnPost(req, res);
         }
 
         // Create new reaction
@@ -72,9 +69,7 @@ export const addReactionToComment = async (req, res) => {
 
         // Ensures a user cannot react more than once to the same comment.
         if (existingReaction) {
-            return res
-                .status(400)
-                .json({ message: 'User has already reacted to this comment.' });
+            return updateReactionOnComment(req, res);
         }
 
         // Create new reaction
