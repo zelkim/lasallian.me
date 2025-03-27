@@ -40,7 +40,7 @@ export const createResetPasswordInstance = async (req, res) => {
         await PasswordResetSession.findOneAndDelete({ email });
 
         const passwordReset = await PasswordResetSession.create({ email });
-        await sendPasswordResetEmail(
+        sendPasswordResetEmail(
             email,
             `${process.env.WEB_URL}/resetpassword/${passwordReset._id}`
         );
