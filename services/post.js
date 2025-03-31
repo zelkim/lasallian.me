@@ -16,10 +16,15 @@ export const GetAllPosts = async (req, res) => {
             .populate('reactions')
             .populate({
                 path: 'comments',
-                populate: {
-                    path: 'author',
-                    select: 'vanity info',
-                },
+                populate: [
+                    {
+                        path: 'author',
+                        select: 'vanity info',
+                    },
+                    {
+                        path: 'reactions', // Populating the "reactions" field
+                    },
+                ],
             });
 
         return res.status(200).json(allPosts);
@@ -37,7 +42,7 @@ export const GetAllUserPosts = async (req, res) => {
         if (!user) {
             return res.status(404).json({
                 status: 'error',
-                error: 'User not found.'
+                error: 'User not found.',
             });
         }
 
@@ -46,10 +51,15 @@ export const GetAllUserPosts = async (req, res) => {
             .populate('badge')
             .populate({
                 path: 'comments',
-                populate: {
-                    path: 'author',
-                    select: 'vanity info',
-                },
+                populate: [
+                    {
+                        path: 'author',
+                        select: 'vanity info',
+                    },
+                    {
+                        path: 'reactions', // Populating the "reactions" field
+                    },
+                ],
             })
             .populate('organization')
             .sort({ 'meta.created_at': -1 }); // sort by newest
@@ -57,13 +67,13 @@ export const GetAllUserPosts = async (req, res) => {
         return res.status(200).json({
             status: 'success',
             count: posts.length,
-            posts
+            posts,
         });
     } catch (err) {
         console.error('GetAllUserPosts Error:', err);
         return res.status(500).json({
             status: 'error',
-            error: 'An error occurred while fetching user posts.'
+            error: 'An error occurred while fetching user posts.',
         });
     }
 };
@@ -80,10 +90,15 @@ export const GetAllPostsByHashtag = async (req, res) => {
             .populate('badge')
             .populate({
                 path: 'comments',
-                populate: {
-                    path: 'author',
-                    select: 'vanity info',
-                },
+                populate: [
+                    {
+                        path: 'author',
+                        select: 'vanity info',
+                    },
+                    {
+                        path: 'reactions', // Populating the "reactions" field
+                    },
+                ],
             })
             .populate('organization');
 
@@ -113,10 +128,15 @@ export const GetNormalPostsByAuthor = async (req, res) => {
             .populate('badge')
             .populate({
                 path: 'comments',
-                populate: {
-                    path: 'author',
-                    select: 'vanity info',
-                },
+                populate: [
+                    {
+                        path: 'author',
+                        select: 'vanity info',
+                    },
+                    {
+                        path: 'reactions', // Populating the "reactions" field
+                    },
+                ],
             });
 
         return res.status(200).json(userNormalPosts);
@@ -146,10 +166,15 @@ export const GetProjectPostsByAuthor = async (req, res) => {
             .populate('badge')
             .populate({
                 path: 'comments',
-                populate: {
-                    path: 'author',
-                    select: 'vanity info',
-                },
+                populate: [
+                    {
+                        path: 'author',
+                        select: 'vanity info',
+                    },
+                    {
+                        path: 'reactions', // Populating the "reactions" field
+                    },
+                ],
             })
             .populate('reactions');
 
@@ -189,10 +214,15 @@ export const GetEventPostsByAuthor = async (req, res) => {
             .populate('badge')
             .populate({
                 path: 'comments',
-                populate: {
-                    path: 'author',
-                    select: 'vanity info',
-                },
+                populate: [
+                    {
+                        path: 'author',
+                        select: 'vanity info',
+                    },
+                    {
+                        path: 'reactions', // Populating the "reactions" field
+                    },
+                ],
             })
             .populate('organization');
 
@@ -221,10 +251,15 @@ export const GetNormalPostById = async (req, res) => {
             .populate('badge')
             .populate({
                 path: 'comments',
-                populate: {
-                    path: 'author',
-                    select: 'vanity info',
-                },
+                populate: [
+                    {
+                        path: 'author',
+                        select: 'vanity info',
+                    },
+                    {
+                        path: 'reactions', // Populating the "reactions" field
+                    },
+                ],
             });
 
         if (!post) {
@@ -256,10 +291,15 @@ export const GetProjectPostById = async (req, res) => {
             .populate('badge')
             .populate({
                 path: 'comments',
-                populate: {
-                    path: 'author',
-                    select: 'vanity info',
-                },
+                populate: [
+                    {
+                        path: 'author',
+                        select: 'vanity info',
+                    },
+                    {
+                        path: 'reactions', // Populating the "reactions" field
+                    },
+                ],
             });
 
         if (!post) {
@@ -291,10 +331,15 @@ export const GetEventPostById = async (req, res) => {
             .populate('badge')
             .populate({
                 path: 'comments',
-                populate: {
-                    path: 'author',
-                    select: 'vanity info',
-                },
+                populate: [
+                    {
+                        path: 'author',
+                        select: 'vanity info',
+                    },
+                    {
+                        path: 'reactions', // Populating the "reactions" field
+                    },
+                ],
             })
             .populate('organization');
 
@@ -337,7 +382,7 @@ export const CreatePost = async (req, res) => {
             return res.status(400).json({ error: 'Invalid post type.' });
         }
 
-        if (badge === "") {
+        if (badge === '') {
             badge = null;
         }
 
@@ -456,9 +501,9 @@ export const UpdatePost = async (req, res) => {
             });
         }
 
-        console.log(req.body)
+        console.log(req.body);
 
-        if (req.body.badge === "") {
+        if (req.body.badge === '') {
             req.body.badge = null;
         }
 
@@ -622,10 +667,15 @@ export const SearchPosts = async (req, res) => {
             .populate('reactions')
             .populate({
                 path: 'comments',
-                populate: {
-                    path: 'author',
-                    select: 'vanity info',
-                },
+                populate: [
+                    {
+                        path: 'author',
+                        select: 'vanity info',
+                    },
+                    {
+                        path: 'reactions', // Populating the "reactions" field
+                    },
+                ],
             })
             .sort({ 'meta.created_at': -1 })
             .limit(resultLimit);
