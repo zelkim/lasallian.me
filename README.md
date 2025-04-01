@@ -2636,6 +2636,8 @@ POST /org/
 {
     "info": {
         "name": "Sample Organization",
+        "office": "Sample Office",
+        "college": "Sample College",
         "acronym": "SORG",
         "founding": "2024-03-01",
         "bio": "A sample organization for testing",
