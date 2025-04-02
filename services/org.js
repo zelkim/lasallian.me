@@ -142,9 +142,9 @@ export const DeleteOrgInfo = async (req, res) => {
     }
 };
 
-export const AddOrgMember = async (req, res, org) => {
+export const AddOrgMember = async (req, res, org_id) => {
     try {
-        const orgId = org || req.params.orgId;
+        const orgId = org_id || req.params.orgId;
         const userId = req.user._id;
 
         const org = await Org.findById(orgId);
@@ -171,7 +171,7 @@ export const AddOrgMember = async (req, res, org) => {
             author: userId,
             org: orgId,
             joindate: new Date(),
-            position: req.body.position || 'MEM', // default position
+            position: org_id ? 'PRES' : req.body.position || 'MEM', // default position
             meta: {
                 created_at: new Date(),
                 updated_at: new Date(),
