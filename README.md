@@ -12,6 +12,7 @@
         - [POST /user/login](#post-userlogin)
         - [GET /user](#get-user)
         - [GET /user/orgs](#get-userorgs)
+        - [GET /user/:id/orgs](#get-useridorgs)
         - [GET /user/:id](#get-userid)
         - [POST /user/get-by-email](#post-userget-by-email)
         - [PUT /user](#put-user)
@@ -434,6 +435,60 @@ curl -X GET localhost:3000/user/orgs \
                     "linkedin": "https://linkedin.com/company/united",
                     "facebook": "https://facebook.com/united",
                     "instagram": "https://instagram.com/united",
+                    "other": []
+                }
+            },
+            "meta": {
+                "created_at": "2024-03-01T00:00:00.000Z",
+                "updated_at": "2024-03-01T00:00:00.000Z"
+            }
+        }
+    ]
+}
+```
+
+---
+
+### GET /user/:id/orgs
+
+- Gets all organizations where a specified user is a member
+- Requires JWT session token as `Authorization: Bearer <JWT>` header
+- Returns an array of organizations and their details for the specified user ID
+
+**Request (via `curl`):**
+
+```bash
+curl -X POST localhost:3000/user/67c8478d8e9f541dfe96893e/orgs \
+-H "Authorization: Bearer <token>"
+```
+
+**Request Body:**
+None required - uses ID from URL parameter
+
+**Response:**
+
+```json
+{
+    "status": "success",
+    "count": 2,
+    "organizations": [
+        {
+            "vanity": {
+                "display_photo": "org1-logo.jpg",
+                "cover_photo": "org1-banner.jpg",
+                "badges": []
+            },
+            "info": {
+                "name": "La Salle Computer Society",
+                "acronym": "LSCS",
+                "founding": "1990-01-01T00:00:00.000Z",
+                "office": "Gokongwei 201",
+                "college": "CCS",
+                "bio": "DLSU's premier computing society",
+                "links": {
+                    "linkedin": "https://linkedin.com/company/lscs",
+                    "facebook": "https://facebook.com/lscs",
+                    "instagram": "https://instagram.com/lscs",
                     "other": []
                 }
             },

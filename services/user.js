@@ -389,3 +389,34 @@ export const GetUserOrgs = async (req, res) => {
         });
     }
 };
+
+export const GetUserOrgsByUserId = async (req, res) => {
+    try {
+        const orgIds = await GetUserOrganizations(req.params.id);
+
+        if (!orgIds || orgIds.length === 0) {
+            return res.status(200).json({
+                status: "success",
+                count: 0,
+                organizations: []
+            });
+        }
+
+        const organizations = await Org.find({ _id: { $in: orgIds } })
+            .select('vanity info meta')
+            .lean()
+            .exec();
+
+        return res.status(200).json({
+            status: "success",
+            count: organizations.length,
+            organizations
+        });
+    } catch (err) {
+        console.error("GetUserOrganizations Error:", err);
+        return res.status(500).json({
+            status: "error",
+            error: "Could not get user organizations"
+        });
+    }
+};
