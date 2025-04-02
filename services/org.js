@@ -1,5 +1,7 @@
 import Org from '../models/Org.js';
 import OrgMember from '../models/OrgMembers.js';
+import Badge from '../models/Badge.js';
+import { addBadgeToUser } from './badge.js';
 
 /**
  * Creates a new organization.
@@ -7,41 +9,64 @@ import OrgMember from '../models/OrgMembers.js';
  * @param {Object} res - Express response object.
  */
 export const createOrg = async (req, res) => {
-    const data = req.body;
+    try {
+        const data = req.body;
 
-    Org.create(data)
-        .then(async (org) => {
-            // AddOrgMember(req, res, org._id);
-            const newMember = await OrgMember.create({
-                author: req.user._id,
-                org: org._id,
-                joindate: new Date(),
-                position: 'PRES', // default position
-                meta: {
-                    created_at: new Date(),
-                    updated_at: new Date(),
-                },
-            });
+        Org.create(data)
+            .then(async (org) => {
+                const badge = new Badge({
+                    badge_type: 'user',
+                    badge_key: `${org.info.acronym.toUpperCase()}_PRES`,
+                    main_text_color: '#FFFFFF',
+                    sub_text_color: '#FFFFFF',
+                    main_title: org.info.acronym,
+                    main_color: '#0a4d88',
+                    sub_title: 'PRES',
+                    sub_color: '#353535',
+                    description: `${org.info.name} - President`,
+                });
 
-            // add member ref to org members array
-            await Org.findByIdAndUpdate(org._id, {
-                $push: { members: newMember._id },
-                'meta.updated_at': new Date(),
-            });
+                const createdBadge = await badge.save();
 
-            return res.status(200).send({
-                status: 'ok',
-                msg: 'Organization created.',
-                data: org,
+                await addBadgeToUser(req.user._id, createdBadge._id);
+
+                // AddOrgMember(req, res, org._id);
+                const newMember = await OrgMember.create({
+                    author: req.user._id,
+                    org: org._id,
+                    joindate: new Date(),
+                    position: 'PRES', // default position
+                    meta: {
+                        created_at: new Date(),
+                        updated_at: new Date(),
+                    },
+                });
+
+                // add member ref to org members array
+                await Org.findByIdAndUpdate(org._id, {
+                    $push: { members: newMember._id },
+                    'meta.updated_at': new Date(),
+                });
+
+                return res.status(200).send({
+                    status: 'ok',
+                    msg: 'Organization created.',
+                    data: org,
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+                return res.status(400).send({
+                    status: 'error',
+                    msg: 'Organization could not be created.',
+                });
             });
-        })
-        .catch((err) => {
-            console.error(err);
-            return res.status(400).send({
-                status: 'error',
-                msg: 'Organization could not be created.',
-            });
-        });
+    } catch (err) {
+        console.log(err);
+        return res
+            .statu(500)
+            .send({ status: 'error', msg: 'Server couldnt create org' });
+    }
 };
 
 /**
@@ -51,7 +76,15 @@ export const createOrg = async (req, res) => {
  */
 export const getOrgById = async (req, res) => {
     try {
-        const org = await Org.findById(req.params.id).exec();
+        const org = await Org.findById(req.params.id)
+            .populate({
+                path: 'members',
+                populate: {
+                    path: 'author',
+                    select: 'vanity info meta',
+                },
+            })
+            .exec();
 
         if (!org)
             return res.status(400).json({
@@ -77,7 +110,15 @@ export const getOrgByAcronym = async (req, res) => {
     try {
         const org = await Org.findOne({
             'info.acronym': req.params.acronym,
-        }).exec();
+        })
+            .populate({
+                path: 'members',
+                populate: {
+                    path: 'author',
+                    select: 'vanity info meta',
+                },
+            })
+            .exec();
 
         if (!org)
             return res.status(400).json({
