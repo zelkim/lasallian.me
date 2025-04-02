@@ -1,5 +1,5 @@
-import Org from "../models/Org.js";
-import OrgMember from "../models/OrgMembers.js";
+import Org from '../models/Org.js';
+import OrgMember from '../models/OrgMembers.js';
 
 /**
  * Creates a new organization.
@@ -11,15 +11,19 @@ export const createOrg = async (req, res) => {
 
     Org.create(data)
         .then((org) => {
-            return res
-                .status(200)
-                .send({ status: "ok", msg: "Organization created.", data: org });
+            AddOrgMember(req, res, org._id);
+            return res.status(200).send({
+                status: 'ok',
+                msg: 'Organization created.',
+                data: org,
+            });
         })
         .catch((err) => {
             console.error(err);
-            return res
-                .status(400)
-                .send({ status: "error", msg: "Organization could not be created." });
+            return res.status(400).send({
+                status: 'error',
+                msg: 'Organization could not be created.',
+            });
         });
 };
 
@@ -33,16 +37,17 @@ export const getOrgById = async (req, res) => {
         const org = await Org.findById(req.params.id).exec();
 
         if (!org)
-            return res
-                .status(400)
-                .json({ status: "error", error: "Could not find organization" });
+            return res.status(400).json({
+                status: 'error',
+                error: 'Could not find organization',
+            });
 
-        return res.status(200).json({ status: "ok", data: org });
+        return res.status(200).json({ status: 'ok', data: org });
     } catch (err) {
         console.error(err);
         return res
             .status(400)
-            .json({ status: "error", error: "Could not get organization" });
+            .json({ status: 'error', error: 'Could not get organization' });
     }
 };
 
@@ -54,20 +59,21 @@ export const getOrgById = async (req, res) => {
 export const getOrgByAcronym = async (req, res) => {
     try {
         const org = await Org.findOne({
-            "info.acronym": req.params.acronym,
+            'info.acronym': req.params.acronym,
         }).exec();
 
         if (!org)
-            return res
-                .status(400)
-                .json({ status: "error", error: "Could not find organization" });
+            return res.status(400).json({
+                status: 'error',
+                error: 'Could not find organization',
+            });
 
-        return res.status(200).json({ status: "ok", data: org });
+        return res.status(200).json({ status: 'ok', data: org });
     } catch (err) {
         console.error(err);
         return res
             .status(400)
-            .json({ status: "error", error: "Could not get organization" });
+            .json({ status: 'error', error: 'Could not get organization' });
     }
 };
 
@@ -93,18 +99,18 @@ export const UpdateOrgInfo = async (req, res) => {
         if (!updatedOrg) {
             return res
                 .status(404)
-                .json({ status: "error", msg: "Organization not found" });
+                .json({ status: 'error', msg: 'Organization not found' });
         }
 
         res.status(200).json({
-            status: "success",
+            status: 'success',
             organization: updatedOrg,
         });
     } catch (err) {
-        console.error("UpdateOrgInfo Error:", err);
+        console.error('UpdateOrgInfo Error:', err);
         res.status(400).json({
-            status: "error",
-            msg: err.message.replace("Error: ", ""),
+            status: 'error',
+            msg: err.message.replace('Error: ', ''),
         });
     }
 };
@@ -120,44 +126,44 @@ export const DeleteOrgInfo = async (req, res) => {
         if (!org) {
             return res
                 .status(404)
-                .json({ status: "error", msg: "Organization not found" });
+                .json({ status: 'error', msg: 'Organization not found' });
         }
 
         return res.status(200).json({
-            status: "success",
-            message: "Organization deleted successfully.",
+            status: 'success',
+            message: 'Organization deleted successfully.',
         });
     } catch (err) {
-        console.error("DeleteOrgInfo Error:", err);
+        console.error('DeleteOrgInfo Error:', err);
         return res.status(400).json({
-            status: "error",
-            msg: err.message.replace("Error: ", ""),
+            status: 'error',
+            msg: err.message.replace('Error: ', ''),
         });
     }
 };
 
-export const AddOrgMember = async (req, res) => {
+export const AddOrgMember = async (req, res, org) => {
     try {
-        const { orgId } = req.params;
+        const orgId = org || req.params.orgId;
         const userId = req.user._id;
 
         const org = await Org.findById(orgId);
         if (!org) {
             return res.status(404).json({
-                status: "error",
-                msg: "Organization not found"
+                status: 'error',
+                msg: 'Organization not found',
             });
         }
 
         // check if already a member
         const existingMember = await OrgMember.findOne({
             author: userId,
-            org: orgId
+            org: orgId,
         });
         if (existingMember) {
             return res.status(400).json({
-                status: "error",
-                msg: "User is already a member of this organization"
+                status: 'error',
+                msg: 'User is already a member of this organization',
             });
         }
 
@@ -168,28 +174,25 @@ export const AddOrgMember = async (req, res) => {
             position: req.body.position || 'MEM', // default position
             meta: {
                 created_at: new Date(),
-                updated_at: new Date()
-            }
+                updated_at: new Date(),
+            },
         });
 
         // add member ref to org members array
-        await Org.findByIdAndUpdate(
-            orgId,
-            {
-                $push: { members: newMember._id },
-                "meta.updated_at": new Date()
-            }
-        );
+        await Org.findByIdAndUpdate(orgId, {
+            $push: { members: newMember._id },
+            'meta.updated_at': new Date(),
+        });
 
         return res.status(201).json({
-            status: "success",
-            member: newMember
+            status: 'success',
+            member: newMember,
         });
     } catch (err) {
-        console.error("AddOrgMember Error:", err);
+        console.error('AddOrgMember Error:', err);
         return res.status(400).json({
-            status: "error",
-            msg: err.message || "Could not add member to organization"
+            status: 'error',
+            msg: err.message || 'Could not add member to organization',
         });
     }
 };
@@ -204,34 +207,35 @@ export const GetOrgMembers = async (req, res) => {
                 path: 'members',
                 populate: {
                     path: 'author',
-                    select: 'vanity info meta'
-                }
-            }).select('members');
+                    select: 'vanity info meta',
+                },
+            })
+            .select('members');
         if (!org) {
             return res.status(404).json({
-                status: "error",
-                msg: "Organization not found"
+                status: 'error',
+                msg: 'Organization not found',
             });
         }
 
-        const members = org.members.map(member => ({
+        const members = org.members.map((member) => ({
             _id: member._id,
             user: member.author,
             position: member.position,
             joindate: member.joindate,
-            meta: member.meta
+            meta: member.meta,
         }));
 
         return res.status(200).json({
-            status: "success",
+            status: 'success',
             count: members.length,
-            members
+            members,
         });
     } catch (err) {
-        console.error("GetOrgMembers Error:", err);
+        console.error('GetOrgMembers Error:', err);
         return res.status(400).json({
-            status: "error",
-            msg: err.message || "Could not get organization members"
+            status: 'error',
+            msg: err.message || 'Could not get organization members',
         });
     }
 };
@@ -242,7 +246,7 @@ export const isOrgMember = async (userId, orgId) => {
 
     const member = await OrgMember.findOne({
         _id: { $in: org.members },
-        author: userId
+        author: userId,
     });
 
     return !!member;
@@ -254,12 +258,11 @@ export const getOrgMemberRole = async (userId, orgId) => {
 
     const member = await OrgMember.findOne({
         _id: { $in: org.members },
-        author: userId
+        author: userId,
     });
 
     return member ? member.position : null;
 };
-
 
 /**
  * Gets all organization IDs where the user is a member
@@ -274,7 +277,7 @@ export const GetUserOrganizations = async (userId) => {
             .exec();
 
         // then get organization IDs
-        const orgIds = memberships.map(membership => membership.org);
+        const orgIds = memberships.map((membership) => membership.org);
 
         return orgIds;
     } catch (error) {
@@ -293,7 +296,7 @@ export const IsUserInOrganization = async (userId, orgId) => {
     try {
         const membership = await OrgMember.findOne({
             author: userId,
-            org: orgId
+            org: orgId,
         }).exec();
 
         return !!membership;
