@@ -10,8 +10,25 @@ export const createOrg = async (req, res) => {
     const data = req.body;
 
     Org.create(data)
-        .then((org) => {
-            AddOrgMember(req, res, org._id);
+        .then(async (org) => {
+            // AddOrgMember(req, res, org._id);
+            const newMember = await OrgMember.create({
+                author: req.user._id,
+                org: org._id,
+                joindate: new Date(),
+                position: 'PRES', // default position
+                meta: {
+                    created_at: new Date(),
+                    updated_at: new Date(),
+                },
+            });
+
+            // add member ref to org members array
+            await Org.findByIdAndUpdate(org._id, {
+                $push: { members: newMember._id },
+                'meta.updated_at': new Date(),
+            });
+
             return res.status(200).send({
                 status: 'ok',
                 msg: 'Organization created.',
