@@ -21,7 +21,7 @@ export const createResetPasswordInstance = async (req, res) => {
         if (!user) {
             return res.status(200).json({
                 message:
-                    '[#1] If your email is registered, you will be sent password reset instructions in your email.',
+                    'If your email is registered, you will be sent password reset instructions in your email.',
             });
         }
 
@@ -47,7 +47,7 @@ export const createResetPasswordInstance = async (req, res) => {
 
         return res.status(200).json({
             message:
-                '[#2] If your email is registered, you will be sent password reset instructions in your email.',
+                'If your email is registered, you will be sent password reset instructions in your email.',
         });
     } catch (error) {
         console.error('Error in createResetPasswordInstance:', error);
