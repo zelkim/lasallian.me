@@ -7,29 +7,10 @@
 #
 
 ### vars
-@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdLCJjb3Zlcl9waG90byI6Imh0dHBzOi8vbmV3LXBob3RvLXVybC5jb20vY292ZXIuanBnIiwiZGlzcGxheV9waG90byI6Imh0dHBzOi8vbmV3LXBob3RvLXVybC5jb20vcGhvdG8uanBnIn0sImluZm8iOnsibmFtZSI6eyJmaXJzdCI6IncyIiwibGFzdCI6ImhlbGxvd29ybGQifSwibGlua3MiOnsib3RoZXIiOlsiaHR0cHM6Ly9naXRodWIuY29tL3VwZGF0ZWQiXSwibGlua2VkaW4iOiJodHRwczovL2xpbmtlZGluLmNvbS9pbi9uZXdwcm9maWxlIiwiZmFjZWJvb2siOiJodHRwczovL2ZhY2Vib29rLmNvbS91cGRhdGVkIiwiaW5zdGFncmFtIjoiaHR0cHM6Ly9pbnN0YWdyYW0uY29tL3VwZGF0ZWQifSwidXNlcm5hbWUiOiJAdzJoZWxsb3dvcmxkIiwiYmF0Y2hpZCI6IjEyMyIsInByb2dyYW0iOiJCU0lUIiwiYmlvIjoiVXBkYXRlZCBiaW8gdGV4dCJ9LCJtZXRhIjp7ImNyZWF0ZWRfYXQiOiIyMDI1LTAzLTA1VDEyOjQ2OjA1LjA3NVoiLCJ1cGRhdGVkX2F0IjoiMjAyNS0wMy0wOVQwOTo0NTowNC4zODNaIn0sIl9fdiI6MCwiaWF0IjoxNzQzNjAxMzI1LCJleHAiOjE3NDM2MDQ5MjV9.hpq1I723BW4RRlGSSIoGvsYLcKtTG8V-SpwaAsT91BM
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdLCJjb3Zlcl9waG90byI6Imh0dHBzOi8vbmV3LXBob3RvLXVybC5jb20vY292ZXIuanBnIiwiZGlzcGxheV9waG90byI6Imh0dHBzOi8vbmV3LXBob3RvLXVybC5jb20vcGhvdG8uanBnIn0sImluZm8iOnsibmFtZSI6eyJmaXJzdCI6IncyIiwibGFzdCI6ImhlbGxvd29ybGQifSwibGlua3MiOnsib3RoZXIiOlsiaHR0cHM6Ly9naXRodWIuY29tL3VwZGF0ZWQiXSwibGlua2VkaW4iOiJodHRwczovL2xpbmtlZGluLmNvbS9pbi9uZXdwcm9maWxlIiwiZmFjZWJvb2siOiJodHRwczovL2ZhY2Vib29rLmNvbS91cGRhdGVkIiwiaW5zdGFncmFtIjoiaHR0cHM6Ly9pbnN0YWdyYW0uY29tL3VwZGF0ZWQifSwidXNlcm5hbWUiOiJAdzJoZWxsb3dvcmxkIiwiYmF0Y2hpZCI6IjEyMyIsInByb2dyYW0iOiJCU0lUIiwiYmlvIjoiVXBkYXRlZCBiaW8gdGV4dCJ9LCJtZXRhIjp7ImNyZWF0ZWRfYXQiOiIyMDI1LTAzLTA1VDEyOjQ2OjA1LjA3NVoiLCJ1cGRhdGVkX2F0IjoiMjAyNS0wMy0wOVQwOTo0NTowNC4zODNaIn0sIl9fdiI6MCwiaWF0IjoxNzQxNTgzMjA3LCJleHAiOjE3NDE1ODY4MDd9.vpYD5hhx-Jb6mVXhONu1oDzWngSreElyIzzbUNOwl-Y
 @orgId = 67c981837c12b0d3b83b702d
 @baseUrl = http://localhost:3000
 // @baseUrl = http://api.zel.kim
-
-# Reset Password actual
-POST {{baseUrl}}/resetpassword
-Authorization: Bearer {{authToken}}
-Content-Type: application/json
-
-{
-    "token": "67e3dd34eaa6754e71f46eae",
-    "password": "HelloWorld!123"
-}
-
-### send password reset email
-POST {{baseUrl}}/resetpassword/create
-Authorization: Bearer {{authToken}}
-Content-Type: application/json
-
-{
-    "email": "sean_robenta@dlsu.edu.ph"
-}
 
 ### get all post
 GET {{baseUrl}}/post/all
@@ -62,10 +43,10 @@ Authorization: Bearer {{authToken}}
 {
     "info": {
         "name": {
-            "first": "w2helloworld1234",
+            "first": "w2helloworld",
             "last": "YES"
         },
-        "username": "@w2helloworld1234",
+        "username": "@w2helloworld",
         "batchid": "123",
         "program": "BSIT"
     }
@@ -449,88 +430,58 @@ Authorization: Bearer {{authToken}}
     "postid": "67cd35a00ddeeaa2a76f82f8"
 }
 
+### --- Add Reactions to Posts Without Reactions --- ###
 
-### --- Event Post Testing --- ###
-
-### Create an event post (requires org member)
-POST {{baseUrl}}/post
+### Add "love" reaction to "I will wait" post
+POST {{baseUrl}}/reaction/post
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "Tech Workshop 2025",
-    "content": {
-        "text": "Join us for an exciting tech workshop! #workshop #tech",
-        "date": "2025-04-15T14:00:00Z",
-        "venue": "Andrew Building Room 1880",
-        "registration_link": "https://forms.example.com/register"
-    },
-    "type": "event",
-    "visibility": "public",
-    "organization": "{{orgId}}",
-    "media": [
-        "https://example.com/workshop-banner.jpg",
-        "https://example.com/workshop-poster.jpg"
-    ]
+    "postid": "67cafddf0ddeeaa2a76f7d00",
+    "reaction": "❤️"
 }
 
-### Get all event posts by current user
-GET {{baseUrl}}/post/event
-Authorization: Bearer {{authToken}}
-
-### Get specific event post by ID (replace <event-post-id> with actual ID from previous response)
-GET {{baseUrl}}/post/event/67ea85316c36cf0a46326307
-Authorization: Bearer {{authToken}}
-
-### Update event post (replace <event-post-id> with actual ID)
-PUT {{baseUrl}}/post/67ea85316c36cf0a46326307
+### Add "angry" reaction to "what the sigma #boy" post
+POST {{baseUrl}}/reaction/post
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "Updated: Tech Workshop 2025",
-    "content": {
-        "text": "UPDATED: Join us for an exciting tech workshop! #workshop #tech",
-        "date": "2025-04-15T15:00:00Z",
-        "venue": "Henry Sy Sr. Hall",
-        "registration_link": "https://forms.example.com/register-updated"
-    },
-    "media": [
-        "https://example.com/workshop-banner-updated.jpg"
-    ]
+    "postid": "67cd3b750ddeeaa2a76f833f",
+    "reaction": "😡"
 }
 
-### Search for event posts
-GET {{baseUrl}}/post/search?query=workshop&type=event
-Authorization: Bearer {{authToken}}
-
-### Delete event post (replace <event-post-id> with actual ID)
-DELETE {{baseUrl}}/post/67ea85316c36cf0a46326307
-Authorization: Bearer {{authToken}}
-
-### Create private event post (org members only)
-POST {{baseUrl}}/post
+### Add "clap" reaction to "Testing hastag post" post
+POST {{baseUrl}}/reaction/post
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-    "title": "Internal Team Meeting",
-    "content": {
-        "text": "Monthly planning meeting for org members #internal #meeting",
-        "date": "2025-04-20T10:00:00Z",
-        "venue": "Virtual Meeting Room",
-        "meeting_link": "https://meet.example.com/internal"
-    },
-    "type": "event",
-    "visibility": "organization",
-    "organization": "{{orgId}}",
-    "media": []
+    "postid": "67cd869140d5b6ac12402dab",
+    "reaction": "👏"
 }
 
-### Get User Organizations of current user
-GET {{baseUrl}}/user/orgs
+### Add "laugh" reaction to "Behold, PEAK!!!!" post
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
-### Get User Organizations of specified user_id
-GET {{baseUrl}}/user/67c8478d8e9f541dfe96893e/orgs
+{
+    "postid": "67cdb6ef5c6d216bdae780f0",
+    "reaction": "😂"
+}
+
+### Add "sad" reaction to "I agree with the top post" post
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cdbc8b5c6d216bdae782b4",
+    "reaction": "😢"
+}
+
+### Verify all posts after adding reactions
+GET {{baseUrl}}/post/all
 Authorization: Bearer {{authToken}}
