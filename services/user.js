@@ -1,6 +1,8 @@
 import { compareSync, hashSync } from 'bcrypt'
 import UserCredentials from '../models/UserCredentials.js'
 import UserInfo from '../models/UserInfo.js'
+import { GetUserOrganizations } from './org.js'
+import Org from '../models/Org.js'
 import { createSession } from '../services/session.js'
 
 export const getSessionUser = async (req, res) => {
@@ -210,7 +212,7 @@ export const authenticate = async (req, res) => {
 
         // TODO: maybe invalidate the last session (if it exists) before creating a new one for consistency or just set expiry time to shorter time than 1 hour
         const userInfo = await UserInfo.findOne({ credentials: user_credentials._id }).populate('vanity.badges').exec();
-                
+
         const user = {
             credentials: {
                 _id: user_credentials._id,
@@ -351,6 +353,39 @@ export const updateInfo = async (req, res) => {
         return res.status(500).json({
             status: 'error',
             error: 'Could not update user information'
+        });
+    }
+};
+
+
+// Get all orgs of a user
+export const GetUserOrgs = async (req, res) => {
+    try {
+        const orgIds = await GetUserOrganizations(req.user._id);
+
+        if (!orgIds || orgIds.length === 0) {
+            return res.status(200).json({
+                status: "success",
+                count: 0,
+                organizations: []
+            });
+        }
+
+        const organizations = await Org.find({ _id: { $in: orgIds } })
+            .select('vanity info meta')
+            .lean()
+            .exec();
+
+        return res.status(200).json({
+            status: "success",
+            count: organizations.length,
+            organizations
+        });
+    } catch (err) {
+        console.error("GetUserOrganizations Error:", err);
+        return res.status(500).json({
+            status: "error",
+            error: "Could not get user organizations"
         });
     }
 };

@@ -7,6 +7,7 @@ import {
     DeleteOrgInfo,
     AddOrgMember,
     GetOrgMembers,
+    GetUserOrganizations,
 } from "../services/org.js";
 import { validateSession } from "../services/session.js";
 
