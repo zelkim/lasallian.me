@@ -46,6 +46,15 @@
         - [PUT /comment/:commentid](#put-commentcommentid)
         - [DELETE /comment/:commentid](#delete-commentcommentid)
     - [Reaction Routes](#reaction-routes)
+    - [Badge Routes](#badge-routes)
+        - [GET /badge/:id](#get-badge-id)
+        - [GET /badge](#get-badge)
+        - [POST /badge/get-by-id-array](#post-badgeget-by-id-array)
+        - [POST /badge](#post-badge)
+        - [PUT /badge/:id](#put-badgeid)
+        - [DELETE /badge/:id](#delete-badgeid)
+        - [POST /badge/give-badge](#post-badgegive-badge)
+        - [DELETE /badge/revoke-badge](#delete-badgerevoke-badge)
 
 ---
 
@@ -3268,6 +3277,381 @@ curl -X DELETE localhost:3000/comment/comment_id \
 - Invalid reaction types will result in an error.
 
 ---
+
+## Badge Routes
+
+- Badges require the following fields:
+- badge_type: user or organization
+- badge_key: string
+- main_text_color: valid hex code (string)
+- sub_text_color: valid hex code (string)
+- main_color: valid hex code (string)
+- sub_color: valid hex code (string)
+- main_title: string
+- sub_title: string
+- badge_expiry: date (optional)
+
+### Get API endpoints
+
+- These are the API endpoints for getting badges.
+
+### GET `/badge/:id`
+
+- Gets the badge information of the given badge id
+
+### Response
+```json
+{
+	"_id": "67dc390ff39de3835941e5c2",
+	"badge_type": "user",
+	"badge_key": "GDSCMKT",
+	"main_text_color": "#fff",
+	"sub_text_color": "#FFFFFF",
+	"main_title": "GDSC",
+	"main_color": "#FFCD05",
+	"sub_title": "MKT",
+	"sub_color": "#313131",
+	"badge_expiry": null,
+	"__v": 0
+}
+```
+
+### GET `/badge`
+
+- Gets all the badges in the collection, and sends it back as an array
+
+### Response
+```
+[
+	{
+		"_id": "67da9403738958467c01258d",
+		"badge_type": "organization",
+		"badge_key": "CSO#2",
+		"text_color": "#AAFFB7",
+		"main_title": "CSO",
+		"main_color": "#007D3F",
+		"sub_title": "#2",
+		"sub_color": "#CDCDCD",
+		"badge_expiry": null,
+		"__v": 0
+	},
+	{
+		"_id": "67da9425738958467c01258f",
+		"badge_type": "user",
+		"badge_key": "CCS123",
+		"text_color": "#ffffff",
+		"main_title": "CCS",
+		"main_color": "#ff4c27",
+		"sub_title": "123",
+		"sub_color": "#ff7f64",
+		"badge_expiry": "2025-06-06T00:00:00.000Z",
+		"__v": 0
+	},
+	{
+		"_id": "67da9449738958467c012591",
+		"badge_type": "organization",
+		"badge_key": "LSCSVP",
+		"text_color": "#AAFFB7",
+		"main_title": "LSCS",
+		"main_color": "#220088",
+		"sub_title": "VP",
+		"sub_color": "#313131",
+		"badge_expiry": null,
+		"__v": 0
+	},
+	{
+		"_id": "67da946a738958467c012593",
+		"badge_type": "user",
+		"badge_key": "TLSWEB",
+		"text_color": "#AAFFB7",
+		"main_title": "TLS",
+		"main_color": "#007D3F",
+		"sub_title": "WEB",
+		"sub_color": "#313131",
+		"badge_expiry": null,
+		"__v": 0
+	}
+]
+```
+
+### POST `/badge/get-by-id-array`
+
+- Returns the badge data of the given badge ids
+
+### Request
+```json
+{
+	"badgeIds": [
+		"67dc2c64f39de3835941e555",
+		"67dc2c70f39de3835941e557",
+		"67dc2c50f39de3835941e553"
+	]
+}
+```
+
+### Response
+```json
+[
+	{
+		"_id": "67dc2c50f39de3835941e553",
+		"badge_type": "user",
+		"badge_key": "CCS123",
+		"main_text_color": "#ffffff",
+		"sub_text_color": "#262626",
+		"main_title": "CCS",
+		"main_color": "#087830",
+		"sub_title": "123",
+		"sub_color": "#f5f5f5",
+		"badge_expiry": "2025-06-06T00:00:00.000Z",
+		"__v": 0
+	},
+	{
+		"_id": "67dc2c64f39de3835941e555",
+		"badge_type": "organization",
+		"badge_key": "CSO#2",
+		"main_text_color": "#AAFFB7",
+		"sub_text_color": "#ffffff",
+		"main_title": "CSO",
+		"main_color": "#007D3F",
+		"sub_title": "#2",
+		"sub_color": "#CDCDCD",
+		"badge_expiry": null,
+		"__v": 0
+	},
+	{
+		"_id": "67dc2c70f39de3835941e557",
+		"badge_type": "user",
+		"badge_key": "LSCSVP",
+		"main_text_color": "#AAFFB7",
+		"sub_text_color": "#ffffff",
+		"main_title": "LSCS",
+		"main_color": "#220088",
+		"sub_title": "VP",
+		"sub_color": "#313131",
+		"badge_expiry": null,
+		"__v": 0
+	}
+]
+```
+
+### Manage Badge API endpoints
+
+- These are the API endpoints for the CRUD operations for badges
+
+### POST `/badge`
+
+- Creates a new badge
+
+### Request
+```json
+{
+	"badge_type": "user",
+	"badge_key": "TLSWEB",
+	"main_text_color": "#AAFFB7",
+	"sub_text_color": "#FFFFFF",
+	"main_title": "TLS",
+	"main_color": "#007D3F",
+	"sub_title": "WEB",
+	"sub_color": "#313131",
+    "description": "TLS Web Developer"
+}
+```
+
+### Response
+```json
+{
+	"status": "ok",
+	"msg": "badge created",
+	"data": {
+		"badge_type": "user",
+		"badge_key": "TLSWEB",
+		"main_text_color": "#AAFFB7",
+		"sub_text_color": "#FFFFFF",
+		"main_title": "TLS",
+		"main_color": "#007D3F",
+		"sub_title": "WEB",
+		"sub_color": "#313131",
+		"badge_expiry": null,
+		"description": "TLS Web Developer",
+		"_id": "67ed3e7679c548d1406670f7",
+		"__v": 0
+	}
+}
+```
+
+### PUT `/badge/:id`
+
+- Updates the given badge associated with the id parameter
+- Only include fields you want to change
+
+### Request
+```json
+{
+	"badge_type": "user",
+	"badge_key": "GDSCMKT",
+	"main_text_color": "#fff",
+	"sub_text_color": "#FFFFFF",
+	"main_title": "GDSC",
+	"main_color": "#FFCD05",
+	"sub_title": "MKT",
+	"sub_color": "#313131"
+}
+```
+
+### Response
+```json
+{
+	"status": "ok",
+	"old": {
+		"_id": "67ed3e7679c548d1406670f7",
+		"badge_type": "user",
+		"badge_key": "TLSWEB",
+		"main_text_color": "#AAFFB7",
+		"sub_text_color": "#FFFFFF",
+		"main_title": "TLS",
+		"main_color": "#007D3F",
+		"sub_title": "WEB",
+		"sub_color": "#313131",
+		"badge_expiry": null,
+		"description": "TLS Web Developer",
+		"__v": 0
+	},
+	"updated": {
+		"_id": "67ed3e7679c548d1406670f7",
+		"badge_type": "user",
+		"badge_key": "GDSCMKT",
+		"main_text_color": "#fff",
+		"sub_text_color": "#FFFFFF",
+		"main_title": "GDSC",
+		"main_color": "#FFCD05",
+		"sub_title": "MKT",
+		"sub_color": "#313131",
+		"badge_expiry": null,
+		"description": "TLS Web Developer",
+		"__v": 0
+	}
+}
+```
+
+### DELETE `/badge/:id`
+
+- Deletes the given badge associated with the id parameter
+
+### Response
+```json
+{
+	"_id": "67a44e5779931ba6c9c39465",
+	"badge_type": "user",
+	"badge_key": "CCS124",
+	"text_color": "#ffffff",
+	"main_title": "CCS",
+	"main_color": "#ff4c27",
+	"sub_title": "124",
+	"sub_color": "#ff7f64",
+	"badge_expiry": "2040-01-01T00:00:00.000Z",
+    "description": "CCS ID 124 - Student",
+	"__v": 0
+}
+```
+
+### Giving or Revoking Badges
+
+- These are the API endpoints for giving or revoking badges.
+- target_id is the recipient of the badge
+- badge_id is the badge to give
+- type is either user or organization
+
+### POST `/badge/give-badge`
+
+- Gives a badge to a user or organization
+
+### Request
+```json
+{
+	"target_id": "67ea71f937fa775f4088f17d",
+	"badge_id": "67ea73ae37fa775f4088f2b9",
+	"type": "user"
+}
+```
+
+### Response
+```json
+{
+	"status": "Successfully added badge to user",
+	"user": {
+		"vanity": {
+			"badges": [
+				"67ea73ae37fa775f4088f2b9"
+			]
+		},
+		"info": {
+			"name": {
+				"first": "Bad",
+				"last": "Badger"
+			},
+			"links": {
+				"other": []
+			},
+			"username": "TestAccountForBadge",
+			"batchid": "120",
+			"program": "CSCSCS",
+			"bio": ""
+		},
+		"meta": {
+			"created_at": "2025-03-31T10:44:09.285Z",
+			"updated_at": "2025-03-31T10:44:09.285Z"
+		},
+		"_id": "67ea71f937fa775f4088f17d",
+		"credentials": "67ea71df37fa775f4088f171",
+		"__v": 0
+	}
+}
+```
+
+### DELETE `/badge/revoke-badge`
+
+- Revokes a badge from a given user or organization
+
+### Request
+```json
+{
+	"target_id": "67ecb19b8a4418423dec900e",
+	"badge_id": "67ed416979c548d1406670fd",
+	"type": "user"
+}
+```
+
+### Response
+```json
+{
+	"status": "Successfully removed badge from user",
+	"user": {
+		"vanity": {
+			"badges": []
+		},
+		"info": {
+			"name": {
+				"first": "Bad",
+				"last": "Badger"
+			},
+			"links": {
+				"other": []
+			},
+			"username": "@ABern",
+			"batchid": "121",
+			"program": "CSST",
+			"bio": ""
+		},
+		"meta": {
+			"created_at": "2025-04-02T03:40:11.957Z",
+			"updated_at": "2025-04-02T03:40:11.957Z"
+		},
+		"_id": "67ecb19b8a4418423dec900e",
+		"credentials": "67ecb17a8a4418423dec900c",
+		"__v": 0
+	}
+}
+```
 
 # Password Reset API Documentation
 
