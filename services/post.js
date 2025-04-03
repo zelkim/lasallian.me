@@ -49,6 +49,7 @@ export const GetAllUserPosts = async (req, res) => {
         const posts = await Post.find({ author: authorId })
             .populate('author', 'vanity info')
             .populate('badge')
+            .populate('reactions')
             .populate({
                 path: 'comments',
                 populate: [
