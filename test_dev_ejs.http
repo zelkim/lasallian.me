@@ -1,0 +1,487 @@
+### HTTP test file (https://www.jetbrains.com/help/idea/exploring-http-syntax.html)
+#
+# NOTE: Usage (for nvim):
+# - install luarocks and lua-5.1/lua5.1/compat-lua (via package manager)
+# - install rest.nvim plugin 
+# - hover cursor on a request you want to run and :Rest run
+#
+
+### vars
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2M4NDc4ZDhlOWY1NDFkZmU5Njg5M2UiLCJjcmVkZW50aWFscyI6IjY3Yzg0Njk2OGU5ZjU0MWRmZTk2ODkzYyIsInZhbml0eSI6eyJiYWRnZXMiOltdLCJjb3Zlcl9waG90byI6Imh0dHBzOi8vbmV3LXBob3RvLXVybC5jb20vY292ZXIuanBnIiwiZGlzcGxheV9waG90byI6Imh0dHBzOi8vbmV3LXBob3RvLXVybC5jb20vcGhvdG8uanBnIn0sImluZm8iOnsibmFtZSI6eyJmaXJzdCI6IncyIiwibGFzdCI6ImhlbGxvd29ybGQifSwibGlua3MiOnsib3RoZXIiOlsiaHR0cHM6Ly9naXRodWIuY29tL3VwZGF0ZWQiXSwibGlua2VkaW4iOiJodHRwczovL2xpbmtlZGluLmNvbS9pbi9uZXdwcm9maWxlIiwiZmFjZWJvb2siOiJodHRwczovL2ZhY2Vib29rLmNvbS91cGRhdGVkIiwiaW5zdGFncmFtIjoiaHR0cHM6Ly9pbnN0YWdyYW0uY29tL3VwZGF0ZWQifSwidXNlcm5hbWUiOiJAdzJoZWxsb3dvcmxkIiwiYmF0Y2hpZCI6IjEyMyIsInByb2dyYW0iOiJCU0lUIiwiYmlvIjoiVXBkYXRlZCBiaW8gdGV4dCJ9LCJtZXRhIjp7ImNyZWF0ZWRfYXQiOiIyMDI1LTAzLTA1VDEyOjQ2OjA1LjA3NVoiLCJ1cGRhdGVkX2F0IjoiMjAyNS0wMy0wOVQwOTo0NTowNC4zODNaIn0sIl9fdiI6MCwiaWF0IjoxNzQxNTgzMjA3LCJleHAiOjE3NDE1ODY4MDd9.vpYD5hhx-Jb6mVXhONu1oDzWngSreElyIzzbUNOwl-Y
+@orgId = 67c981837c12b0d3b83b702d
+@baseUrl = http://localhost:3000
+// @baseUrl = http://api.zel.kim
+
+### get all post
+GET {{baseUrl}}/post/all
+
+### create comment
+POST {{baseUrl}}/comment/
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+        "post_id": "67cd3b750ddeeaa2a76f833f",
+        "content": "test comment"
+}
+### register
+POST {{baseUrl}}/user/register
+Content-Type: application/json 
+
+{
+    "credentials": {
+        "email": "w2helloworld1234@dlsu.edu.ph",
+        "password": "12345678@Aa"
+    }
+}
+
+### setup
+POST {{baseUrl}}/user/setup
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "info": {
+        "name": {
+            "first": "w2helloworld",
+            "last": "YES"
+        },
+        "username": "@w2helloworld",
+        "batchid": "123",
+        "program": "BSIT"
+    }
+}
+
+### login
+POST {{baseUrl}}/user/login
+Content-Type: application/json
+
+{
+    "credentials": {
+        "email": "w2helloworld@dlsu.edu.ph",
+        "password": "NewPassword123!"
+    }
+}
+
+### get user info of currently authenticated user
+GET {{baseUrl}}/user
+Authorization: Bearer {{authToken}}
+
+### get user by id
+GET {{baseUrl}}/user/67c8478d8e9f541dfe96893e
+Authorization: Bearer {{authToken}}
+
+### get user by email
+POST {{baseUrl}}/user/get-by-email
+Authorization: Bearer {{authToken}}
+
+{
+    "email": "w2helloworld@dlsu.edu.ph"
+}
+
+### update user profile (minimal changes)
+PUT {{baseUrl}}/user
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "info": {
+        "bio": "Updated bio text",
+        "links": {
+            "linkedin": "https://linkedin.com/in/newprofile"
+        }
+    }
+}
+
+### update user profile (many changes)
+PUT {{baseUrl}}/user
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "credentials": {
+        "email": "w2helloworld@dlsu.edu.ph",
+        "password": "NewPassword123!"
+    },
+    "info": {
+        "name": {
+            "first": "w2",
+            "last": "helloworld"
+        },
+        "username": "@w2helloworld",
+        "batchid": "123",
+        "program": "BSIT",
+        "bio": "My updated professional bio",
+        "links": {
+            "linkedin": "https://linkedin.com/in/updated",
+            "facebook": "https://facebook.com/updated",
+            "instagram": "https://instagram.com/updated",
+            "other": ["https://github.com/updated"]
+        }
+    },
+    "vanity": {
+        "display_photo": "https://new-photo-url.com/photo.jpg",
+        "cover_photo": "https://new-photo-url.com/cover.jpg"
+    }
+}
+
+### create post (minimal)
+POST {{baseUrl}}/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "content": {
+        "text": "NORMAL MINIMAL POST hehe"
+    }
+}
+
+### create post with hashtags (all fields)
+POST {{baseUrl}}/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "title": "POST4 w2helloworld normal",
+    "content": {
+        "text": "Testing hastag post 2 #test #w2"
+    },
+    "type": "normal",
+    "visibility": "public",
+    "media": ["url-string-test"]
+}
+
+### delete post
+DELETE {{baseUrl}}/post/67cd82c249c9b9a2727022ee
+Authorization: Bearer {{authToken}}
+
+### search hashtags
+GET {{baseUrl}}/hashtag/test
+Authorization: Bearer {{authToken}}
+
+### get posts by hashtag
+GET {{baseUrl}}/post/hashtag/test
+Authorization: Bearer {{authToken}}
+
+### fetch all normal posts of user
+GET {{baseUrl}}/post/normal
+Authorization: Bearer {{authToken}}
+
+### fetch all project posts of user
+GET {{baseUrl}}/post/project
+Authorization: Bearer {{authToken}}
+
+### fetch all event posts of user
+GET {{baseUrl}}/post/event
+Authorization: Bearer {{authToken}}
+
+### fetch a normal posts by id (sigma)
+GET {{baseUrl}}/post/normal/67cd3b750ddeeaa2a76f833f
+Authorization: Bearer {{authToken}}
+
+### fetch a normal posts by id
+GET {{baseUrl}}/post/normal/67cd8824a05e28753681bdb2
+Authorization: Bearer {{authToken}}
+
+### fetch all posts
+GET {{baseUrl}}/post/all
+Authorization: Bearer {{authToken}}
+
+### fetch all posts from specific user (by UserInfo _id)
+GET {{baseUrl}}/post/all/67c8478d8e9f541dfe96893e
+Authorization: Bearer {{authToken}}
+
+### fetch all posts from specific user (test user)
+GET {{baseUrl}}/post/all/67cd35870ddeeaa2a76f82f0
+Authorization: Bearer {{authToken}}
+
+### --- Organization Routes --- ###
+
+### create organization
+POST {{baseUrl}}/org
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "info": {
+        "name": "Sample Organization",
+        "acronym": "SORG",
+        "founding": "2024-03-01",
+        "bio": "A sample organization for testing",
+        "links": {
+            "linkedin": "https://linkedin.com/sampleorg",
+            "facebook": "https://facebook.com/sampleorg",
+            "instagram": "https://instagram.com/sampleorg",
+            "other": ["https://other-link.com"]
+        }
+    },
+    "vanity": {
+        "display_photo": "https://example.com/display.jpg",
+        "cover_photo": "https://example.com/cover.jpg",
+        "badges": []
+    }
+}
+
+### Get Organization by ID
+### Usage: http://localhost:3000/org/<org-id>
+GET {{baseUrl}}/org/{{orgId}}
+
+### Get Organization by Acronym
+### Usage: http://localhost:3000/org/acronym/<org-acronym>
+GET {{baseUrl}}/org/acronym/SORG
+
+### Update Organization
+### Usage: http://localhost:3000/org/<org-id>
+PUT {{baseUrl}}/org/{{orgId}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "info": {
+        "name": "Updated Organization Name",
+        "acronym": "SORG",
+        "bio": "Updated organization description",
+        "links": {
+            "linkedin": "https://linkedin.com/updated",
+            "facebook": "https://facebook.com/updated"
+        }
+    },
+    "vanity": {
+        "display_photo": "https://example.com/new-display.jpg"
+    }
+}
+
+### Delete Organization
+### Usage: http://localhost:3000/org/<org-id>
+DELETE {{baseUrl}}/org/{{orgId}}
+Authorization: Bearer {{authToken}}
+
+### Add Member to Organization
+### Usage: http://localhost:3000/org/<org-id>/members
+# Note: Requires authentication
+POST {{baseUrl}}/org/{{orgId}}/members
+Authorization: Bearer {{authToken}}
+
+### Add Member to Organization (with optional req.body)
+# Note: Requires authentication
+POST {{baseUrl}}/org/{{orgId}}/members
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "position": "MEM"
+}
+
+### Get Organization Members
+### Usage: http://localhost:3000/org/<org-id>/members
+GET {{baseUrl}}/org/{{orgId}}/members
+Authorization: Bearer {{authToken}}
+
+### --- Search Posts --- ###
+
+### Basic search
+GET {{baseUrl}}/post/search?query=test
+Authorization: Bearer {{authToken}}
+
+### Default limit (10)
+GET {{baseUrl}}/post/search?query=sigma
+Authorization: Bearer {{authToken}}
+
+### Custom limit (e.g., 20)
+GET {{baseUrl}}/post/search?query=test&limit=20
+Authorization: Bearer {{authToken}}
+
+### Search with type filter
+GET {{baseUrl}}/post/search?query=test&type=normal
+Authorization: Bearer {{authToken}}
+
+### Search with visibility filter
+GET {{baseUrl}}/post/search?query=test&visibility=public
+Authorization: Bearer {{authToken}}
+
+### Search with 3 filters and default limit (10)
+GET {{baseUrl}}/post/search?query=sigma&type=project&visibility=public
+Authorization: Bearer {{authToken}}
+
+### With all parameters
+GET {{baseUrl}}/post/search?query=test&type=normal&visibility=public&limit=15
+Authorization: Bearer {{authToken}}
+
+### --- Reaction Routes --- ###
+
+### Create reaction
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "reaction": "❤️",
+    "postid": "67cd3b750ddeeaa2a76f833f"
+}
+
+### Create reaction on post
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd55b44385737d06cd55c3",
+    "reaction": "❤️"
+}
+
+### Update reaction on post
+PUT {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd55b44385737d06cd55c3",
+    "reaction": "👏"
+}
+
+### Delete reaction from post
+DELETE {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd3b750ddeeaa2a76f833f"
+}
+
+### Create reaction on comment
+POST {{baseUrl}}/reaction/comment
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "commentid": "67cd89fe21009c70077678e6",
+    "reaction": "❤️"
+}
+
+### Update reaction on comment
+PUT {{baseUrl}}/reaction/comment
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "commentid": "67cd89fe21009c70077678e6",
+    "reaction": "😂"
+}
+
+### Delete reaction from comment
+DELETE {{baseUrl}}/reaction/comment
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "commentid": "67cd89fe21009c70077678e6"
+}
+
+### ------ FOR TESTING ------- ###
+
+### --- Reactions for Specific Posts --- ###
+
+### Add "clap" reaction to "tara beh suntukan" post
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd55b44385737d06cd55c3",
+    "reaction": "👏"
+}
+
+### Add "love" reaction to "what the sigma #boy" post
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd3b750ddeeaa2a76f833f",
+    "reaction": "❤️"
+}
+
+### Add "laugh" reaction to "pogi ako" post
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd35a00ddeeaa2a76f82f8",
+    "reaction": "😂"
+}
+
+### Update reaction on "what the sigma #boy" post to angry
+PUT {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd3b750ddeeaa2a76f833f",
+    "reaction": "😡"
+}
+
+### Remove reaction from "pogi ako" post
+DELETE {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd35a00ddeeaa2a76f82f8"
+}
+
+### --- Add Reactions to Posts Without Reactions --- ###
+
+### Add "love" reaction to "I will wait" post
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cafddf0ddeeaa2a76f7d00",
+    "reaction": "❤️"
+}
+
+### Add "angry" reaction to "what the sigma #boy" post
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd3b750ddeeaa2a76f833f",
+    "reaction": "😡"
+}
+
+### Add "clap" reaction to "Testing hastag post" post
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cd869140d5b6ac12402dab",
+    "reaction": "👏"
+}
+
+### Add "laugh" reaction to "Behold, PEAK!!!!" post
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cdb6ef5c6d216bdae780f0",
+    "reaction": "😂"
+}
+
+### Add "sad" reaction to "I agree with the top post" post
+POST {{baseUrl}}/reaction/post
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "postid": "67cdbc8b5c6d216bdae782b4",
+    "reaction": "😢"
+}
+
+### Verify all posts after adding reactions
+GET {{baseUrl}}/post/all
+Authorization: Bearer {{authToken}}
